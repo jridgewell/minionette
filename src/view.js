@@ -2,27 +2,45 @@ Minionette.View = Backbone.View.extend({
     constructor: function() {
         Backbone.View.apply(this, arguments);
 
-        _.bindAll(this, '_jquery_remove');
+        // Done so we don't bindAll to standard methods
+        _.bindAll(this, '_jquery_remove', '_close');
 
+        // Keep track of our subviews
         this._subViews = {};
-        this._bindEntityEvents(this, this.model, this.modelEvents);
-        this._bindEntityEvents(this, this.collection, this.collectionEvents);
+
+        // Have the view listenTo the model and collection
+        this._listenToEvents(this.model, this.modelEvents);
+        this._listenToEvents(this.collection, this.collectionEvents);
+        this.listenTo(this, 'close:before', this._close);
     },
 
+    // A default template that will clear this.$el
+    // Override this in a subclass to something useful.
     template: function() { return ''; },
 
+    // When delegating events, bind this view to jQuery's special remove event
+    // Allows us to clean up the view, even if you remove this.$el with jQuery
+    // http://blog.alexmaccaw.com/jswebapps-memory-management
     delegateEvents: function(events) {
         Backbone.View.prototype.delegateEvents.apply(this, events);
         this.$el.on('remove.delegateEvents' + this.cid, this._jquery_remove);
     },
 
+    // A useful remove method to that triggers events
+    // Notice we emit "close" events, not "remove"
     close: function() {
-        _.each(this._subViews, function(view) { view.close(); });
+        this.trigger('close:before');
         this.remove();
+        this.trigger('close');
+    },
+
+    // A called on close:before to remove all our subviews
+    _close: function() {
+        _.each(this._subViews, function(view) { view.close(); });
     },
 
 
-    // Attach a subview to an element in my template
+    // Assign a subview to an element in my template
     // selector is a dom selector to assign to
     // view is the subview to assign the selector to
     // replace is a boolean
@@ -52,17 +70,22 @@ Minionette.View = Backbone.View.extend({
         }, this);
     },
 
+    // A proxy method to this.close()
+    // This is bindAll-ed to the view instance.
+    // Done so that we don't need to bindAll to close()
     _jquery_remove: function() {
         this.close();
     },
 
-    _bindEntityEvents: function(target, entity, events) {
+    // Loop through the events given, and listen to
+    // entity's event
+    _listenToEvents: function(entity, events) {
         for (var event in events) {
             var method = events[event];
             if (!_.isFunction(method)) { method = this[method]; }
             if (!method) { continue; }
 
-            target.listenTo(entity, event, method);
+            this.listenTo(entity, event, method);
         }
         return this;
     }
