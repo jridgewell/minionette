@@ -25,6 +25,7 @@
     },
     "devDependencies": {
         "grunt": "~0.4.0",
+        "docco": "~0.6.0",
         "grunt-plato": "~0.1.4",
         "grunt-preprocess": "~2.3.0",
         "grunt-contrib-jshint": "~0.1.1",
