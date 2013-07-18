@@ -74,11 +74,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Done so we don&#39;t bindAll to standard methods</p>
+              <p>Done so we don&#39;t bindAll to standard methods.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        _.bindAll(<span class="keyword">this</span>, <span class="string">'_jquery_remove'</span>, <span class="string">'_close'</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        _.bindAll(<span class="keyword">this</span>, <span class="string">'_jqueryRemove'</span>, <span class="string">'_close'</span>);</pre></div></div>
             
         </li>
         
@@ -89,7 +89,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Keep track of our subviews</p>
+              <p>Keep track of our subviews.</p>
 
             </div>
             
@@ -104,7 +104,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Have the view listenTo the model and collection</p>
+              <p>Have the view listenTo the model and collection.</p>
 
             </div>
             
@@ -122,7 +122,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>A default template that will clear this.$el
+              <p>A default template that will clear this.$el.
 Override this in a subclass to something useful.</p>
 
             </div>
@@ -138,15 +138,15 @@ Override this in a subclass to something useful.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>When delegating events, bind this view to jQuery&#39;s special remove event
-Allows us to clean up the view, even if you remove this.$el with jQuery
+              <p>When delegating events, bind this view to jQuery&#39;s special remove event.
+Allows us to clean up the view, even if you remove this.$el with jQuery.
 <a href="http://blog.alexmaccaw.com/jswebapps-memory-management">http://blog.alexmaccaw.com/jswebapps-memory-management</a></p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    delegateEvents: <span class="keyword">function</span>(events) {
         Backbone.View.prototype.delegateEvents.apply(<span class="keyword">this</span>, events);
-        <span class="keyword">this</span>.$el.on(<span class="string">'remove.delegateEvents'</span> + <span class="keyword">this</span>.cid, <span class="keyword">this</span>._jquery_remove);
+        <span class="keyword">this</span>.$el.on(<span class="string">'remove.delegateEvents'</span> + <span class="keyword">this</span>.cid, <span class="keyword">this</span>._jqueryRemove);
     },</pre></div></div>
             
         </li>
@@ -158,8 +158,8 @@ Allows us to clean up the view, even if you remove this.$el with jQuery
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>A useful remove method to that triggers events
-Notice we emit &quot;close&quot; events, not &quot;remove&quot;</p>
+              <p>A useful remove method to that triggers events.
+Notice we emit &quot;close&quot; events, not &quot;remove&quot;.</p>
 
             </div>
             
@@ -178,7 +178,7 @@ Notice we emit &quot;close&quot; events, not &quot;remove&quot;</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>A called on close:before to remove all our subviews</p>
+              <p>A called on close:before to remove all our subviews.</p>
 
             </div>
             
@@ -195,13 +195,13 @@ Notice we emit &quot;close&quot; events, not &quot;remove&quot;</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Assign a subview to an element in my template
-selector is a dom selector to assign to
-view is the subview to assign the selector to
-replace is a boolean
-   False (default), set view&#39;s $el to the selector
-   True, replace the selector with view&#39;s $el
-Alternate syntax by passing in an object for selector
+              <p>Assign a subview to an element in my template.
+<code>selector</code> is a dom selector to assign to.
+<code>view</code> is the subview to assign the selector to.
+<code>replace</code> is a boolean.
+   <code>False</code> (default), set view&#39;s $el to the selector.
+   <code>True</code>, replace the selector with view&#39;s $el.
+Alternate syntax by passing in an object for selector.
    With &quot;selector&quot;: subview
    Replace will be the second param in this case.</p>
 
@@ -237,13 +237,13 @@ Alternate syntax by passing in an object for selector
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>A proxy method to this.close()
+              <p>A proxy method to this.close().
 This is bindAll-ed to the view instance.
-Done so that we don&#39;t need to bindAll to close()</p>
+Done so that we don&#39;t need to bindAll to close().</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    _jquery_remove: <span class="keyword">function</span>() {
+            <div class="content"><div class='highlight'><pre>    _jqueryRemove: <span class="keyword">function</span>() {
         <span class="keyword">this</span>.close();
     },</pre></div></div>
             
@@ -257,7 +257,7 @@ Done so that we don&#39;t need to bindAll to close()</p>
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
               <p>Loop through the events given, and listen to
-entity&#39;s event</p>
+entity&#39;s event.</p>
 
             </div>
             
