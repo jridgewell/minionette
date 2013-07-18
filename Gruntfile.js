@@ -65,12 +65,20 @@ module.exports = function(grunt) {
                 }
             }
         },
+
+        docco: {
+            src: ['src/*.js'],
+            options: {
+                output: 'docs/'
+            }
+        }
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-preprocess');
     grunt.loadNpmTasks('grunt-plato');
+    grunt.loadNpmTasks('grunt-docco2');
 
     // Default task.
     grunt.registerTask('default', ['jshint', 'preprocess', 'uglify']);
