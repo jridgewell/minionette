@@ -1,0 +1,20 @@
+{
+  "name": "minionette",
+  "version": "0.2.0",
+  "main": "dist/minonette.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components",
+    "bower_components",
+    "spec",
+    "reports"
+  ],
+  "author": {
+      "name": "Justin Ridgewell"
+  },
+  "dependencies": {
+      "jquery": "",
+      "backbone": "~1.0"
+  }
+}
