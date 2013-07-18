@@ -14,7 +14,7 @@
       "name": "Justin Ridgewell"
   },
   "dependencies": {
-      "jquery": "",
+      "jquery": ">=1.7.0",
       "backbone": "~1.0"
   }
 }
