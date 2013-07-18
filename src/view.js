@@ -21,6 +21,37 @@ Minionette.View = Backbone.View.extend({
         this.remove();
     },
 
+
+    // Attach a subview to an element in my template
+    // selector is a dom selector to assign to
+    // view is the subview to assign the selector to
+    // replace is a boolean
+    //    False (default), set view's $el to the selector
+    //    True, replace the selector with view's $el
+    // Alternate syntax by passing in an object for selector
+    //    With "selector": subview
+    //    Replace will be the second param in this case.
+    assign : function (selector, view, replace) {
+        var selectors;
+        if (_.isObject(selector)) {
+            selectors = selector;
+            replace = view;
+        } else {
+            selectors = {};
+            selectors[selector] = view;
+        }
+        if (!selectors) { return; }
+
+        _.each(selectors, function (view, selector) {
+            this._subViews[view.cid] = view;
+            if (replace) {
+                this.$(selector).replaceWith(view.el);
+            } else {
+                view.setElement(this.$(selector)).render();
+            }
+        }, this);
+    },
+
     _jquery_remove: function() {
         this.close();
     },
