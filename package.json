@@ -25,8 +25,9 @@
     },
     "devDependencies": {
         "grunt": "~0.4.0",
-        "grunt-contrib-jshint": "~0.1.1",
         "grunt-plato": "~0.1.4",
+        "grunt-preprocess": "~2.3.0",
+        "grunt-contrib-jshint": "~0.1.1",
         "grunt-contrib-uglify": "~0.1.1",
         "grunt-contrib-concat": "~0.1.2"
 
