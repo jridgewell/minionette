@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>view.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="collection_view.html">
+                collection_view.js
+              </a>
+            
+              
+              <a class="source" href="jquery.event.special.remove.html">
+                jquery.event.special.remove.js
+              </a>
+            
+              
+              <a class="source" href="model_view.html">
+                model_view.js
+              </a>
+            
+              
+              <a class="source" href="view.html">
+                view.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>view.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Minionette.View = Backbone.View.extend({
+    constructor: <span class="keyword">function</span>() {
+        Backbone.View.apply(<span class="keyword">this</span>, arguments);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Done so we don&#39;t bindAll to standard methods</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        _.bindAll(<span class="keyword">this</span>, <span class="string">'_jquery_remove'</span>, <span class="string">'_close'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Keep track of our subviews</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._subViews = {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Have the view listenTo the model and collection</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._listenToEvents(<span class="keyword">this</span>.model, <span class="keyword">this</span>.modelEvents);
+        <span class="keyword">this</span>._listenToEvents(<span class="keyword">this</span>.collection, <span class="keyword">this</span>.collectionEvents);
+        <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>, <span class="string">'close:before'</span>, <span class="keyword">this</span>._close);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>A default template that will clear this.$el
+Override this in a subclass to something useful.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    template: <span class="keyword">function</span>() { <span class="keyword">return</span> <span class="string">''</span>; },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>When delegating events, bind this view to jQuery&#39;s special remove event
+Allows us to clean up the view, even if you remove this.$el with jQuery
+<a href="http://blog.alexmaccaw.com/jswebapps-memory-management">http://blog.alexmaccaw.com/jswebapps-memory-management</a></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    delegateEvents: <span class="keyword">function</span>(events) {
+        Backbone.View.prototype.delegateEvents.apply(<span class="keyword">this</span>, events);
+        <span class="keyword">this</span>.$el.on(<span class="string">'remove.delegateEvents'</span> + <span class="keyword">this</span>.cid, <span class="keyword">this</span>._jquery_remove);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>A useful remove method to that triggers events
+Notice we emit &quot;close&quot; events, not &quot;remove&quot;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    close: <span class="keyword">function</span>() {
+        <span class="keyword">this</span>.trigger(<span class="string">'close:before'</span>);
+        <span class="keyword">this</span>.remove();
+        <span class="keyword">this</span>.trigger(<span class="string">'close'</span>);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>A called on close:before to remove all our subviews</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _close: <span class="keyword">function</span>() {
+        _.each(<span class="keyword">this</span>._subViews, <span class="keyword">function</span>(view) { view.close(); });
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Assign a subview to an element in my template
+selector is a dom selector to assign to
+view is the subview to assign the selector to
+replace is a boolean
+   False (default), set view&#39;s $el to the selector
+   True, replace the selector with view&#39;s $el
+Alternate syntax by passing in an object for selector
+   With &quot;selector&quot;: subview
+   Replace will be the second param in this case.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    assign : <span class="function"><span class="keyword">function</span> <span class="params">(selector, view, replace)</span> {</span>
+        <span class="keyword">var</span> selectors;
+        <span class="keyword">if</span> (_.isObject(selector)) {
+            selectors = selector;
+            replace = view;
+        } <span class="keyword">else</span> {
+            selectors = {};
+            selectors[selector] = view;
+        }
+        <span class="keyword">if</span> (!selectors) { <span class="keyword">return</span>; }
+
+        _.each(selectors, <span class="function"><span class="keyword">function</span> <span class="params">(view, selector)</span> {</span>
+            <span class="keyword">this</span>._subViews[view.cid] = view;
+            <span class="keyword">if</span> (replace) {
+                <span class="keyword">this</span>.$(selector).replaceWith(view.el);
+            } <span class="keyword">else</span> {
+                view.setElement(<span class="keyword">this</span>.$(selector)).render();
+            }
+        }, <span class="keyword">this</span>);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>A proxy method to this.close()
+This is bindAll-ed to the view instance.
+Done so that we don&#39;t need to bindAll to close()</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _jquery_remove: <span class="keyword">function</span>() {
+        <span class="keyword">this</span>.close();
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Loop through the events given, and listen to
+entity&#39;s event</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _listenToEvents: <span class="keyword">function</span>(entity, events) {
+        <span class="keyword">for</span> (<span class="keyword">var</span> event <span class="keyword">in</span> events) {
+            <span class="keyword">var</span> method = events[event];
+            <span class="keyword">if</span> (!_.isFunction(method)) { method = <span class="keyword">this</span>[method]; }
+            <span class="keyword">if</span> (!method) { <span class="keyword">continue</span>; }
+
+            <span class="keyword">this</span>.listenTo(entity, event, method);
+        }
+        <span class="keyword">return</span> <span class="keyword">this</span>;
+    }
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
