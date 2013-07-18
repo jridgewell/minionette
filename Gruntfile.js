@@ -31,10 +31,6 @@ module.exports = function(grunt) {
             },
         },
 
-        lint: {
-            files: ['src/*.js']
-        },
-
         uglify : {
             options: {
                 banner: "<%= meta.banner %>"
