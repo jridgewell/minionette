@@ -1,10 +1,8 @@
 Minionette.CollectionView = Minionette.View.extend({
     constructor: function(options) {
-        Minionette.View.apply(this, arguments)
+        Minionette.View.apply(this, arguments);
         this._listenEvents();
     },
-
-    template: function() { return '' },
 
     setElement: function() {
         Minionette.View.prototype.setElement.apply(this, arguments);
@@ -23,7 +21,6 @@ Minionette.CollectionView = Minionette.View.extend({
         return this;
     },
 
-    // Handle a model added to the collection
     addOne: function(model) {
         var ModelView = this._getModelView();
         this._addModelView(model, ModelView);
@@ -48,9 +45,6 @@ Minionette.CollectionView = Minionette.View.extend({
         return ModelView;
     },
 
-    // Configured the initial events that the collection view
-    // binds to. Override this method to prevent the initial
-    // events, or to add your own initial events.
     _listenEvents: function() {
         if (this.collection){
             this.listenTo(this.collection, "add", this.addOne, this);
@@ -58,7 +52,6 @@ Minionette.CollectionView = Minionette.View.extend({
             this.listenTo(this.collection, "reset", this.render, this);
         }
     },
-
 
     _removeModelView: function(view) {
         if (view) {

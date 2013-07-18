@@ -1,6 +1,6 @@
 Minionette.View = Backbone.View.extend({
     constructor: function() {
-        Backbone.View.apply(this, arguments)
+        Backbone.View.apply(this, arguments);
 
         _.bindAll(this, '_jquery_remove');
 
@@ -9,7 +9,7 @@ Minionette.View = Backbone.View.extend({
         this._bindEntityEvents(this, this.collection, this.collectionEvents);
     },
 
-    template: function() {},
+    template: function() { return ''; },
 
     delegateEvents: function(events) {
         Backbone.View.prototype.delegateEvents.apply(this, events);
@@ -28,8 +28,8 @@ Minionette.View = Backbone.View.extend({
     _bindEntityEvents: function(target, entity, events) {
         for (var event in events) {
             var method = events[event];
-            if (!_.isFunction(method)) method = this[events[event]];
-            if (!method) continue;
+            if (!_.isFunction(method)) { method = this[method]; }
+            if (!method) { continue; }
 
             target.listenTo(entity, event, method);
         }
