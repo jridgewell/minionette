@@ -1,13 +1,9 @@
 Minionette.CollectionView = Minionette.View.extend({
     constructor: function(options) {
         Minionette.View.apply(this, arguments);
-        this._listenEvents();
-    },
 
-    setElement: function() {
-        Minionette.View.prototype.setElement.apply(this, arguments);
-        this.$whereToAdd = this.$(this.options.whereToAdd)[0] ||
-            this.$(this.whereToAdd)[0] || this.$el;
+        // Listen to the default events
+        this._listenEvents();
     },
 
     render: function() {
@@ -34,7 +30,7 @@ Minionette.CollectionView = Minionette.View.extend({
     _addModelView: function(model, ModelView) {
         var modelView = new ModelView({model: model});
         this._subViews[modelView.cid] = modelView;
-        this.$whereToAdd.append(modelView.render().el);
+        this.$el.append(modelView.render().el);
     },
 
     _getModelView: function() {
