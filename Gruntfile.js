@@ -35,20 +35,6 @@ module.exports = function(grunt) {
             files: ['src/*.js']
         },
 
-        concat: {
-            options: {
-                banner: "<%= meta.banner %>"
-            },
-            core: {
-                src: 'dist/minionette.js',
-                dest: 'dist/minionette.js'
-            },
-            amd: {
-                src: 'dist/amd/minionette.js',
-                dest: 'dist/amd/minionette.js'
-            }
-        },
-
         uglify : {
             options: {
                 banner: "<%= meta.banner %>"
@@ -85,13 +71,12 @@ module.exports = function(grunt) {
         },
     });
 
-    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-preprocess');
     grunt.loadNpmTasks('grunt-plato');
 
     // Default task.
-    grunt.registerTask('default', ['jshint', 'preprocess', 'concat', 'uglify']);
+    grunt.registerTask('default', ['jshint', 'preprocess', 'uglify']);
 
 };
