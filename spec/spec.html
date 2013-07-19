@@ -3,22 +3,19 @@
     <head>
         <meta charset="utf-8">
         <title>Minionette</title>
-        <link rel="stylesheet" href="../node_modules/mocha/mocha.css" type="text/css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="support/mocha/mocha.css" type="text/css" media="screen" title="no title" charset="utf-8">
     </head>
     <body>
         <div id="mocha"></div>
 
-        <script src="../node_modules/mocha/mocha.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../node_modules/chai/chai.js" type="text/javascript" charset="utf-8"></script>
-        <script src="../node_modules/sinon/lib/sinon.js" type="text/javascript" charset="utf-8"></script>
-
-        <!-- <script src="config.js" type="text/javascript" charset="utf-8"></script> -->
+        <script src="support/mocha/mocha.js" type="text/javascript" charset="utf-8"></script>
+        <script src="support/requirejs/require.js" type="text/javascript" charset="utf-8"></script>
 
         <!-- <script src="spec-helpers.js" type="text/javascript" charset="utf-8"></script> -->
 
         <script type="text/javascript" charset="utf-8">
-            mocha.setup('bdd');
-            mocha.run();
+            require(['config', 'common'], function() {
+            });
         </script>
     </body>
 </html>
