@@ -53,7 +53,7 @@ Minionette.CollectionView = Minionette.View.extend({
     _addModelView: function(model, ModelView) {
         var modelView = new ModelView({model: model});
 
-        // Add this view to our subviews, so we can close
+        // Add this view to our subviews, so we can remove
         // them later.
         this._subViews[modelView.cid] = modelView;
         this.$el.append(modelView.render().el);
@@ -75,7 +75,7 @@ Minionette.CollectionView = Minionette.View.extend({
         // Cuased be removeOne() trying to remove a model
         // that we haven't added yet.
         if (view) {
-            view.close();
+            view.remove();
 
             // Remove it from our subviews.
             delete this._subViews[view.cid];

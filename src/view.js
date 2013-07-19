@@ -3,7 +3,7 @@ Minionette.View = Backbone.View.extend({
         Backbone.View.apply(this, arguments);
 
         // Done so we don't bindAll to standard methods.
-        _.bindAll(this, '_jqueryRemove', '_close');
+        _.bindAll(this, '_jqueryRemove', '_remove');
 
         // Keep track of our subviews.
         this._subViews = {};
@@ -11,7 +11,6 @@ Minionette.View = Backbone.View.extend({
         // Have the view listenTo the model and collection.
         this._listenToEvents(this.model, this.modelEvents);
         this._listenToEvents(this.collection, this.collectionEvents);
-        this.listenTo(this, 'close:before', this._close);
     },
 
     // A default template that will clear this.$el.
@@ -27,18 +26,17 @@ Minionette.View = Backbone.View.extend({
     },
 
     // A useful remove method to that triggers events.
-    // Notice we emit "close" events, not "remove".
-    close: function() {
-        this.trigger('close:before');
-        this.remove();
-        this.trigger('close');
+    remove: function() {
+        this.trigger('remove:before');
+        this._removeSubViews();
+        Backbone.View.prototype.remove.apply(this, arguments);
+        this.trigger('remove');
     },
 
-    // A called on close:before to remove all our subviews.
-    _close: function() {
-        _.each(this._subViews, function(view) { view.close(); });
+    // A remove helper to clear our subviews.
+    _removeSubViews: function() {
+        _.invoke(this._subViews, 'remove');
     },
-
 
     // Assign a subview to an element in my template.
     // `selector` is a dom selector to assign to.
@@ -70,11 +68,11 @@ Minionette.View = Backbone.View.extend({
         }, this);
     },
 
-    // A proxy method to this.close().
+    // A proxy method to this.remove().
     // This is bindAll-ed to the view instance.
-    // Done so that we don't need to bindAll to close().
+    // Done so that we don't need to bindAll to remove().
     _jqueryRemove: function() {
-        this.close();
+        this.remove();
     },
 
     // Loop through the events given, and listen to
