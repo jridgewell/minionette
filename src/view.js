@@ -2,9 +2,6 @@ Minionette.View = Backbone.View.extend({
     constructor: function() {
         Backbone.View.apply(this, arguments);
 
-        // Done so we don't bindAll to standard methods.
-        _.bindAll(this, '_jqueryRemove', '_remove');
-
         // Keep track of our subviews.
         this._subViews = {};
 
@@ -22,6 +19,8 @@ Minionette.View = Backbone.View.extend({
     // http://blog.alexmaccaw.com/jswebapps-memory-management
     delegateEvents: function() {
         Backbone.View.prototype.delegateEvents.apply(this, arguments);
+
+        _.bindAll(this, '_jqueryRemove');
         this.$el.on('remove.delegateEvents' + this.cid, this._jqueryRemove);
     },
 
@@ -68,11 +67,12 @@ Minionette.View = Backbone.View.extend({
         }, this);
     },
 
-    // A proxy method to this.remove().
-    // This is bindAll-ed to the view instance.
-    // Done so that we don't need to bindAll to remove().
+    // Does the same thing as this.remove(), without
+    // actually removing the element. Done to prevent
+    // us from removing an element that is already removed.
     _jqueryRemove: function() {
-        this.remove();
+        this.trigger('remove:jquery');
+        this.stopListening();
     },
 
     // Loop through the events given, and listen to
