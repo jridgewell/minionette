@@ -76,7 +76,7 @@ module.exports = function(grunt) {
         mocha: {
             browser: ['spec/spec.html'],
             options: {
-                run: true
+                // run: true
             }
         }
     });
