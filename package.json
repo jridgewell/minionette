@@ -19,10 +19,7 @@
     "bugs": {
         "url": "https://github.com/jridgewell/minionette/issues"
     },
-    "dependencies": {
-        "jquery": ">=1.7.0",
-        "backbone": "~1.0"
-    },
+    "dependencies": {},
     "devDependencies": {
         "grunt": "~0.4.0",
         "docco": "~0.6.0",
