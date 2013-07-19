@@ -78,7 +78,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        _.bindAll(<span class="keyword">this</span>, <span class="string">'_jqueryRemove'</span>, <span class="string">'_close'</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        _.bindAll(<span class="keyword">this</span>, <span class="string">'_jqueryRemove'</span>, <span class="string">'_remove'</span>);</pre></div></div>
             
         </li>
         
@@ -110,7 +110,6 @@
             
             <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._listenToEvents(<span class="keyword">this</span>.model, <span class="keyword">this</span>.modelEvents);
         <span class="keyword">this</span>._listenToEvents(<span class="keyword">this</span>.collection, <span class="keyword">this</span>.collectionEvents);
-        <span class="keyword">this</span>.listenTo(<span class="keyword">this</span>, <span class="string">'close:before'</span>, <span class="keyword">this</span>._close);
     },</pre></div></div>
             
         </li>
@@ -144,8 +143,8 @@ Allows us to clean up the view, even if you remove this.$el with jQuery.
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    delegateEvents: <span class="keyword">function</span>(events) {
-        Backbone.View.prototype.delegateEvents.apply(<span class="keyword">this</span>, events);
+            <div class="content"><div class='highlight'><pre>    delegateEvents: <span class="keyword">function</span>() {
+        Backbone.View.prototype.delegateEvents.apply(<span class="keyword">this</span>, arguments);
         <span class="keyword">this</span>.$el.on(<span class="string">'remove.delegateEvents'</span> + <span class="keyword">this</span>.cid, <span class="keyword">this</span>._jqueryRemove);
     },</pre></div></div>
             
@@ -158,15 +157,15 @@ Allows us to clean up the view, even if you remove this.$el with jQuery.
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>A useful remove method to that triggers events.
-Notice we emit &quot;close&quot; events, not &quot;remove&quot;.</p>
+              <p>A useful remove method to that triggers events.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    close: <span class="keyword">function</span>() {
-        <span class="keyword">this</span>.trigger(<span class="string">'close:before'</span>);
-        <span class="keyword">this</span>.remove();
-        <span class="keyword">this</span>.trigger(<span class="string">'close'</span>);
+            <div class="content"><div class='highlight'><pre>    remove: <span class="keyword">function</span>() {
+        <span class="keyword">this</span>.trigger(<span class="string">'remove:before'</span>);
+        <span class="keyword">this</span>._removeSubViews();
+        Backbone.View.prototype.remove.apply(<span class="keyword">this</span>, arguments);
+        <span class="keyword">this</span>.trigger(<span class="string">'remove'</span>);
     },</pre></div></div>
             
         </li>
@@ -178,12 +177,12 @@ Notice we emit &quot;close&quot; events, not &quot;remove&quot;.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>A called on close:before to remove all our subviews.</p>
+              <p>A remove helper to clear our subviews.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    _close: <span class="keyword">function</span>() {
-        _.each(<span class="keyword">this</span>._subViews, <span class="keyword">function</span>(view) { view.close(); });
+            <div class="content"><div class='highlight'><pre>    _removeSubViews: <span class="keyword">function</span>() {
+        _.invoke(<span class="keyword">this</span>._subViews, <span class="string">'remove'</span>);
     },</pre></div></div>
             
         </li>
@@ -237,14 +236,14 @@ Alternate syntax by passing in an object for selector.
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>A proxy method to this.close().
+              <p>A proxy method to this.remove().
 This is bindAll-ed to the view instance.
-Done so that we don&#39;t need to bindAll to close().</p>
+Done so that we don&#39;t need to bindAll to remove().</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    _jqueryRemove: <span class="keyword">function</span>() {
-        <span class="keyword">this</span>.close();
+        <span class="keyword">this</span>.remove();
     },</pre></div></div>
             
         </li>
