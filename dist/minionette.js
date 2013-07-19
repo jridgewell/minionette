@@ -7,7 +7,7 @@ var Minionette = (function(global, _, $, Backbone) {
 
     // Force jQuery to emit remove events.
 // Our views bind to it to see if they
-// have been removed and should be closed.
+// have been removed and should be cleaned.
 $.event.special.remove = {
     remove: function(e) {
         if (e.handler) { e.handler(); }
@@ -20,7 +20,7 @@ $.event.special.remove = {
         Backbone.View.apply(this, arguments);
 
         // Done so we don't bindAll to standard methods.
-        _.bindAll(this, '_jqueryRemove', '_close');
+        _.bindAll(this, '_jqueryRemove', '_remove');
 
         // Keep track of our subviews.
         this._subViews = {};
@@ -28,7 +28,6 @@ $.event.special.remove = {
         // Have the view listenTo the model and collection.
         this._listenToEvents(this.model, this.modelEvents);
         this._listenToEvents(this.collection, this.collectionEvents);
-        this.listenTo(this, 'close:before', this._close);
     },
 
     // A default template that will clear this.$el.
@@ -38,24 +37,23 @@ $.event.special.remove = {
     // When delegating events, bind this view to jQuery's special remove event.
     // Allows us to clean up the view, even if you remove this.$el with jQuery.
     // http://blog.alexmaccaw.com/jswebapps-memory-management
-    delegateEvents: function(events) {
-        Backbone.View.prototype.delegateEvents.apply(this, events);
+    delegateEvents: function() {
+        Backbone.View.prototype.delegateEvents.apply(this, arguments);
         this.$el.on('remove.delegateEvents' + this.cid, this._jqueryRemove);
     },
 
     // A useful remove method to that triggers events.
-    // Notice we emit "close" events, not "remove".
-    close: function() {
-        this.trigger('close:before');
-        this.remove();
-        this.trigger('close');
+    remove: function() {
+        this.trigger('remove:before');
+        this._removeSubViews();
+        Backbone.View.prototype.remove.apply(this, arguments);
+        this.trigger('remove');
     },
 
-    // A called on close:before to remove all our subviews.
-    _close: function() {
-        _.each(this._subViews, function(view) { view.close(); });
+    // A remove helper to clear our subviews.
+    _removeSubViews: function() {
+        _.invoke(this._subViews, 'remove');
     },
-
 
     // Assign a subview to an element in my template.
     // `selector` is a dom selector to assign to.
@@ -87,11 +85,11 @@ $.event.special.remove = {
         }, this);
     },
 
-    // A proxy method to this.close().
+    // A proxy method to this.remove().
     // This is bindAll-ed to the view instance.
-    // Done so that we don't need to bindAll to close().
+    // Done so that we don't need to bindAll to remove().
     _jqueryRemove: function() {
-        this.close();
+        this.remove();
     },
 
     // Loop through the events given, and listen to
@@ -185,7 +183,7 @@ $.event.special.remove = {
     _addModelView: function(model, ModelView) {
         var modelView = new ModelView({model: model});
 
-        // Add this view to our subviews, so we can close
+        // Add this view to our subviews, so we can remove
         // them later.
         this._subViews[modelView.cid] = modelView;
         this.$el.append(modelView.render().el);
@@ -207,7 +205,7 @@ $.event.special.remove = {
         // Cuased be removeOne() trying to remove a model
         // that we haven't added yet.
         if (view) {
-            view.close();
+            view.remove();
 
             // Remove it from our subviews.
             delete this._subViews[view.cid];
