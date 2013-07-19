@@ -71,6 +71,13 @@ module.exports = function(grunt) {
             options: {
                 output: 'docs/'
             }
+        },
+
+        mocha: {
+            browser: ['spec/spec.html'],
+            options: {
+                run: true
+            }
         }
     });
 
@@ -79,8 +86,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-preprocess');
     grunt.loadNpmTasks('grunt-plato');
     grunt.loadNpmTasks('grunt-docco2');
+    grunt.loadNpmTasks('grunt-mocha');
 
     // Default task.
+    grunt.registerTask('test', ['mocha']);
     grunt.registerTask('default', ['jshint', 'preprocess', 'uglify']);
 
 };
