@@ -2,7 +2,7 @@
     "name": "minionette",
     "version": "0.2.1",
     "description": "A Mini Marionette for Backbone.js",
-    "main": "dist/minonette.js",
+    "main": "lib/minonette.js",
     "scripts": {
         "test": "grunt jasmine"
     },

@@ -21,12 +21,12 @@ module.exports = function(grunt) {
         preprocess: {
             build: {
                 files: {
-                    'dist/minionette.js' : 'src/build/minionette.js'
+                    'lib/minionette.js' : 'src/build/minionette.js'
                 }
             },
             amd: {
                 files: {
-                    'dist/amd/minionette.js' : 'src/build/amd.js'
+                    'lib/amd/minionette.js' : 'src/build/amd.js'
                 }
             },
         },
@@ -36,14 +36,14 @@ module.exports = function(grunt) {
                 banner: "<%= meta.banner %>"
             },
             amd : {
-                src : 'dist/amd/minionette.js',
-                dest : 'dist/amd/minionette.min.js',
+                src : 'lib/amd/minionette.js',
+                dest : 'lib/amd/minionette.min.js',
             },
             core : {
-                src : 'dist/minionette.js',
-                dest : 'dist/minionette.min.js',
+                src : 'lib/minionette.js',
+                dest : 'lib/minionette.min.js',
                 options : {
-                    sourceMap : 'dist/minionette.map',
+                    sourceMap : 'lib/minionette.map',
                     sourceMapPrefix : 1,
                 }
             }
