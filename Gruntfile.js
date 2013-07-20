@@ -89,7 +89,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mocha');
 
     // Default task.
-    grunt.registerTask('test', ['mocha']);
-    grunt.registerTask('default', ['jshint', 'preprocess', 'uglify']);
+    grunt.registerTask('test', ['jshint', 'preprocess', 'mocha']);
+    grunt.registerTask('default', ['test', 'docco', 'uglify']);
 
 };
