@@ -11,7 +11,7 @@ require.config({
         'jquery'        : 'support/jquery/jquery',
         'underscore'    : 'support/underscore/underscore',
         'backbone'      : 'support/backbone/backbone',
-        'minionette'    : '../dist/amd/minionette'
+        'minionette'    : '../lib/amd/minionette'
     },
     shim: {
         underscore: {

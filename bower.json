@@ -1,7 +1,7 @@
 {
   "name": "minionette",
   "version": "0.2.1",
-  "main": "dist/minonette.js",
+  "main": "lib/minonette.js",
   "ignore": [
     "**/.*",
     "node_modules",
