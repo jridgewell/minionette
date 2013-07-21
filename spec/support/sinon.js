@@ -1,4 +1,4 @@
-require([
+define([
     'sinon-commonjs',
     'sinon/match', 'sinon/spy',
     'sinon/call', 'sinon/stub',
