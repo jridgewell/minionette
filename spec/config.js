@@ -70,11 +70,3 @@ require.config({
         'underscore'
     ]
 });
-
-// Protect from barfs
-console = window.console || function() {};
-
-mocha.setup('bdd');
-function runMocha() {
-    mocha.run();
-}
