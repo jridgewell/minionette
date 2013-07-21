@@ -6,6 +6,7 @@ define(function(require) {
     window.assert            = chai.assert;
     window.sinonChai         = require('sinon-chai');
     window.jqueryChai        = require('chai-jquery');
+    window.Minionette        = require('minionette');
 
     chai.use(sinonChai);
     chai.use(jqueryChai);
