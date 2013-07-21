@@ -17,6 +17,14 @@
             console = window.console || function() {};
             mocha.setup('bdd');
 
+            // Make sinon clean itself
+            beforeEach(function() {
+                this.sinon = sinon.sandbox.create();
+            });
+            afterEach(function(){
+                this.sinon.restore();
+            });
+
             function runMocha() {
                 mocha.run();
             }
