@@ -7,10 +7,6 @@ define(function(require) {
             this.view.remove();
         });
 
-        it('Exists', function() {
-            expect(Minionette.View).to.not.be.undefined;
-        });
-
         describe("constructor", function() {
             it("calls Backbone.View's constructor", function() {
                 var spy = this.sinon.spy(Backbone, 'View');
