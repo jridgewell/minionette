@@ -7,8 +7,6 @@ define(function(require) {
     window.Minionette        = require('minionette');
 
     window.expect = chai.expect;
-    window.assert = chai.assert;
-    chai.should();
     chai.use(sinonChai);
     chai.use(jqueryChai);
 
