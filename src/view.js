@@ -21,7 +21,7 @@ Minionette.View = Backbone.View.extend({
         Backbone.View.prototype.delegateEvents.apply(this, arguments);
 
         _.bindAll(this, '_jqueryRemove');
-        this.$el.on('remove.delegateEvents' + this.cid, this._jqueryRemove);
+        this.$el.on('remove', this._jqueryRemove);
     },
 
     // A useful remove method to that triggers events.
