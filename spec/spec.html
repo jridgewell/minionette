@@ -29,7 +29,10 @@
                 mocha.run();
             }
             require(['config', 'common'], function() {
-                require(['view_spec'], runMocha);
+                require([
+                    'jquery_spec',
+                    'view_spec',
+                ], runMocha);
             });
         </script>
     </body>
