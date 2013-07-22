@@ -1,4 +1,4 @@
-define(function(require) {
+define(function() {
     describe('Minionette.View', function() {
         beforeEach(function() {
             this.view = new Minionette.View;
