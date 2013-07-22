@@ -1,4 +1,4 @@
-define(function(require) {
+define(function() {
     describe('jQuery Remove Polyfill', function() {
         beforeEach(function() {
             this.element = $('<div />');
