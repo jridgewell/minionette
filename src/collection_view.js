@@ -44,7 +44,7 @@ Minionette.CollectionView = Minionette.View.extend({
         this.trigger('removeOne:before');
 
         var view = this._findSubViewByModel(model);
-        this._removeModelView(view);
+        if (view) { view.remove(); }
 
         this.trigger('removeOne');
     },
@@ -69,19 +69,6 @@ Minionette.CollectionView = Minionette.View.extend({
             ModelView = this.option.ModelView;
         }
         return ModelView;
-    },
-
-    // Remove an individual model's view from this.$el.
-    _removeModelView: function(view) {
-        // Check that view exists first.
-        // Cuased be removeOne() trying to remove a model
-        // that we haven't added yet.
-        if (view) {
-            view.remove();
-
-            // Remove it from our subviews.
-            delete this._subViews[view.cid];
-        }
     },
 
     // Find the view associated with a model from our subviews.

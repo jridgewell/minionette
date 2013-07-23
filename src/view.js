@@ -30,12 +30,13 @@ Minionette.View = Backbone.View.extend({
         Backbone.View.prototype.delegateEvents.apply(this, arguments);
 
         _.bindAll(this, '_jqueryRemove');
-        this.$el.on('remove', this._jqueryRemove);
+        this.$el.on('remove.delegateEvents' + this.cid, this._jqueryRemove);
     },
 
     // A useful remove method to that triggers events.
     remove: function() {
         this.trigger('remove:before');
+        this._removeFromParentView();
         this._removeSubViews();
         Backbone.View.prototype.remove.apply(this, arguments);
         this.trigger('remove');
@@ -86,6 +87,17 @@ Minionette.View = Backbone.View.extend({
         }, this);
     },
 
+    // A remove helper to remove this view from it's parent
+    _removeFromParentView: function() {
+        if (this._parentView) {
+            this._parentView._removeSubView(this);
+        }
+    },
+
+    _removeSubView: function(subView) {
+        delete this._subViews[subView.cid];
+    },
+
     // A remove helper to clear our subviews.
     _removeSubViews: function() {
         _.invoke(this._subViews, 'remove');
@@ -96,6 +108,7 @@ Minionette.View = Backbone.View.extend({
     // us from removing an element that is already removed.
     _jqueryRemove: function() {
         this.trigger('remove:jquery');
+        this._removeFromParentView();
         this.stopListening();
     },
 
