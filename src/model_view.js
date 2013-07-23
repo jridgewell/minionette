@@ -9,7 +9,6 @@ Minionette.ModelView = Minionette.View.extend({
     // The data that is sent into the template function.
     // Override this to provide custom data.
     serializeData: function() {
-        return this.model.attributes;
     },
 
     // A useful default render method.
@@ -24,5 +23,6 @@ Minionette.ModelView = Minionette.View.extend({
         // Listen for render events to reattach subviews.
         this.trigger('render');
         return this;
+        return _.clone(this.model.attributes);
     }
 });
