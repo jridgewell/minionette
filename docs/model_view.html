@@ -96,57 +96,7 @@ Override this to provide custom data.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    serializeData: <span class="keyword">function</span>() {
-        <span class="keyword">return</span> <span class="keyword">this</span>.model.attributes;
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <p>A useful default render method.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    render: <span class="keyword">function</span>() {
-        <span class="keyword">this</span>.trigger(<span class="string">'render:before'</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
-              </div>
-              <p>Detach all our subviews, so they don&#39;t need to be re-rendered.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        _.each(<span class="keyword">this</span>._subViews, <span class="keyword">function</span>(view) { view.$el.detach(); });
-
-        <span class="keyword">this</span>.$el.html(<span class="keyword">this</span>.template(<span class="keyword">this</span>.serializeData()));</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p>Listen for render events to reattach subviews.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.trigger(<span class="string">'render'</span>);
-        <span class="keyword">return</span> <span class="keyword">this</span>;
+        <span class="keyword">return</span> _.clone(<span class="keyword">this</span>.model.attributes);
     }
 });</pre></div></div>
             
