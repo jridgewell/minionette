@@ -10,13 +10,18 @@ Minionette.View = Backbone.View.extend({
         this._listenToEvents(this.collection, this.collectionEvents);
     },
 
+    // The Parent View of this View
+    // Defaults to nothing
+    _parentView: null,
+
     // A default template that will clear this.$el.
     // Override this in a subclass to something useful.
     template: function() { return ''; },
 
-    // The Parent View of this View
-    // Defaults to nothing
-    _parentView: null,
+    // A default function that will have it's return passed
+    // to this.template
+    // Override this in a subclass to something useful.
+    serializeData: function() { return {}; },
 
     // When delegating events, bind this view to jQuery's special remove event.
     // Allows us to clean up the view, even if you remove this.$el with jQuery.
@@ -35,6 +40,20 @@ Minionette.View = Backbone.View.extend({
         Backbone.View.prototype.remove.apply(this, arguments);
         this.trigger('remove');
     },
+
+    // A useful default render method.
+    render: function() {
+        this.trigger('render:before');
+
+        // Detach all our subviews, so they don't need to be re-rendered.
+        _.each(this._subViews, function(view) { view.$el.detach(); });
+
+        this.$el.html(this.template(this.serializeData()));
+
+        // Listen for render events to reattach subviews.
+        this.trigger('render');
+        return this;
+    }
 
     // Assign a subview to an element in my template.
     // `selector` is a dom selector to assign to.
