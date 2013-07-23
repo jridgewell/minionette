@@ -60,7 +60,7 @@ define(function() {
                 });
 
                 it("removes subViews", function() {
-                    var v = new Backbone.View,
+                    var v = new Minionette.View,
                         spy = this.sinon.spy(v, 'remove');
                     this.view._subViews[0] = v;
 
@@ -72,7 +72,7 @@ define(function() {
 
             describe("#assign", function() {
                 beforeEach(function() {
-                    this.subView = new Backbone.View({id: 'subView'});
+                    this.subView = new Minionette.View({id: 'subView'});
                 });
 
                 it("takes a selector and a subView as arguments", function() {
@@ -86,7 +86,7 @@ define(function() {
                 });
 
                 it("takes an object (with keys as selectors and values as subViews) as an argument", function() {
-                    var subView2 = new Backbone.View,
+                    var subView2 = new Minionette.View,
                         subViews = {
                             '.selector': this.subView,
                             '.test': subView2
@@ -115,7 +115,7 @@ define(function() {
                     });
 
                     it("can optionally take a replace param with alternate syntax", function() {
-                        var subView2 = new Backbone.View,
+                        var subView2 = new Minionette.View,
                         subViews = {
                             '.selector': this.subView,
                             '.test': subView2
@@ -134,6 +134,15 @@ define(function() {
             });
 
             describe("#_jqueryRemove", function() {
+                it("fires 'remove:jquery' event", function() {
+                    var spy = this.sinon.spy();
+                    this.view.on('remove:jquery', spy);
+
+                    this.view._jqueryRemove();
+
+                    expect(spy).to.have.been.called;
+                });
+
                 it("is called when jQuery removes $el", function() {
                     var spy = this.sinon.spy(this.view, '_jqueryRemove');
 
@@ -143,7 +152,7 @@ define(function() {
                     expect(spy).to.have.been.called;
                 });
 
-                it("is not called with #undelegateEvents", function() {
+                it("is not called on #undelegateEvents", function() {
                     // Why are we testing this?
                     // With the way jQuery defines special events,
                     // the "remove" event will actually fire whenever we
@@ -153,6 +162,38 @@ define(function() {
 
                     this.view.delegateEvents();
                     this.view.undelegateEvents();
+
+                    expect(spy).to.not.have.been.called;
+                });
+
+                it("is not called on jQuery #detach", function() {
+                    var spy = this.sinon.spy(this.view, '_jqueryRemove');
+
+                    this.view.delegateEvents();
+                    this.view.$el.detach();
+
+                    expect(spy).to.not.have.been.called;
+                });
+
+                it("will not fire event if $el is on the page", function() {
+                    var spy = this.sinon.spy();
+                    this.view.on('remove:jquery', spy);
+                    $(document.body).append(this.view.$el);
+
+                    this.view._jqueryRemove();
+
+                    expect(spy).to.not.have.been.called;
+                });
+
+                it("will not fire event if $el is in a parentView's el", function() {
+                    // TODO: Knows to many implementation details
+                    var subView = new Minionette.View,
+                        spy = this.sinon.spy();
+                    subView.on('remove:jquery', spy);
+                    this.view.$el.append(subView.$el);
+                    subView._parentView = this.view;
+
+                    subView._jqueryRemove();
 
                     expect(spy).to.not.have.been.called;
                 });
