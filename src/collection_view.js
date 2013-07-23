@@ -16,7 +16,8 @@ Minionette.CollectionView = Minionette.View.extend({
         this.trigger('render:before');
 
         // TODO: DocumentFragment
-        this.$el.html(this.template(this.serializeData()));
+        var $el = this.$el.html(this.template(this.serializeData()));
+        this.$el = $(document.createDocumentFragment());
 
         // Collect the ModelView class.
         var ModelView = this._getModelView();
@@ -25,6 +26,8 @@ Minionette.CollectionView = Minionette.View.extend({
         this.collection.each(function(model) {
             this._addModelView(model, ModelView);
         }, this);
+
+        this.$el = $el.append(this.$el);
 
         this.trigger('render');
         return this;
