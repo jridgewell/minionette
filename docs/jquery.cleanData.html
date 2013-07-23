@@ -66,13 +66,13 @@ have been removed and should be cleaned.</p>
             
             <div class="content"><div class='highlight'><pre><span class="keyword">if</span> ($) {
     <span class="keyword">var</span> _cleanData = $.cleanData;
-    $.cleanData = <span class="keyword">function</span>( elems ) {
-        <span class="keyword">for</span> ( <span class="keyword">var</span> i = <span class="number">0</span>, elem; (elem = elems[i]) !== <span class="literal">undefined</span>; i++ ) {
+    $.cleanData = <span class="keyword">function</span>(elems) {
+        _.each(elems, <span class="keyword">function</span>(elem) {
             <span class="keyword">try</span> {
-                $( elem ).triggerHandler( <span class="string">'remove'</span> );
-            } <span class="keyword">catch</span>( e ) {}
-        }
-        _cleanData( elems );
+                $(elem).triggerHandler(<span class="string">'remove'</span>);
+            } <span class="keyword">catch</span>(e) {}
+        });
+        _cleanData(elems);
     };
 }</pre></div></div>
             

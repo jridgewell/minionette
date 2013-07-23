@@ -94,7 +94,8 @@
             <div class="content"><div class='highlight'><pre>    collectionEvents: {
         <span class="string">'add'</span>: <span class="string">'addOne'</span>,
         <span class="string">'remove'</span>: <span class="string">'removeOne'</span>,
-        <span class="string">'reset'</span>: <span class="string">'render'</span>
+        <span class="string">'reset'</span>: <span class="string">'render'</span>,
+        <span class="string">'sort'</span>: <span class="string">'render'</span>
     },</pre></div></div>
             
         </li>
@@ -113,7 +114,7 @@
             <div class="content"><div class='highlight'><pre>    render: <span class="keyword">function</span>() {
         <span class="keyword">this</span>.trigger(<span class="string">'render:before'</span>);
 
-        <span class="keyword">this</span>.$el.html(<span class="keyword">this</span>.template(<span class="keyword">this</span>.collection));</pre></div></div>
+        <span class="keyword">var</span> $el = <span class="keyword">this</span>.$el.html(<span class="keyword">this</span>.template(<span class="keyword">this</span>.serializeData()));</pre></div></div>
             
         </li>
         
@@ -124,11 +125,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Collect the ModelView class.</p>
+              <p>Use a DocumentFragment to speed up #render</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> ModelView = <span class="keyword">this</span>._getModelView();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.$el = $(document.createDocumentFragment());</pre></div></div>
             
         </li>
         
@@ -139,17 +140,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>Loop through all our models, and build their view.</p>
+              <p>Collect the ModelView class.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.collection.each(<span class="keyword">function</span>(model) {
-            <span class="keyword">this</span>._addModelView(model, ModelView);
-        }, <span class="keyword">this</span>);
-
-        <span class="keyword">this</span>.trigger(<span class="string">'render'</span>);
-        <span class="keyword">return</span> <span class="keyword">this</span>;
-    },</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> ModelView = <span class="keyword">this</span>._getModelView();</pre></div></div>
             
         </li>
         
@@ -160,12 +155,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
-              <p>Add an individual model&#39;s view to this.$el.</p>
+              <p>Loop through all our models, and build their view.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    addOne: <span class="keyword">function</span>(model) {
-        <span class="keyword">this</span>.trigger(<span class="string">'addOne:before'</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.collection.each(<span class="keyword">function</span>(model) {
+            <span class="keyword">this</span>._addModelView(model, ModelView);
+        }, <span class="keyword">this</span>);</pre></div></div>
             
         </li>
         
@@ -176,14 +172,15 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>Collect the ModelView class.</p>
+              <p>Append the DocumentFragment to the rendered template,
+and set that as this.$el</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> ModelView = <span class="keyword">this</span>._getModelView();
-        <span class="keyword">this</span>._addModelView(model, ModelView);
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.$el = $el.append(<span class="keyword">this</span>.$el);
 
-        <span class="keyword">this</span>.trigger(<span class="string">'addOne'</span>);
+        <span class="keyword">this</span>.trigger(<span class="string">'render'</span>);
+        <span class="keyword">return</span> <span class="keyword">this</span>;
     },</pre></div></div>
             
         </li>
@@ -195,18 +192,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Remove an individual model&#39;s view from this.$el.</p>
+              <p>Add an individual model&#39;s view to this.$el.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    removeOne: <span class="keyword">function</span>(model) {
-        <span class="keyword">this</span>.trigger(<span class="string">'removeOne:before'</span>);
-
-        <span class="keyword">var</span> view = <span class="keyword">this</span>._findSubViewByModel(model);
-        <span class="keyword">this</span>._removeModelView(view);
-
-        <span class="keyword">this</span>.trigger(<span class="string">'removeOne'</span>);
-    },</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    addOne: <span class="keyword">function</span>(model) {
+        <span class="keyword">this</span>.trigger(<span class="string">'addOne:before'</span>);</pre></div></div>
             
         </li>
         
@@ -217,12 +208,16 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>Add an individual model&#39;s view to this.$el.</p>
+              <p>Collect the ModelView class.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    _addModelView: <span class="keyword">function</span>(model, ModelView) {
-        <span class="keyword">var</span> modelView = <span class="keyword">new</span> ModelView({model: model});</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> ModelView = <span class="keyword">this</span>._getModelView(),
+            view = <span class="keyword">this</span>._addModelView(model, ModelView);
+
+        <span class="keyword">this</span>.trigger(<span class="string">'addOne'</span>);
+        <span class="keyword">return</span> view;
+    },</pre></div></div>
             
         </li>
         
@@ -233,15 +228,18 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <p>Add this view to our subviews, so we can remove
-them later.</p>
+              <p>Remove an individual model&#39;s view from this.$el.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._subViews[modelView.cid] = modelView;
-        modelView._parentView = <span class="keyword">this</span>;
+            <div class="content"><div class='highlight'><pre>    removeOne: <span class="keyword">function</span>(model) {
+        <span class="keyword">this</span>.trigger(<span class="string">'removeOne:before'</span>);
 
-        <span class="keyword">this</span>.$el.append(modelView.render().el);
+        <span class="keyword">var</span> view = <span class="keyword">this</span>._findSubViewByModel(model);
+        <span class="keyword">if</span> (view) { view.remove(); }
+
+        <span class="keyword">this</span>.trigger(<span class="string">'removeOne'</span>);
+        <span class="keyword">return</span> view;
     },</pre></div></div>
             
         </li>
@@ -253,18 +251,12 @@ them later.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Find the correct ModelView to use.
-Prioritizes the one passed at initialization.</p>
+              <p>Add an individual model&#39;s view to this.$el.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    _getModelView: <span class="keyword">function</span>() {
-        <span class="keyword">var</span> ModelView = <span class="keyword">this</span>.ModelView;
-        <span class="keyword">if</span> (<span class="keyword">this</span>.options &amp;&amp; <span class="keyword">this</span>.options.ModelView) {
-            ModelView = <span class="keyword">this</span>.option.ModelView;
-        }
-        <span class="keyword">return</span> ModelView;
-    },</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    _addModelView: <span class="keyword">function</span>(model, ModelView) {
+        <span class="keyword">var</span> modelView = <span class="keyword">new</span> ModelView({model: model});</pre></div></div>
             
         </li>
         
@@ -275,11 +267,17 @@ Prioritizes the one passed at initialization.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>Remove an individual model&#39;s view from this.$el.</p>
+              <p>Add this view to our subviews, so we can remove
+them later.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    _removeModelView: <span class="keyword">function</span>(view) {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._subViews[modelView.cid] = modelView;
+        modelView._parentView = <span class="keyword">this</span>;
+
+        <span class="keyword">this</span>.$el.append(modelView.render().el);
+        <span class="keyword">return</span> modelView;
+    },</pre></div></div>
             
         </li>
         
@@ -290,14 +288,18 @@ Prioritizes the one passed at initialization.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Check that view exists first.
-Cuased be removeOne() trying to remove a model
-that we haven&#39;t added yet.</p>
+              <p>Find the correct ModelView to use.
+Prioritizes the one passed at initialization.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> (view) {
-            view.remove();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    _getModelView: <span class="keyword">function</span>() {
+        <span class="keyword">var</span> ModelView = <span class="keyword">this</span>.ModelView;
+        <span class="keyword">if</span> (<span class="keyword">this</span>.options &amp;&amp; <span class="keyword">this</span>.options.ModelView) {
+            ModelView = <span class="keyword">this</span>.options.ModelView;
+        }
+        <span class="keyword">return</span> ModelView;
+    },</pre></div></div>
             
         </li>
         
@@ -307,23 +309,6 @@ that we haven&#39;t added yet.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
-              </div>
-              <p>Remove it from our subviews.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            <span class="keyword">delete</span> <span class="keyword">this</span>._subViews[view.cid];
-        }
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-16">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>Find the view associated with a model from our subviews.</p>
 
