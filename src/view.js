@@ -14,6 +14,10 @@ Minionette.View = Backbone.View.extend({
     // Override this in a subclass to something useful.
     template: function() { return ''; },
 
+    // The Parent View of this View
+    // Defaults to nothing
+    _parentView: null,
+
     // When delegating events, bind this view to jQuery's special remove event.
     // Allows us to clean up the view, even if you remove this.$el with jQuery.
     // http://blog.alexmaccaw.com/jswebapps-memory-management
