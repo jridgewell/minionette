@@ -53,7 +53,8 @@ module.exports = function(grunt) {
             options: {
                 jshintrc : '.jshintrc'
             },
-            minionette : [ 'src/*.js' ]
+            minionette : [ 'src/*.js' ],
+            test : [ 'spec/*.js', 'spec/specs/*.js' ],
         },
 
         plato: {
@@ -89,7 +90,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mocha');
 
     // Default task.
-    grunt.registerTask('test', ['jshint', 'preprocess', 'mocha']);
+    grunt.registerTask('lint-test', ['jshint:test']);
+    grunt.registerTask('test', ['jshint:minionette', 'preprocess', 'mocha']);
     grunt.registerTask('default', ['test', 'docco', 'uglify']);
 
 };
