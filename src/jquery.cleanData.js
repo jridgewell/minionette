@@ -3,12 +3,12 @@
 // have been removed and should be cleaned.
 if ($) {
     var _cleanData = $.cleanData;
-    $.cleanData = function( elems ) {
-        for ( var i = 0, elem; (elem = elems[i]) !== undefined; i++ ) {
+    $.cleanData = function(elems) {
+        _.each(elems, function(elem) {
             try {
-                $( elem ).triggerHandler( 'remove' );
-            } catch( e ) {}
-        }
-        _cleanData( elems );
+                $(elem).triggerHandler('remove');
+            } catch(e) {}
+        });
+        _cleanData(elems);
     };
 }
