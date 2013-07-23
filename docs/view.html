@@ -24,8 +24,8 @@
               </a>
             
               
-              <a class="source" href="jquery.event.special.remove.html">
-                jquery.event.special.remove.js
+              <a class="source" href="jquery.cleanData.html">
+                jquery.cleanData.js
               </a>
             
               
@@ -74,21 +74,6 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Done so we don&#39;t bindAll to standard methods.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        _.bindAll(<span class="keyword">this</span>, <span class="string">'_jqueryRemove'</span>, <span class="string">'_remove'</span>);</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
-              </div>
               <p>Keep track of our subviews.</p>
 
             </div>
@@ -98,11 +83,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-3">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
               <p>Have the view listenTo the model and collection.</p>
 
@@ -115,11 +100,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-4">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>A default template that will clear this.$el.
 Override this in a subclass to something useful.</p>
@@ -127,6 +112,22 @@ Override this in a subclass to something useful.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    template: <span class="keyword">function</span>() { <span class="keyword">return</span> <span class="string">''</span>; },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>The Parent View of this View
+Defaults to nothing</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _parentView: <span class="literal">null</span>,</pre></div></div>
             
         </li>
         
@@ -145,7 +146,9 @@ Allows us to clean up the view, even if you remove this.$el with jQuery.
             
             <div class="content"><div class='highlight'><pre>    delegateEvents: <span class="keyword">function</span>() {
         Backbone.View.prototype.delegateEvents.apply(<span class="keyword">this</span>, arguments);
-        <span class="keyword">this</span>.$el.on(<span class="string">'remove.delegateEvents'</span> + <span class="keyword">this</span>.cid, <span class="keyword">this</span>._jqueryRemove);
+
+        _.bindAll(<span class="keyword">this</span>, <span class="string">'_jqueryRemove'</span>);
+        <span class="keyword">this</span>.$el.on(<span class="string">'remove'</span>, <span class="keyword">this</span>._jqueryRemove);
     },</pre></div></div>
             
         </li>
@@ -177,23 +180,6 @@ Allows us to clean up the view, even if you remove this.$el with jQuery.
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <p>A remove helper to clear our subviews.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    _removeSubViews: <span class="keyword">function</span>() {
-        _.invoke(<span class="keyword">this</span>._subViews, <span class="string">'remove'</span>);
-    },</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-9">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
-              </div>
               <p>Assign a subview to an element in my template.
 <code>selector</code> is a dom selector to assign to.
 <code>view</code> is the subview to assign the selector to.
@@ -219,6 +205,7 @@ Alternate syntax by passing in an object for selector.
 
         _.each(selectors, <span class="function"><span class="keyword">function</span> <span class="params">(view, selector)</span> {</span>
             <span class="keyword">this</span>._subViews[view.cid] = view;
+            view._parentView = <span class="keyword">this</span>;
             <span class="keyword">if</span> (replace) {
                 <span class="keyword">this</span>.$(selector).replaceWith(view.el);
             } <span class="keyword">else</span> {
@@ -230,20 +217,38 @@ Alternate syntax by passing in an object for selector.
         </li>
         
         
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>A remove helper to clear our subviews.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _removeSubViews: <span class="keyword">function</span>() {
+        _.invoke(<span class="keyword">this</span>._subViews, <span class="string">'remove'</span>);
+    },</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-10">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>A proxy method to this.remove().
-This is bindAll-ed to the view instance.
-Done so that we don&#39;t need to bindAll to remove().</p>
+              <p>Does the same thing as this.remove(), without
+actually removing the element. Done to prevent
+us from removing an element that is already removed.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>    _jqueryRemove: <span class="keyword">function</span>() {
-        <span class="keyword">this</span>.remove();
+        <span class="keyword">this</span>.trigger(<span class="string">'remove:jquery'</span>);
+        <span class="keyword">this</span>.stopListening();
     },</pre></div></div>
             
         </li>
@@ -261,6 +266,7 @@ entity&#39;s event.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    _listenToEvents: <span class="keyword">function</span>(entity, events) {
+        <span class="keyword">if</span> (!entity) { <span class="keyword">return</span>; }
         <span class="keyword">for</span> (<span class="keyword">var</span> event <span class="keyword">in</span> events) {
             <span class="keyword">var</span> method = events[event];
             <span class="keyword">if</span> (!_.isFunction(method)) { method = <span class="keyword">this</span>[method]; }

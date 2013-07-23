@@ -24,8 +24,8 @@
               </a>
             
               
-              <a class="source" href="jquery.event.special.remove.html">
-                jquery.event.special.remove.js
+              <a class="source" href="jquery.cleanData.html">
+                jquery.cleanData.js
               </a>
             
               
@@ -239,6 +239,8 @@ them later.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._subViews[modelView.cid] = modelView;
+        modelView._parentView = <span class="keyword">this</span>;
+
         <span class="keyword">this</span>.$el.append(modelView.render().el);
     },</pre></div></div>
             
