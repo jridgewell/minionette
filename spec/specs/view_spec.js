@@ -1,8 +1,8 @@
 define(function() {
     describe('Minionette.View', function() {
         beforeEach(function() {
-            this.view = new Minionette.View;
-        })
+            this.view = new Minionette.View();
+        });
         afterEach(function() {
             this.view.remove();
         });
@@ -11,13 +11,13 @@ define(function() {
             it("calls Backbone.View's constructor", function() {
                 var spy = this.sinon.spy(Backbone, 'View');
 
-                new Minionette.View;
+                new Minionette.View();
 
                 expect(spy).to.have.been.called;
             });
 
             it("initializes _subViews", function() {
-                expect(this.view._subViews).to.not.be.undefined;
+                expect(this.view._subViews).to.be.defined;
             });
 
             describe("Model Events", function() {
@@ -28,12 +28,13 @@ define(function() {
                             'change': this.spy
                         }
                     });
-                    this.model = new Backbone.Model;
+                    this.model = new Backbone.Model();
                 });
 
                 it("listens for model events", function() {
                     var view = new this.ModelEventTest({model: this.model});
 
+                    view.noop;
                     this.model.trigger('change');
 
                     expect(this.spy).to.have.been.called;
@@ -48,12 +49,13 @@ define(function() {
                             'change': this.spy
                         }
                     });
-                    this.collection = new Backbone.Collection;
+                    this.collection = new Backbone.Collection();
                 });
 
                 it("listens for collection events", function() {
                     var view = new this.CollectionEventTest({collection: this.collection});
 
+                    view.noop;
                     this.collection.trigger('change');
 
                     expect(this.spy).to.have.been.called;
@@ -64,7 +66,8 @@ define(function() {
 
         describe("instances", function() {
             it("creates #template function", function() {
-                expect(this.view.template).to.be.a.function;
+                expect(this.view.template).to.be.defined;
+                expect(this.view.template()).to.be.defined;
             });
 
             describe("#delegateEvents", function() {
@@ -97,7 +100,7 @@ define(function() {
                 });
 
                 it("removes subViews", function() {
-                    var v = new Minionette.View,
+                    var v = new Minionette.View(),
                         spy = this.sinon.spy(v, 'remove');
                     this.view._subViews[0] = v;
 
@@ -131,13 +134,13 @@ define(function() {
                     this.view.assign(this.selector, this.subView, true);
 
                     expect(this.spy).to.not.have.been.called;
-                    expect(this.view.$(this.subView.el).get(0)).to.not.be.undefined;
+                    expect(this.view.$(this.subView.el).get(0)).to.be.defined;
                 });
 
 
                 describe("alternate syntax", function() {
                     beforeEach(function() {
-                        this.subView2 = new Minionette.View;
+                        this.subView2 = new Minionette.View();
                         this.subViews = {'.test': this.subView2};
                         this.subViews[this.selector] = this.subView;
                         this.spy2 = this.sinon.spy(this.subView2, 'setElement');
