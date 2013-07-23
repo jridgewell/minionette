@@ -95,7 +95,7 @@ define(function() {
 
                     this.view.$el.trigger('remove');
 
-                    expect(spy).to.have.been.called;
+                    expect(spy).to.not.have.been.called;
                 });
             });
 
