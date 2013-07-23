@@ -92,6 +92,6 @@ module.exports = function(grunt) {
     // Default task.
     grunt.registerTask('lint-test', ['jshint:test']);
     grunt.registerTask('test', ['jshint:minionette', 'preprocess', 'mocha']);
-    grunt.registerTask('default', ['test', 'docco', 'uglify']);
+    grunt.registerTask('default', ['test', 'uglify', 'docco']);
 
 };
