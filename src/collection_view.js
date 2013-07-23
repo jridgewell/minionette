@@ -56,6 +56,8 @@ Minionette.CollectionView = Minionette.View.extend({
         // Add this view to our subviews, so we can remove
         // them later.
         this._subViews[modelView.cid] = modelView;
+        modelView._parentView = this;
+
         this.$el.append(modelView.render().el);
     },
 
