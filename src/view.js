@@ -83,6 +83,7 @@ Minionette.View = Backbone.View.extend({
     // Loop through the events given, and listen to
     // entity's event.
     _listenToEvents: function(entity, events) {
+        if (!entity) { return; }
         for (var event in events) {
             var method = events[event];
             if (!_.isFunction(method)) { method = this[method]; }
