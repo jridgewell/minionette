@@ -2,7 +2,7 @@ define(function() {
     describe('Minionette.CollectionView', function() {
         describe("instances", function() {
             beforeEach(function() {
-                this.collection = new Backbone.Collection;
+                this.collection = new Backbone.Collection();
                 this.view = new Minionette.CollectionView({collection: this.collection});
             });
 

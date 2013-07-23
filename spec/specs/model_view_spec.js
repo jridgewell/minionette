@@ -2,7 +2,7 @@ define(function() {
     describe('Minionette.ModelView', function() {
         describe("instances", function() {
             beforeEach(function() {
-                this.model = new Backbone.Model;
+                this.model = new Backbone.Model();
                 this.view = new Minionette.ModelView({model: this.model});
             });
 
@@ -42,8 +42,8 @@ define(function() {
                 });
 
                 it("detaches subViews before emptying $el", function() {
-                    var subView = new Minionette.View,
-                    spy = this.sinon.spy();
+                    var subView = new Minionette.View(),
+                        spy = this.sinon.spy();
                     this.view.$el.append('<div id="test" />');
                     this.view.assign('#test', subView);
                     subView.$el.on('click', spy);
@@ -60,7 +60,7 @@ define(function() {
                     serializeData = _.uniqueId;
                     this.view.serializeData = function() {
                         return serializeData;
-                    }
+                    };
 
                     this.view.render();
 
@@ -72,7 +72,7 @@ define(function() {
                     template = _.uniqueId;
                     this.view.template = function() {
                         return template;
-                    }
+                    };
 
                     this.view.render();
 
@@ -83,7 +83,7 @@ define(function() {
                     var ret = this.view.render();
 
                     expect(ret).to.equal(this.view);
-                })
+                });
             });
         });
     });

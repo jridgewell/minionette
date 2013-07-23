@@ -30,7 +30,7 @@ require.config({
         'sinon/collection'             : 'support/sinon/lib/sinon/collection',
         'sinon/sandbox'                : 'support/sinon/lib/sinon/sandbox',
         'sinon/test'                   : 'support/sinon/lib/sinon/test',
-        'sinon/test_case'              : 'support/sinon/lib/sinon/test_case',
+        'sinon/test_case'              : 'support/sinon/lib/sinon/test_case'
     },
     shim: {
         underscore: {
