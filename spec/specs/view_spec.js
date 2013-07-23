@@ -20,8 +20,45 @@ define(function() {
                 expect(this.view._subViews).to.not.be.undefined;
             });
 
-            xit("listens for model events", function() {});
-            xit("listens for collection events", function() {});
+            describe("Model Events", function() {
+                before(function() {
+                    this.spy = this.sinon.spy();
+                    this.ModelEventTest = Minionette.View.extend({
+                        modelEvents: {
+                            'change': this.spy
+                        }
+                    });
+                    this.model = new Backbone.Model;
+                });
+
+                it("listens for model events", function() {
+                    var view = new this.ModelEventTest({model: this.model});
+
+                    this.model.trigger('change');
+
+                    expect(this.spy).to.have.been.called;
+                });
+            });
+
+            describe("Collection Events", function() {
+                before(function() {
+                    this.spy = this.sinon.spy();
+                    this.CollectionEventTest = Minionette.View.extend({
+                        collectionEvents: {
+                            'change': this.spy
+                        }
+                    });
+                    this.collection = new Backbone.Collection;
+                });
+
+                it("listens for collection events", function() {
+                    var view = new this.CollectionEventTest({collection: this.collection});
+
+                    this.collection.trigger('change');
+
+                    expect(this.spy).to.have.been.called;
+                });
+            });
 
         });
 
