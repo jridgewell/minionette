@@ -85,6 +85,15 @@ define(function() {
                     expect(spy).to.have.been.calledWith(this.view.$(selector));
                 });
 
+                it("sets the subView's _parentView to this", function() {
+                    var selector = '.selector';
+                    this.view.$el.append('<div class="selector" />');
+
+                    this.view.assign(selector, this.subView);
+
+                    expect(this.subView._parentView).to.equal(this.view);
+                });
+
                 it("takes an object (with keys as selectors and values as subViews) as an argument", function() {
                     var subView2 = new Minionette.View,
                         subViews = {
