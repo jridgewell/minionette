@@ -78,6 +78,25 @@ define(function() {
 
                     expect(spy).to.have.been.called;
                 });
+
+                it("sets #_jqueryRemove listener on $el 'remove' event", function() {
+                    var spy = this.sinon.spy(this.view, '_jqueryRemove')
+                    this.view.delegateEvents();
+
+                    this.view.$el.trigger('remove');
+
+                    expect(spy).to.have.been.called;
+                });
+
+                it("sets #_jqueryRemove listener that is compatible with #undelegateEvents", function() {
+                    var spy = this.sinon.spy(this.view, '_jqueryRemove')
+                    this.view.delegateEvents();
+                    this.view.undelegateEvents();
+
+                    this.view.$el.trigger('remove');
+
+                    expect(spy).to.have.been.called;
+                });
             });
 
             describe("#remove", function() {
@@ -99,7 +118,18 @@ define(function() {
                     expect(spy).to.have.been.called;
                 });
 
+                it("removes from parent view", function() {
+                    // TODO: Knows too much
+                    var parentView = new Minionette.View();
+                    parentView._subViews[this.view.cid] = this.view;
+
+                    this.view.remove();
+
+                    expect(parentView._subViews[this.view.cid]).to.not.be.defined;
+                });
+
                 it("removes subViews", function() {
+                    // TODO: knows too much
                     var v = new Minionette.View(),
                         spy = this.sinon.spy(v, 'remove');
                     this.view._subViews[0] = v;
@@ -238,27 +268,22 @@ define(function() {
                     expect(spy).to.have.been.called;
                 });
 
-                it("is not called on #undelegateEvents", function() {
-                    // Why are we testing this?
-                    // With the way jQuery defines special events,
-                    // the "remove" event will actually fire whenever we
-                    // remove the event handler from the DOM element, calling
-                    // the callback. We don't want that.
-                    var spy = this.sinon.spy(this.view, '_jqueryRemove');
+                it("Removes from parent view", function() {
+                    // TODO: Knows too much
+                    var parentView = new Minionette.View();
+                    parentView._subViews[this.view.cid] = this.view;
 
-                    this.view.delegateEvents();
-                    this.view.undelegateEvents();
+                    this.view._jqueryRemove();
 
-                    expect(spy).to.not.have.been.called;
+                    expect(parentView._subViews[this.view.cid]).to.not.be.defined;
                 });
 
-                it("is not called on jQuery #detach", function() {
-                    var spy = this.sinon.spy(this.view, '_jqueryRemove');
+                it("stops listening", function() {
+                    var spy = this.sinon.spy(this.view, 'stopListening');
 
-                    this.view.delegateEvents();
-                    this.view.$el.detach();
+                    this.view._jqueryRemove();
 
-                    expect(spy).to.not.have.been.called;
+                    expect(spy).to.have.been.called;
                 });
             });
         });
