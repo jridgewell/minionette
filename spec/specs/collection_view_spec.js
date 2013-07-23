@@ -48,18 +48,22 @@ define(function() {
                 });
 
                 it("appends a modelView for each model in the collection", function() {
-                    // TODO: Shouldn't know about #_addModelView
                     var models = [
-                        new Backbone.Model(),
-                        new Backbone.Model(),
-                        new Backbone.Model()
+                        new Backbone.Model({id: _.uniqueId()}),
+                        new Backbone.Model({id: _.uniqueId()}),
+                        new Backbone.Model({id: _.uniqueId()})
                     ];
+                    var view = new (Minionette.CollectionView.extend({
+                        ModelView: Minionette.ModelView.extend({
+                            template: function(model) {return '<p>' + model.id + '</p>';}
+                        })
+                    }))({collection: this.collection});
                     this.collection.add(models);
-                    var spy = this.sinon.spy(this.view, '_addModelView');
+                    view.$el.empty();
 
-                    this.view.render();
+                    view.render();
 
-                    expect(spy).to.be.calledThrice;
+                    expect(view.$el.text()).to.equal(_.pluck(models, 'id').join(''));
                 });
             });
 
