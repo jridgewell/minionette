@@ -73,72 +73,54 @@ define(function() {
             describe("#assign", function() {
                 beforeEach(function() {
                     this.subView = new Minionette.View({id: 'subView'});
+                    this.selector = '.selector';
+                    this.spy = this.sinon.spy(this.subView, 'setElement');
+                    this.view.$el.append('<div class="selector" />');
                 });
 
                 it("takes a selector and a subView as arguments", function() {
-                    var selector = '.selector',
-                        spy = this.sinon.spy(this.subView, 'setElement');
-                    this.view.$el.append('<div class="selector" />');
+                    this.view.assign(this.selector, this.subView);
 
-                    this.view.assign(selector, this.subView);
-
-                    expect(spy).to.have.been.calledWith(this.view.$(selector));
+                    expect(this.spy).to.have.been.calledWith(this.view.$(this.selector));
                 });
 
                 it("sets the subView's _parentView to this", function() {
-                    var selector = '.selector';
-                    this.view.$el.append('<div class="selector" />');
-
-                    this.view.assign(selector, this.subView);
+                    this.view.assign(this.selector, this.subView);
 
                     expect(this.subView._parentView).to.equal(this.view);
                 });
 
-                it("takes an object (with keys as selectors and values as subViews) as an argument", function() {
-                    var subView2 = new Minionette.View,
-                        subViews = {
-                            '.selector': this.subView,
-                            '.test': subView2
-                        },
-                        spy = this.sinon.spy(this.subView, 'setElement'),
-                        spy2 = this.sinon.spy(subView2, 'setElement');
-                    this.view.$el.append('<div class="selector" />');
-                    this.view.$el.append('<div class="test" />');
+                it("can optionally take a replace param", function() {
+                    this.view.assign(this.selector, this.subView, true);
 
-                    this.view.assign(subViews);
-
-                    expect(spy).to.have.been.calledWith(this.view.$('.selector'));
-                    expect(spy2).to.have.been.calledWith(this.view.$('.test'));
+                    expect(this.spy).to.not.have.been.called;
+                    expect(this.view.$(this.subView.el).get(0)).to.not.be.undefined;
                 });
 
-                describe("replace param", function() {
-                    it("can optionally take a replace param", function() {
-                        var selector = '.selector',
-                        spy = this.sinon.spy(this.subView, 'setElement');
-                        this.view.$el.append('<div class="selector" />');
 
-                        this.view.assign(selector, this.subView, true);
-
-                        expect(spy).to.not.have.been.called;
-                        expect(this.view.$(this.subView.el).get(0)).to.not.be.undefined;
-                    });
-
-                    it("can optionally take a replace param with alternate syntax", function() {
-                        var subView2 = new Minionette.View,
-                        subViews = {
-                            '.selector': this.subView,
-                            '.test': subView2
-                        },
-                        spy = this.sinon.spy(this.subView, 'setElement'),
-                        spy2 = this.sinon.spy(subView2, 'setElement');
-                        this.view.$el.append('<div class="selector" />');
+                describe("alternate syntax", function() {
+                    beforeEach(function() {
+                        this.subView2 = new Minionette.View;
+                        this.subViews = {'.test': this.subView2};
+                        this.subViews[this.selector] = this.subView;
+                        this.spy2 = this.sinon.spy(this.subView2, 'setElement');
                         this.view.$el.append('<div class="test" />');
-
-                        this.view.assign(subViews, true);
-
-                        expect(spy).to.not.have.been.calledWith(this.view.$('.selector'));
-                        expect(spy2).to.not.have.been.calledWith(this.view.$('.test'));
                     });
+
+                    it("takes an object (with keys as selectors and values as subViews) as an argument", function() {
+                        this.view.assign(this.subViews);
+
+                        expect(this.spy).to.have.been.calledWith(this.view.$('.selector'));
+                        expect(this.spy2).to.have.been.calledWith(this.view.$('.test'));
+                    });
+
+                    it("can optionally take a replace param", function() {
+                        this.view.assign(this.subViews, true);
+
+                        expect(this.spy).to.not.have.been.calledWith(this.view.$('.selector'));
+                        expect(this.spy2).to.not.have.been.calledWith(this.view.$('.test'));
+                    });
+
                 });
             });
 
