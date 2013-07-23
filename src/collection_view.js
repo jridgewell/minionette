@@ -7,14 +7,16 @@ Minionette.CollectionView = Minionette.View.extend({
     collectionEvents: {
         'add': 'addOne',
         'remove': 'removeOne',
-        'reset': 'render'
+        'reset': 'render',
+        'sort': 'render'
     },
 
     // A default useful render function.
     render: function() {
         this.trigger('render:before');
 
-        this.$el.html(this.template(this.collection));
+        // TODO: DocumentFragment
+        this.$el.html(this.template(this.serializeData()));
 
         // Collect the ModelView class.
         var ModelView = this._getModelView();
@@ -33,10 +35,11 @@ Minionette.CollectionView = Minionette.View.extend({
         this.trigger('addOne:before');
 
         // Collect the ModelView class.
-        var ModelView = this._getModelView();
-        this._addModelView(model, ModelView);
+        var ModelView = this._getModelView(),
+            view = this._addModelView(model, ModelView);
 
         this.trigger('addOne');
+        return view;
     },
 
     // Remove an individual model's view from this.$el.
@@ -47,6 +50,7 @@ Minionette.CollectionView = Minionette.View.extend({
         if (view) { view.remove(); }
 
         this.trigger('removeOne');
+        return view;
     },
 
     // Add an individual model's view to this.$el.
@@ -59,6 +63,7 @@ Minionette.CollectionView = Minionette.View.extend({
         modelView._parentView = this;
 
         this.$el.append(modelView.render().el);
+        return modelView;
     },
 
     // Find the correct ModelView to use.
@@ -66,7 +71,7 @@ Minionette.CollectionView = Minionette.View.extend({
     _getModelView: function() {
         var ModelView = this.ModelView;
         if (this.options && this.options.ModelView) {
-            ModelView = this.option.ModelView;
+            ModelView = this.options.ModelView;
         }
         return ModelView;
     },
