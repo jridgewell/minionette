@@ -5,7 +5,7 @@ var Minionette = (function(global, _, $, Backbone) {
     var Minionette = {};
     Backbone.Minionette = Minionette;
 
-    // @include ../jquery.event.special.remove.js
+    // @include ../jquery.cleanData.js
 
     // @include ../view.js
     // @include ../model_view.js
