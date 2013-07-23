@@ -36,11 +36,6 @@ Minionette.View = Backbone.View.extend({
         this.trigger('remove');
     },
 
-    // A remove helper to clear our subviews.
-    _removeSubViews: function() {
-        _.invoke(this._subViews, 'remove');
-    },
-
     // Assign a subview to an element in my template.
     // `selector` is a dom selector to assign to.
     // `view` is the subview to assign the selector to.
@@ -63,12 +58,18 @@ Minionette.View = Backbone.View.extend({
 
         _.each(selectors, function (view, selector) {
             this._subViews[view.cid] = view;
+            view._parentView = this;
             if (replace) {
                 this.$(selector).replaceWith(view.el);
             } else {
                 view.setElement(this.$(selector)).render();
             }
         }, this);
+    },
+
+    // A remove helper to clear our subviews.
+    _removeSubViews: function() {
+        _.invoke(this._subViews, 'remove');
     },
 
     // Does the same thing as this.remove(), without
