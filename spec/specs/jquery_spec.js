@@ -7,34 +7,34 @@ define(function() {
             this.element.remove();
         });
 
+        it("doesn't trigger on jQuery#off", function() {
+            var spy = this.sinon.spy();
+            this.element.on('remove', spy)
+
+            this.element.off('remove');
+
+            expect(spy).to.not.have.been.called;
+        });
+
+        it("doesn't trigger on jQuery#detach", function() {
+            var spy = this.sinon.spy();
+            this.element.on('remove', spy)
+
+            this.element.detach();
+
+            expect(spy).to.not.have.been.called;
+        });
+
         describe("when not nested", function() {
             beforeEach(function() {
                 this.spy = this.sinon.spy();
                 this.element.on('remove', this.spy);
             });
 
-            describe("when on the page", function() {
-                it("triggers on jQuery#remove", function() {
-                    $(document.body).append(this.element);
+            it("triggers on jQuery#remove", function() {
+                this.element.remove();
 
-                    this.element.remove();
-
-                    expect(this.spy).to.have.been.called;
-                });
-            });
-
-            describe("when not on the page", function() {
-                it("triggers on jQuery#remove", function() {
-                    this.element.remove();
-
-                    expect(this.spy).to.have.been.called;
-                });
-            });
-
-            it("doesn't trigger on jQuery#off", function() {
-                this.element.off('remove');
-
-                expect(this.spy).to.not.have.been.called;
+                expect(this.spy).to.have.been.called;
             });
         });
 
@@ -46,36 +46,16 @@ define(function() {
                 this.nestedElement.on('remove', this.spy);
             });
 
-            describe("when on the page", function() {
-                it("triggers on jQuery#remove on parent element", function() {
-                    $(document.body).append(this.element);
+            it("triggers on jQuery#remove on parent element", function() {
+                this.element.remove();
 
-                    this.element.remove();
-
-                    expect(this.spy).to.have.been.called;
-                });
-
-                it("triggers on jQuery#html on parent element", function() {
-                    $(document.body).append(this.element);
-
-                    this.element.html('');
-
-                    expect(this.spy).to.have.been.called;
-                });
+                expect(this.spy).to.have.been.called;
             });
 
-            describe("when not on the page", function() {
-                it("triggers on jQuery#remove on parent element", function() {
-                    this.element.remove();
+            it("triggers on jQuery#html on parent element", function() {
+                this.element.html('');
 
-                    expect(this.spy).to.have.been.called;
-                });
-
-                it("triggers on jQuery#html on parent element", function() {
-                    this.element.html('');
-
-                    expect(this.spy).to.have.been.called;
-                });
+                expect(this.spy).to.have.been.called;
             });
         });
     });
