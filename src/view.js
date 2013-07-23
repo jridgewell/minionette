@@ -77,8 +77,7 @@ Minionette.View = Backbone.View.extend({
         if (!selectors) { return; }
 
         _.each(selectors, function (view, selector) {
-            this._subViews[view.cid] = view;
-            view._parentView = this;
+            this._addSubView(view);
             if (replace) {
                 this.$(selector).replaceWith(view.el);
             } else {
@@ -89,9 +88,14 @@ Minionette.View = Backbone.View.extend({
 
     // A remove helper to remove this view from it's parent
     _removeFromParentView: function() {
-        if (this._parentView) {
+        if (this._parentView && this._parentView._removeSubView) {
             this._parentView._removeSubView(this);
         }
+    },
+
+    _addSubView: function(view) {
+        this._subViews[view.cid] = view;
+        view._parentView = this;
     },
 
     _removeSubView: function(subView) {
