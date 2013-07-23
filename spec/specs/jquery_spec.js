@@ -9,7 +9,7 @@ define(function() {
 
         it("doesn't trigger on jQuery#off", function() {
             var spy = this.sinon.spy();
-            this.element.on('remove', spy)
+            this.element.on('remove', spy);
 
             this.element.off('remove');
 
@@ -18,7 +18,7 @@ define(function() {
 
         it("doesn't trigger on jQuery#detach", function() {
             var spy = this.sinon.spy();
-            this.element.on('remove', spy)
+            this.element.on('remove', spy);
 
             this.element.detach();
 
