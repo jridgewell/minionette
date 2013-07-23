@@ -47,6 +47,12 @@ define(function() {
                     expect(spy).to.have.been.called;
                 });
 
+                it("returns the view", function() {
+                    var ret = this.view.render();
+
+                    expect(ret).to.equal(this.view);
+                });
+
                 it("appends a modelView for each model in the collection", function() {
                     var models = [
                         new Backbone.Model({id: _.uniqueId()}),
@@ -106,10 +112,9 @@ define(function() {
                 });
 
                 it("add the new modelView to _subViews", function() {
-                    // TODO: Knows too much
                     var view = this.view.addOne(this.model);
 
-                    expect(this.view._subViews[view.cid]).to.equal(view);
+                    expect(_.values(this.view._subViews)).to.include(view);
                 });
 
                 it("sets the new modelView's _parentView to this", function() {
