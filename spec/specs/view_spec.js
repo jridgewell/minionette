@@ -119,22 +119,20 @@ define(function() {
                 });
 
                 it("removes from parent view", function() {
-                    // TODO: Knows too much
                     var parentView = new Minionette.View();
-                    parentView._subViews[this.view.cid] = this.view;
+                    parentView._addSubView(this.view);
 
                     this.view.remove();
 
-                    expect(parentView._subViews[this.view.cid]).to.not.be.defined;
+                    expect(_.values(parentView._subViews)).to.not.include(this.view);
                 });
 
                 it("removes subViews", function() {
-                    // TODO: knows too much
-                    var v = new Minionette.View(),
-                        spy = this.sinon.spy(v, 'remove');
-                    this.view._subViews[0] = v;
+                    var parentView = new Minionette.View(),
+                        spy = this.sinon.spy(this.view, 'remove');
+                    parentView._addSubView(this.view);
 
-                    this.view.remove();
+                    parentView.remove();
 
                     expect(spy).to.have.been.called;
                 });
@@ -269,13 +267,12 @@ define(function() {
                 });
 
                 it("Removes from parent view", function() {
-                    // TODO: Knows too much
                     var parentView = new Minionette.View();
-                    parentView._subViews[this.view.cid] = this.view;
+                    parentView._addSubView(this.view);
 
                     this.view._jqueryRemove();
 
-                    expect(parentView._subViews[this.view.cid]).to.not.be.defined;
+                    expect(_.values(parentView._subViews)).to.include(this.view);
                 });
 
                 it("stops listening", function() {
