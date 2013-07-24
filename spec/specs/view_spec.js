@@ -70,6 +70,11 @@ define(function() {
                 expect(this.view.template()).to.be.defined;
             });
 
+            it("creates #serializeData function", function() {
+                expect(this.view.serializeData).to.be.defined;
+                expect(this.view.serializeData()).to.be.an.object;
+            });
+
             describe("#delegateEvents", function() {
                 it("calls Backbone.View's #delegateEvents", function() {
                     var spy = this.sinon.spy(Backbone.View.prototype, 'delegateEvents');
