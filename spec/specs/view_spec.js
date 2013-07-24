@@ -143,7 +143,7 @@ define(function() {
                 });
             });
 
-            describe("#assign()", function() {
+            describe("#attach()", function() {
                 beforeEach(function() {
                     this.subView = new Minionette.View({id: 'subView'});
                     this.selector = '.selector';
@@ -152,19 +152,19 @@ define(function() {
                 });
 
                 it("takes a selector and a subView as arguments", function() {
-                    this.view.assign(this.selector, this.subView);
+                    this.view.attach(this.selector, this.subView);
 
                     expect(this.spy).to.have.been.calledWith(this.view.$(this.selector));
                 });
 
                 it("sets the subView's _parentView to this", function() {
-                    this.view.assign(this.selector, this.subView);
+                    this.view.attach(this.selector, this.subView);
 
                     expect(this.subView._parentView).to.equal(this.view);
                 });
 
                 it("can optionally take a replace param", function() {
-                    this.view.assign(this.selector, this.subView, true);
+                    this.view.attach(this.selector, this.subView, true);
 
                     expect(this.spy).to.not.have.been.called;
                     expect(this.view.$(this.subView.el)[0]).to.be.defined;
@@ -181,14 +181,14 @@ define(function() {
                     });
 
                     it("takes an object (with keys as selectors and values as subViews) as an argument", function() {
-                        this.view.assign(this.subViews);
+                        this.view.attach(this.subViews);
 
                         expect(this.spy).to.have.been.calledWith(this.view.$('.selector'));
                         expect(this.spy2).to.have.been.calledWith(this.view.$('.test'));
                     });
 
                     it("can optionally take a replace param", function() {
-                        this.view.assign(this.subViews, true);
+                        this.view.attach(this.subViews, true);
 
                         expect(this.spy).to.not.have.been.calledWith(this.view.$('.selector'));
                         expect(this.spy2).to.not.have.been.calledWith(this.view.$('.test'));
@@ -220,7 +220,7 @@ define(function() {
                     var subView = new Minionette.View(),
                         spy = this.sinon.spy();
                     this.view.$el.append('<div id="test" />');
-                    this.view.assign('#test', subView);
+                    this.view.attach('#test', subView);
                     subView.$el.on('click', spy);
 
                     this.view.render();
