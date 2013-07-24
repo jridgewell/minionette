@@ -62,6 +62,9 @@ define(function() {
                 });
             });
 
+            describe("SubViews", function() {
+                xit('subviews');
+            });
         });
 
         describe("instances", function() {
@@ -140,60 +143,6 @@ define(function() {
                     parentView.remove();
 
                     expect(spy).to.have.been.called;
-                });
-            });
-
-            describe("#attach()", function() {
-                beforeEach(function() {
-                    this.subView = new Minionette.View({id: 'subView'});
-                    this.selector = '.selector';
-                    this.spy = this.sinon.spy(this.subView, 'setElement');
-                    this.view.$el.append('<div class="selector" />');
-                });
-
-                it("takes a selector and a subView as arguments", function() {
-                    this.view.attach(this.selector, this.subView);
-
-                    expect(this.spy).to.have.been.calledWith(this.view.$(this.selector));
-                });
-
-                it("sets the subView's _parentView to this", function() {
-                    this.view.attach(this.selector, this.subView);
-
-                    expect(this.subView._parentView).to.equal(this.view);
-                });
-
-                it("can optionally take a replace param", function() {
-                    this.view.attach(this.selector, this.subView, true);
-
-                    expect(this.spy).to.not.have.been.called;
-                    expect(this.view.$(this.subView.el)).to.exist;
-                });
-
-
-                describe("alternate syntax", function() {
-                    beforeEach(function() {
-                        this.subView2 = new Minionette.View();
-                        this.subViews = {'.test': this.subView2};
-                        this.subViews[this.selector] = this.subView;
-                        this.spy2 = this.sinon.spy(this.subView2, 'setElement');
-                        this.view.$el.append('<div class="test" />');
-                    });
-
-                    it("takes an object (with keys as selectors and values as subViews) as an argument", function() {
-                        this.view.attach(this.subViews);
-
-                        expect(this.spy).to.have.been.calledWith(this.view.$('.selector'));
-                        expect(this.spy2).to.have.been.calledWith(this.view.$('.test'));
-                    });
-
-                    it("can optionally take a replace param", function() {
-                        this.view.attach(this.subViews, true);
-
-                        expect(this.spy).to.not.have.been.calledWith(this.view.$('.selector'));
-                        expect(this.spy2).to.not.have.been.calledWith(this.view.$('.test'));
-                    });
-
                 });
             });
 
@@ -287,6 +236,10 @@ define(function() {
 
                     expect(spy).to.have.been.called;
                 });
+            });
+
+            describe("#addRegion()", function() {
+                xit("do something");
             });
         });
     });

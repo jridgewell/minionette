@@ -1,14 +1,12 @@
-Minionette.SubView = function(options) {
+Minionette.Region = function(options) {
     this.cid = _.uniqueId('subview');
     this._ensureView();
     this._configure(options || {});
-    this.initialize.apply(this, arguments);
 };
 
-_.extend(Minionette.SubView.prototype, Backbone.Events, {
-    initialize: function() {},
-
-    _view: new Backbone.View({tagName: 'span'}),
+_.extend(Minionette.Region.prototype, Backbone.Events, {
+    //TODO: Comments
+    _View: Backbone.View.extend({tagName: 'span'}),
 
     _configure: function(options) {
         if (options.view) { this.view = options.view; }
@@ -16,7 +14,7 @@ _.extend(Minionette.SubView.prototype, Backbone.Events, {
 
     _ensureView: function() {
         if (!this.view || !(this.view instanceof Backbone.View)) {
-            this.view = this._view;
+            this.view = new this._View();
         }
     },
 
@@ -25,6 +23,7 @@ _.extend(Minionette.SubView.prototype, Backbone.Events, {
     },
 
     attach: function(view) {
+        view = view || (new this._View());
         var v = this.view;
 
         this.view.$el.replaceWith(view.el);
@@ -36,7 +35,7 @@ _.extend(Minionette.SubView.prototype, Backbone.Events, {
     remove: function() {
         var v = this.view;
 
-        this.attach(this._view);
+        this.attach();
 
         return v;
     }

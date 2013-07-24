@@ -8,6 +8,7 @@ Minionette.ModelView = Minionette.View.extend({
     // The data that is sent into the template function.
     // Override this to provide custom data.
     serializeData: function() {
-        return _.clone(this.model.attributes);
+        var superRet = Minionette.View.prototype.serializeData.apply(this, arguments);
+        return _.extend(superRet, this.model.attributes);
     }
 });
