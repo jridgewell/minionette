@@ -226,7 +226,6 @@ define(function() {
                     var parentView = new Minionette.View();
                     parentView.addRegion('region', this.view);
                     var spy = this.sinon.spy(parentView.region, '_removeView');
-                    debugger;
 
                     this.view.remove();
 
