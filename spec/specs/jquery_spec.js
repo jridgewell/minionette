@@ -7,7 +7,7 @@ define(function() {
             this.element.remove();
         });
 
-        it("doesn't trigger on jQuery#off", function() {
+        it("doesn't trigger on jQuery#off()", function() {
             var spy = this.sinon.spy();
             this.element.on('remove', spy);
 
@@ -16,7 +16,7 @@ define(function() {
             expect(spy).to.not.have.been.called;
         });
 
-        it("doesn't trigger on jQuery#detach", function() {
+        it("doesn't trigger on jQuery#detach()", function() {
             var spy = this.sinon.spy();
             this.element.on('remove', spy);
 
@@ -31,7 +31,7 @@ define(function() {
                 this.element.on('remove', this.spy);
             });
 
-            it("triggers on jQuery#remove", function() {
+            it("triggers on jQuery#remove()", function() {
                 this.element.remove();
 
                 expect(this.spy).to.have.been.called;
@@ -46,13 +46,13 @@ define(function() {
                 this.nestedElement.on('remove', this.spy);
             });
 
-            it("triggers on jQuery#remove on parent element", function() {
+            it("triggers on jQuery#remove() on parent element", function() {
                 this.element.remove();
 
                 expect(this.spy).to.have.been.called;
             });
 
-            it("triggers on jQuery#html on parent element", function() {
+            it("triggers on jQuery#html() on parent element", function() {
                 this.element.html('');
 
                 expect(this.spy).to.have.been.called;

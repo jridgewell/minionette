@@ -11,24 +11,24 @@ define(function() {
             });
 
             describe("Collection Events", function() {
-                it("#render on collection's 'reset' event", function() {
+                it("#render() on collection's 'reset' event", function() {
                     expect(this.view.collectionEvents.reset).to.equal('render');
                 });
 
-                it("#render on collection's 'sort' event", function() {
+                it("#render() on collection's 'sort' event", function() {
                     expect(this.view.collectionEvents.sort).to.equal('render');
                 });
 
-                it("#removeOne on collection's 'remove' event", function() {
+                it("#removeOne() on collection's 'remove' event", function() {
                     expect(this.view.collectionEvents.remove).to.equal('removeOne');
                 });
 
-                it("#addOne on collection's 'add' event", function() {
+                it("#addOne() on collection's 'add' event", function() {
                     expect(this.view.collectionEvents.add).to.equal('addOne');
                 });
             });
 
-            describe("#render", function() {
+            describe("#render()", function() {
                 it("triggers 'render:before' event", function() {
                     var spy = this.sinon.spy();
                     this.view.on('render:before', spy);
@@ -73,7 +73,7 @@ define(function() {
                 });
             });
 
-            describe("#addOne", function() {
+            describe("#addOne()", function() {
                 beforeEach(function() {
                     this.model = new Backbone.Model();
                 });
@@ -130,7 +130,7 @@ define(function() {
                 });
             });
 
-            describe("#removeOne", function() {
+            describe("#removeOne()", function() {
                 beforeEach(function() {
                     this.model = new Backbone.Model();
                     this.modelView = this.view.addOne(this.model);
@@ -160,7 +160,7 @@ define(function() {
                     expect(ret).to.equal(this.modelView);
                 });
 
-                it("calls #remove on the view", function() {
+                it("calls #remove() on the view", function() {
                     var spy = this.sinon.spy(this.modelView, 'remove');
 
                     this.view.removeOne(this.model);
@@ -169,7 +169,7 @@ define(function() {
                 });
             });
 
-            describe("#_getModelView", function() {
+            describe("#_getModelView()", function() {
                 beforeEach(function() {
                     this.View = Minionette.CollectionView.extend({
                         ModelView: 'DefaultModelView'

@@ -65,18 +65,18 @@ define(function() {
         });
 
         describe("instances", function() {
-            it("creates #template function", function() {
+            it("creates #template()", function() {
                 expect(this.view.template).to.be.defined;
                 expect(this.view.template()).to.be.defined;
             });
 
-            it("creates #serializeData function", function() {
+            it("creates #serializeData()", function() {
                 expect(this.view.serializeData).to.be.defined;
                 expect(this.view.serializeData()).to.be.an.object;
             });
 
-            describe("#delegateEvents", function() {
-                it("calls Backbone.View's #delegateEvents", function() {
+            describe("#delegateEvents()", function() {
+                it("calls Backbone.View's #delegateEvents()", function() {
                     var spy = this.sinon.spy(Backbone.View.prototype, 'delegateEvents');
 
                     this.view.delegateEvents();
@@ -84,7 +84,7 @@ define(function() {
                     expect(spy).to.have.been.called;
                 });
 
-                it("sets #_jqueryRemove listener on $el 'remove' event", function() {
+                it("sets #_jqueryRemove() listener on $el 'remove' event", function() {
                     var spy = this.sinon.spy(this.view, '_jqueryRemove');
                     this.view.delegateEvents();
 
@@ -93,7 +93,7 @@ define(function() {
                     expect(spy).to.have.been.called;
                 });
 
-                it("sets #_jqueryRemove listener that is compatible with #undelegateEvents", function() {
+                it("sets #_jqueryRemove() listener that is compatible with #undelegateEvents()", function() {
                     var spy = this.sinon.spy(this.view, '_jqueryRemove');
                     this.view.delegateEvents();
                     this.view.undelegateEvents();
@@ -104,7 +104,7 @@ define(function() {
                 });
             });
 
-            describe("#remove", function() {
+            describe("#remove()", function() {
                 it("triggers 'remove:before' event", function() {
                     var spy = this.sinon.spy();
                     this.view.on('remove:before', spy);
@@ -143,7 +143,7 @@ define(function() {
                 });
             });
 
-            describe("#assign", function() {
+            describe("#assign()", function() {
                 beforeEach(function() {
                     this.subView = new Minionette.View({id: 'subView'});
                     this.selector = '.selector';
@@ -197,7 +197,7 @@ define(function() {
                 });
             });
 
-            describe("#render", function() {
+            describe("#render()", function() {
                 it("triggers 'render:before' event", function() {
                     var spy = this.sinon.spy();
                     this.view.on('render:before', spy);
@@ -230,7 +230,7 @@ define(function() {
                     expect(spy).to.have.been.called;
                 });
 
-                it("passes #serializeData's output to #template", function() {
+                it("passes #serializeData() output to #template()", function() {
                     var spy = this.sinon.spy(this.view, 'template'),
                     serializeData = _.uniqueId;
                     this.view.serializeData = function() {
@@ -242,7 +242,7 @@ define(function() {
                     expect(spy).to.have.been.calledWith(serializeData);
                 });
 
-                it("passes #template's output to $el#html", function() {
+                it("passes #template() output to $el#html()", function() {
                     var spy = this.sinon.spy(this.view.$el, 'html'),
                     template = _.uniqueId;
                     this.view.template = function() {
@@ -261,7 +261,7 @@ define(function() {
                 });
             });
 
-            describe("#_jqueryRemove", function() {
+            describe("#_jqueryRemove()", function() {
                 it("triggers 'remove:jquery' event", function() {
                     var spy = this.sinon.spy();
                     this.view.on('remove:jquery', spy);

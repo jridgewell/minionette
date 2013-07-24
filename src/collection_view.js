@@ -16,7 +16,7 @@ Minionette.CollectionView = Minionette.View.extend({
         this.trigger('render:before');
 
         var $el = this.$el.html(this.template(this.serializeData()));
-        // Use a DocumentFragment to speed up #render
+        // Use a DocumentFragment to speed up #render()
         this.$el = $(document.createDocumentFragment());
 
         // Collect the ModelView class.

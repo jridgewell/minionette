@@ -7,16 +7,16 @@ define(function() {
             });
 
             describe("Model Events", function() {
-                it("#renders on model's 'change' event", function() {
+                it("#render() on model's 'change' event", function() {
                     expect(this.view.modelEvents.change).to.equal('render');
                 });
 
-                it("#removes on model's 'destroy' event", function() {
+                it("#remove() on model's 'destroy' event", function() {
                     expect(this.view.modelEvents.destroy).to.equal('remove');
                 });
             });
 
-            describe("#serializeData", function() {
+            describe("#serializeData()", function() {
                 it("returns model.attributes", function() {
                     this.model.set(_.uniqueId(), _.uniqueId());
                     var ret = this.view.serializeData();
