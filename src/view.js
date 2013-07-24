@@ -1,6 +1,6 @@
 Minionette.View = Backbone.View.extend({
     constructor: function(options) {
-        this._initializeSubViews(options || {});
+        this._initializeRegions(options || {});
 
         Backbone.View.apply(this, arguments);
 
@@ -11,7 +11,7 @@ Minionette.View = Backbone.View.extend({
 
     // The Parent View of this View
     // Defaults to nothing
-    _parentView: null,
+    _parent: null,
 
     // A default template that will clear this.$el.
     // Override this in a subclass to something useful.
@@ -23,7 +23,6 @@ Minionette.View = Backbone.View.extend({
     serializeData: function() {
         //TODO: FIX THIS
         return {};
-        // return _.pick(this, _.keys(this.subViews || {}));
     },
 
     // When delegating events, bind this view to jQuery's special remove event.
@@ -40,8 +39,8 @@ Minionette.View = Backbone.View.extend({
     remove: function() {
         this.trigger('remove:before');
 
-        this._removeFromParentView();
-        this._removeSubViews();
+        this._removeFromParent();
+        _.invoke(this._regions, 'remove');
 
         Backbone.View.prototype.remove.apply(this, arguments);
 
@@ -53,25 +52,23 @@ Minionette.View = Backbone.View.extend({
         this.trigger('render:before');
 
         // Detach all our subviews, so they don't need to be re-rendered.
-        _.each(this._subViews, function(view) { view.$el.detach(); });
+        // TODO: detach regions
+        // _.each(this._regions, function(view) { view.$el.detach(); });
+        _.invoke(this._regions, 'detach');
 
         this.$el.html(this.template(this.serializeData()));
 
-        // Listen for render events to reattach subviews.
+        _.invoke(this._regions, 'reattach');
+
         this.trigger('render');
         return this;
     },
 
     // A remove helper to remove this view from it's parent
-    _removeFromParentView: function() {
-        if (this._parentView && this._parentView._removeSubView) {
-            this._parentView._removeSubView(this);
+    _removeFromParent: function() {
+        if (this._parent && this._parent._removeView) {
+            this._parent._removeView(this);
         }
-    },
-
-    // A remove helper to clear our subviews.
-    _removeSubViews: function() {
-        _.invoke(this._subViews, 'remove');
     },
 
     // Does the same thing as this.remove(), without
@@ -79,7 +76,7 @@ Minionette.View = Backbone.View.extend({
     // us from removing an element that is already removed.
     _jqueryRemove: function() {
         this.trigger('remove:jquery');
-        this._removeFromParentView();
+        this._removeFromParent();
         this.stopListening();
     },
 
@@ -94,35 +91,21 @@ Minionette.View = Backbone.View.extend({
     },
 
     // TODO: comments
-    _initializeSubViews: function(options) {
-        var subViews = {};
-        // Pull subViews from instantiated options.
-        if (options.subViews) { subViews = options.subViews; }
+    _initializeRegions: function(options) {
+        // Initialize our regions object
+        this._regions = {};
 
-        _.each(subViews, function(view, name) {
+        // Pull regions from instantiated options.
+        var regions = {};
+        if (options.regions) { regions = options.regions; }
+
+        // Add the regions
+        _.each(regions, function(view, name) {
             this.addRegion(name, view);
         }, this);
     },
 
     addRegion: function(name, view) {
-        this._addSubView(view);
-        this._addRegion(name);
-        return this[name] = new Minionette.Region({view: view});
-    },
-
-    _addRegion: function(name) {
-        this._regions || (this.regions = []);
-        this.regions.push(name);
-    },
-
-    _addSubView: function(view) {
-        this.subViews || (this.subViews = {});
-        this._subViews[view.cid] = view;
-        view._parentView = this;
-    },
-
-    _removeSubView: function(subView) {
-        delete this._subViews[subView.cid];
+        return this[name] = this._regions[name] = new Minionette.Region({view: view});
     }
-
 });
