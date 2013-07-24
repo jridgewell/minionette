@@ -37,14 +37,17 @@ Minionette.View = Backbone.View.extend({
 
     // A useful remove method to that triggers events.
     remove: function() {
-        this.trigger('remove:before');
+        if (!this._isRemoving) {
+            this._isRemoving = true;
+            this.trigger('remove:before');
 
-        this._removeFromParent();
-        _.invoke(this._regions, 'remove');
+            this._removeFromParent();
+            _.invoke(this._regions, 'remove');
 
-        Backbone.View.prototype.remove.apply(this, arguments);
+            Backbone.View.prototype.remove.apply(this, arguments);
 
-        this.trigger('remove');
+            this.trigger('remove');
+        }
     },
 
     // A useful default render method.
@@ -71,13 +74,12 @@ Minionette.View = Backbone.View.extend({
         }
     },
 
-    // Does the same thing as this.remove(), without
-    // actually removing the element. Done to prevent
-    // us from removing an element that is already removed.
+    // A proxy method to #remove()
+    // Done so we don't _.bindall() to
+    // #remove()
     _jqueryRemove: function() {
         this.trigger('remove:jquery');
-        this._removeFromParent();
-        this.stopListening();
+        this.remove();
     },
 
     // Loop through the events given, and listen to
