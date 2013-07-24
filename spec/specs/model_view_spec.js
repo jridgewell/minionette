@@ -17,9 +17,22 @@ define(function() {
             });
 
             describe("#serializeData", function() {
-                it("returns models attributes", function() {
+                it("returns model.attributes", function() {
                     this.model.set(_.uniqueId(), _.uniqueId());
-                    expect(this.view.serializeData()).to.deep.equal(this.model.attributes);
+                    var ret = this.view.serializeData();
+
+                    expect(ret).to.deep.equal(this.model.attributes);
+                    expect(this.model.attributes).to.deep.equal(ret);
+                });
+
+                it("returns cloned model.attributes", function() {
+                    this.model.set(_.uniqueId(), _.uniqueId());
+                    var ret = this.view.serializeData();
+
+                    this.model.set('test', 'test');
+
+                    expect(ret).to.not.deep.equal(this.model.attributes);
+                    expect(this.model.attributes).to.not.deep.equal(ret);
                 });
             });
         });
