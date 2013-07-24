@@ -1,16 +1,13 @@
 Minionette.Region = function(options) {
+    options || (options = {});
     this.cid = _.uniqueId('subview');
+    if (options.view) { this.view = options.view; }
     this._ensureView();
-    this._configure(options || {});
 };
 
 _.extend(Minionette.Region.prototype, Backbone.Events, {
     //TODO: Comments
     _View: Backbone.View.extend({tagName: 'span'}),
-
-    _configure: function(options) {
-        if (options.view) { this.view = options.view; }
-    },
 
     _ensureView: function() {
         if (!this.view || !(this.view instanceof Backbone.View)) {
