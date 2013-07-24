@@ -272,7 +272,7 @@ define(function() {
 
                     this.view._jqueryRemove();
 
-                    expect(_.values(parentView._subViews)).to.include(this.view);
+                    expect(_.values(parentView._subViews)).to.not.include(this.view);
                 });
 
                 it("stops listening", function() {
