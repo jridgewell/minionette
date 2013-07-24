@@ -176,6 +176,24 @@ define(function() {
 
                 expect(spy).to.not.have.been.called;
             });
-        })
+        });
+
+        describe("#_removeView()", function() {
+            it("sets #view to empty element", function() {
+                this.region.reset(this.view);
+
+                expect(this.region.view.$el).to.be.empty;
+            });
+
+            it("only resets if #view equals passed in view", function() {
+                var v = new Minionette.View;
+                v.template = function() { return 'test'; };
+                this.region.attach(v).render();
+
+                this.region._removeView(this.view);
+
+                expect(this.region.view.$el).to.not.be.empty;
+            });
+        });
     });
 });
