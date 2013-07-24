@@ -67,6 +67,7 @@ Minionette.View = Backbone.View.extend({
     _removeFromParent: function() {
         if (this._parent && this._parent._removeView) {
             this._parent._removeView(this);
+            this._parent = null;
         }
     },
 
