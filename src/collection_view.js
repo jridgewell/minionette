@@ -67,7 +67,7 @@ Minionette.CollectionView = Minionette.View.extend({
     _addModelView: function(model, ModelView) {
         var modelView = new ModelView({model: model});
 
-        // Add a the modelView, and keep track of it.
+        // Add the modelView, and keep track of it.
         this._modelViews || (this._modelViews = {});
         this._modelViews[modelView.cid] = modelView;
         modelView._parent = this;

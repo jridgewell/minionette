@@ -51,13 +51,12 @@ Minionette.View = Backbone.View.extend({
     render: function() {
         this.trigger('render:before');
 
-        // Detach all our subviews, so they don't need to be re-rendered.
-        // TODO: detach regions
-        // _.each(this._regions, function(view) { view.$el.detach(); });
+        // Detach all our regions, so they don't need to be re-rendered.
         _.invoke(this._regions, 'detach');
 
         this.$el.html(this.template(this.serializeData()));
 
+        // Reattach all our regions
         _.invoke(this._regions, 'reattach');
 
         this.trigger('render');
@@ -106,6 +105,7 @@ Minionette.View = Backbone.View.extend({
     },
 
     addRegion: function(name, view) {
-        return this[name] = this._regions[name] = new Minionette.Region({view: view});
+        this[name] = this._regions[name] = new Minionette.Region({view: view});
+        return this[name];
     }
 });
