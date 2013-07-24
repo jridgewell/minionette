@@ -161,5 +161,21 @@ define(function() {
                 expect(ret).to.equal(this.view);
             });
         });
+
+        describe("#reset()", function() {
+            it("sets #view to empty element", function() {
+                this.region.reset();
+
+                expect(this.region.view.$el).to.be.empty;
+            });
+
+            it("doesn't call #remove on old #view", function() {
+                var spy = this.sinon.spy(this.view, 'remove');
+
+                this.region.reset();
+
+                expect(spy).to.not.have.been.called;
+            });
+        })
     });
 });
