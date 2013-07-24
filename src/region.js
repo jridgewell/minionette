@@ -13,6 +13,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         if (!this.view || !(this.view instanceof Backbone.View)) {
             this.view = new this._View();
         }
+        this._assignParent(this.view);
     },
 
     render: function() {
@@ -21,6 +22,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
     attach: function(view, detach) {
         view = view || (new this._View());
+        this._assignParent(view);
 
         this.view.$el.after(view.$el).detach();
 
@@ -50,5 +52,15 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         var ret = this.attach(this._detachedView);
         delete this._detachedView;
         return ret;
+    },
+
+    _removeView: function(view) {
+        if (this.view === view) {
+            this.reset();
+        }
+    },
+
+    _assignParent: function(view) {
+        view._parent = this;
     }
 });
