@@ -22,12 +22,14 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         return this.view.render();
     },
 
-    attach: function(view) {
+    attach: function(view, detach) {
         view = view || (new this._View());
-        var v = this.view;
 
-        this.view.$el.replaceWith(view.el);
-        v.remove();
+        this.view.$el.after(view.$el).detach();
+
+        if (!detach) {
+            this.view.remove();
+        }
 
         return this.view = view;
     },
@@ -38,5 +40,18 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         this.attach();
 
         return v;
+    },
+
+    detach: function() {
+        this._detachedView = this.view;
+        this.attach(new this._View(), true);
+
+        return this;
+    },
+
+    reattach: function() {
+        var ret = this.attach(this._detachedView);
+        delete this._detachedView;
+        return ret;
     }
 });
