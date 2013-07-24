@@ -15,6 +15,11 @@ Minionette.CollectionView = Minionette.View.extend({
     render: function() {
         this.trigger('render:before');
 
+        // Dump all our modelViews.
+        // They will be removed by the jQuery#remove
+        // listener when we clear $el
+        this._modelViews = {};
+
         var $el = this.$el.html(this.template(this.serializeData()));
         // Use a DocumentFragment to speed up #render()
         this.$el = $(document.createDocumentFragment());
@@ -51,7 +56,7 @@ Minionette.CollectionView = Minionette.View.extend({
     removeOne: function(model) {
         this.trigger('removeOne:before');
 
-        var view = this._findSubViewByModel(model);
+        var view = this._findModelViewByModel(model);
         if (view) { view.remove(); }
 
         this.trigger('removeOne');
@@ -62,7 +67,10 @@ Minionette.CollectionView = Minionette.View.extend({
     _addModelView: function(model, ModelView) {
         var modelView = new ModelView({model: model});
 
-        this._addSubView(modelView);
+        // Add a the modelView, and keep track of it.
+        this._modelViews || (this._modelViews = {});
+        this._modelViews[modelView.cid] = modelView;
+        modelView._parent = this;
 
         this.$el.append(modelView.render().el);
         return modelView;
@@ -78,8 +86,8 @@ Minionette.CollectionView = Minionette.View.extend({
         return ModelView;
     },
 
-    // Find the view associated with a model from our subviews.
-    _findSubViewByModel: function(model) {
-        return _.findWhere(this._subViews, {model: model});
+    // Find the view associated with a model from our modelViews.
+    _findModelViewByModel: function(model) {
+        return _.findWhere(this._modelViews, {model: model});
     }
 });
