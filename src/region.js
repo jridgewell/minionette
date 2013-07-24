@@ -33,8 +33,9 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         if (!detach) {
             this.view.remove();
         }
+        this.view = view;
 
-        return this.view = view;
+        return view;
     },
 
     remove: function() {
