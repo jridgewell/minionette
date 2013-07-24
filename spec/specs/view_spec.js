@@ -222,18 +222,8 @@ define(function() {
                     expect(spy).to.have.been.called;
                 });
 
-                it("Removes from parent view", function() {
-                    var parentView = new Minionette.View();
-                    parentView.addRegion('region', this.view);
-                    var spy = this.sinon.spy(parentView.region, '_removeView');
-
-                    this.view.remove();
-
-                    expect(spy).to.have.been.called;
-                });
-
-                it("stops listening", function() {
-                    var spy = this.sinon.spy(this.view, 'stopListening');
+                it("calls #remove()", function() {
+                    var spy = this.sinon.spy(this.view, 'remove');
 
                     this.view._jqueryRemove();
 
