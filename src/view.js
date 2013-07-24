@@ -1,13 +1,12 @@
 Minionette.View = Backbone.View.extend({
-    constructor: function() {
+    constructor: function(options) {
+        this._initializeSubViews(options || {});
+
         Backbone.View.apply(this, arguments);
 
-        // Keep track of our subviews.
-        this._subViews = {};
-
         // Have the view listenTo the model and collection.
-        this._listenToEvents(this.model, this.modelEvents);
-        this._listenToEvents(this.collection, this.collectionEvents);
+        this._listenToEvents(this.model, _.result(this, 'modelEvents'));
+        this._listenToEvents(this.collection, _.result(this, 'collectionEvents'));
     },
 
     // The Parent View of this View
@@ -21,7 +20,11 @@ Minionette.View = Backbone.View.extend({
     // A default function that will have it's return passed
     // to this.template
     // Override this in a subclass to something useful.
-    serializeData: function() { return {}; },
+    serializeData: function() {
+        //TODO: FIX THIS
+        return {};
+        // return _.pick(this, _.keys(this.subViews || {}));
+    },
 
     // When delegating events, bind this view to jQuery's special remove event.
     // Allows us to clean up the view, even if you remove this.$el with jQuery.
@@ -36,9 +39,12 @@ Minionette.View = Backbone.View.extend({
     // A useful remove method to that triggers events.
     remove: function() {
         this.trigger('remove:before');
+
         this._removeFromParentView();
         this._removeSubViews();
+
         Backbone.View.prototype.remove.apply(this, arguments);
+
         this.trigger('remove');
     },
 
@@ -56,50 +62,11 @@ Minionette.View = Backbone.View.extend({
         return this;
     },
 
-    // Attach a subview to an element in my template.
-    // `selector` is a dom selector to attach to.
-    // `view` is the subview to attach the selector to.
-    // `replace` is a boolean.
-    //    `False` (default), set view's $el to the selector.
-    //    `True`, replace the selector with view's $el.
-    // Alternate syntax by passing in an object for selector.
-    //    With "selector": subview
-    //    Replace will be the second param in this case.
-    attach: function (selector, view, replace) {
-        var selectors;
-        if (_.isObject(selector)) {
-            selectors = selector;
-            replace = view;
-        } else {
-            selectors = {};
-            selectors[selector] = view;
-        }
-        if (!selectors) { return; }
-
-        _.each(selectors, function (view, selector) {
-            this._addSubView(view);
-            if (replace) {
-                this.$(selector).replaceWith(view.el);
-            } else {
-                view.setElement(this.$(selector)).render();
-            }
-        }, this);
-    },
-
     // A remove helper to remove this view from it's parent
     _removeFromParentView: function() {
         if (this._parentView && this._parentView._removeSubView) {
             this._parentView._removeSubView(this);
         }
-    },
-
-    _addSubView: function(view) {
-        this._subViews[view.cid] = view;
-        view._parentView = this;
-    },
-
-    _removeSubView: function(subView) {
-        delete this._subViews[subView.cid];
     },
 
     // A remove helper to clear our subviews.
@@ -122,9 +89,40 @@ Minionette.View = Backbone.View.extend({
         if (!entity) { return; }
         _.each(events, function(method, event) {
             if (!_.isFunction(method)) { method = this[method]; }
-            if (method) {
-                this.listenTo(entity, event, method);
-            }
+            this.listenTo(entity, event, method);
         }, this);
+    },
+
+    // TODO: comments
+    _initializeSubViews: function(options) {
+        var subViews = {};
+        // Pull subViews from instantiated options.
+        if (options.subViews) { subViews = options.subViews; }
+
+        _.each(subViews, function(view, name) {
+            this.addRegion(name, view);
+        }, this);
+    },
+
+    addRegion: function(name, view) {
+        this._addSubView(view);
+        this._addRegion(name);
+        return this[name] = new Minionette.Region({view: view});
+    },
+
+    _addRegion: function(name) {
+        this._regions || (this.regions = []);
+        this.regions.push(name);
+    },
+
+    _addSubView: function(view) {
+        this.subViews || (this.subViews = {});
+        this._subViews[view.cid] = view;
+        view._parentView = this;
+    },
+
+    _removeSubView: function(subView) {
+        delete this._subViews[subView.cid];
     }
+
 });
