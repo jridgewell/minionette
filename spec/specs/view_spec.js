@@ -167,7 +167,7 @@ define(function() {
                     this.view.attach(this.selector, this.subView, true);
 
                     expect(this.spy).to.not.have.been.called;
-                    expect(this.view.$(this.subView.el)[0]).to.be.defined;
+                    expect(this.view.$(this.subView.el)).to.exist;
                 });
 
 
