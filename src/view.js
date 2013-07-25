@@ -59,7 +59,7 @@ Minionette.View = Backbone.View.extend({
         this.$el.html(this.template(this.serializeData()));
 
         // Reattach all our regions
-        _.invoke(this._regions, 'reattach');
+        _.invoke(this._regions, 'reattach', this.$el);
 
         this.trigger('render');
         return this;

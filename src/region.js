@@ -7,17 +7,23 @@ Minionette.Region = function(options) {
 
 _.extend(Minionette.Region.prototype, Backbone.Events, {
     //TODO: Comments
-    _View: Backbone.View.extend({tagName: 'span'}),
+    _View: Backbone.View.extend({
+        tagName: 'span',
+        attributes: function() {
+            return {'data-cid': this.cid};
+        }
+    }),
 
     _ensureView: function() {
+        this._view = (new this._View()).render();
         if (!this.view || !(this.view instanceof Backbone.View)) {
-            this.view = new this._View();
+            this.view = this._view;
         }
         this._assignParent(this.view);
     },
 
     reset: function() {
-        this.attach(new this._View(), true);
+        this.attach(this._view, true);
     },
 
     render: function() {
@@ -38,11 +44,12 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     },
 
     remove: function() {
-        var v = this.view;
+        var oldView = this.view;
 
-        this.attach(new this._View());
+        this.reset();
+        oldView.remove();
 
-        return v;
+        return oldView;
     },
 
     detach: function() {
@@ -52,11 +59,17 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         return this;
     },
 
-    reattach: function() {
-        var ret = this.attach(this._detachedView);
-        delete this._detachedView;
+    reattach: function($context) {
+        $context = $context || Backbone.$(document.body);
+        var viewSelector = '[data-cid=' + this.view.cid + ']',
+            newView = this._detachedView;
 
-        return ret;
+        $context.find(viewSelector).replaceWith(newView.$el);
+
+        delete this._detachedView;
+        this.view = newView;
+
+        return newView;
     },
 
     _removeView: function(view) {
