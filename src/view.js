@@ -66,6 +66,14 @@ Minionette.View = Backbone.View.extend({
         return this;
     },
 
+    // Adds the Region "name" to as this[name].
+    // Also attaches it to this._regions[name], for
+    // internal management.
+    addRegion: function(name, view) {
+        this[name] = this._regions[name] = new Minionette.Region({view: view});
+        return this[name];
+    },
+
     // A remove helper to remove this view from it's parent
     _removeFromParent: function() {
         if (this._parent && this._parent._removeView) {
@@ -92,7 +100,10 @@ Minionette.View = Backbone.View.extend({
         }, this);
     },
 
-    // TODO: comments
+    // Takes the #regions object and creates the regions,
+    // using the keys as the name and the values as the original
+    // view. Keys are all that is required, passing in a false-y
+    // value will make Region use a placeholder span element.
     _initializeRegions: function(options) {
         // Initialize our regions object
         this._regions = {};
@@ -107,8 +118,5 @@ Minionette.View = Backbone.View.extend({
         }, this);
     },
 
-    addRegion: function(name, view) {
-        this[name] = this._regions[name] = new Minionette.Region({view: view});
-        return this[name];
     }
 });
