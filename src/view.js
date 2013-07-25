@@ -119,11 +119,9 @@ Minionette.View = Backbone.View.extend({
 
     // TODO: Comment
     _viewHelper: function(view) {
-        if (view) {
-            var region = this._regions[view];
-            if (region) {
-                return region.render().$el.html();
-            }
+        var region = this._regions[view];
+        if (region) {
+            return region.render().el.outerHTML;
         }
         return '';
     }
