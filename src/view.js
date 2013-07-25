@@ -10,6 +10,8 @@ Minionette.View = Backbone.View.extend({
         this._listenToEvents(this.collection, _.result(this, 'collectionEvents'));
     },
 
+    Region: Minionette.Region,
+
     // A default template that will clear this.$el.
     // Override this in a subclass to something useful.
     template: function() { return ''; },
@@ -65,7 +67,7 @@ Minionette.View = Backbone.View.extend({
     // Also attaches it to this._regions[name], for
     // internal management.
     addRegion: function(name, view) {
-        this[name] = this._regions[name] = new Minionette.Region({view: view});
+        this[name] = this._regions[name] = new this.Region({view: view});
         return this[name];
     },
 
