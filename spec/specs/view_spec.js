@@ -73,6 +73,10 @@ define(function() {
                 expect(this.view.template()).to.be.defined;
             });
 
+            it("sets Region to Minionette.Region", function() {
+                expect(this.view.Region).to.equal(Minionette.Region);
+            });
+
             describe("#serializeData()", function() {
                 it("returns an object", function() {
                     expect(this.view.serializeData()).to.be.an.object;
