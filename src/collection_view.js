@@ -19,13 +19,13 @@ Minionette.CollectionView = Minionette.View.extend({
         // They will be removed by the jQuery#remove
         // listener when we clear $el
         this._modelViews = {};
+        // Collect the ModelView class.
+        var ModelView = this._getModelView();
+
 
         var $el = this.$el.html(this.template(this.serializeData()));
         // Use a DocumentFragment to speed up #render()
         this.$el = $(document.createDocumentFragment());
-
-        // Collect the ModelView class.
-        var ModelView = this._getModelView();
 
         // Loop through all our models, and build their view.
         this.collection.each(function(model) {

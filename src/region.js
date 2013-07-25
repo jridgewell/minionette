@@ -1,3 +1,4 @@
+//TODO: Comments
 Minionette.Region = function(options) {
     options || (options = {});
     this.cid = _.uniqueId('subview');
@@ -6,7 +7,6 @@ Minionette.Region = function(options) {
 };
 
 _.extend(Minionette.Region.prototype, Backbone.Events, {
-    //TODO: Comments
     _View: Backbone.View.extend({
         tagName: 'span',
         attributes: function() {

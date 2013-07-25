@@ -10,10 +10,6 @@ Minionette.View = Backbone.View.extend({
         this._listenToEvents(this.collection, _.result(this, 'collectionEvents'));
     },
 
-    // The Parent View of this View
-    // Defaults to nothing
-    _parent: null,
-
     // A default template that will clear this.$el.
     // Override this in a subclass to something useful.
     template: function() { return ''; },
@@ -117,7 +113,8 @@ Minionette.View = Backbone.View.extend({
         }, this);
     },
 
-    // TODO: Comment
+    // A helper that is passed to #template() that will
+    // render regions inline.
     _viewHelper: function(view) {
         var region = this._regions[view];
         if (region) {
