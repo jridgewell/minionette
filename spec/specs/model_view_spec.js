@@ -17,12 +17,22 @@ define(function() {
             });
 
             describe("#serializeData()", function() {
-                it("returns model.attributes", function() {
+                it("calls Minionette.View#serializeData()", function() {
+                    var spy = this.sinon.spy(Minionette.View.prototype, 'serializeData');
+
+                    this.view.serializeData();
+
+                    expect(spy).to.have.been.called;
+                });
+
+                it("adds #model#attributes to return", function() {
                     this.model.set(_.uniqueId(), _.uniqueId());
                     var ret = this.view.serializeData();
 
-                    expect(ret).to.deep.equal(this.model.attributes);
-                    expect(this.model.attributes).to.deep.equal(ret);
+                    _.each(this.model.attributes, function(value, key) {
+                        expect(ret[key]).equal(value);
+                    });
+                    expect(ret).to.not.deep.equal(this.model.attributes);
                 });
 
                 it("returns cloned model.attributes", function() {
@@ -31,8 +41,7 @@ define(function() {
 
                     this.model.set('test', 'test');
 
-                    expect(ret).to.not.deep.equal(this.model.attributes);
-                    expect(this.model.attributes).to.not.deep.equal(ret);
+                    expect(ret['test']).to.not.equal('test');
                 });
             });
         });
