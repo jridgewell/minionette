@@ -2,6 +2,7 @@ Minionette.View = Backbone.View.extend({
     constructor: function(options) {
         this._initializeRegions(options || {});
 
+        _.bindAll(this, '_jqueryRemove');
         Backbone.View.apply(this, arguments);
 
         // Have the view listenTo the model and collection.
@@ -31,7 +32,6 @@ Minionette.View = Backbone.View.extend({
     delegateEvents: function() {
         Backbone.View.prototype.delegateEvents.apply(this, arguments);
 
-        _.bindAll(this, '_jqueryRemove');
         this.$el.on('remove.delegateEvents' + this.cid, this._jqueryRemove);
     },
 
