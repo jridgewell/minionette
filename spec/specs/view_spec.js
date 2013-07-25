@@ -73,10 +73,16 @@ define(function() {
                 expect(this.view.template()).to.be.defined;
             });
 
-            it("creates #serializeData()", function() {
-                expect(this.view.serializeData).to.be.defined;
-                expect(this.view.serializeData()).to.be.an.object;
-            });
+            describe("#serializeData()", function() {
+                it("returns an object", function() {
+                    expect(this.view.serializeData()).to.be.an.object;
+                });
+
+                it("has #_viewHelper as 'view' key", function() {
+                    expect(this.view.serializeData().view).to.equal(this.view._viewHelper);
+                });
+            })
+            xit("#_viewHelper()");
 
             describe("#delegateEvents()", function() {
                 it("calls Backbone.View's #delegateEvents()", function() {
@@ -202,14 +208,37 @@ define(function() {
                     expect(spy).to.have.been.calledWith(template);
                 });
 
-                xit("reattaches regions");
-                xit("renders regions");
+                it("reattaches regions", function() {
+                    var subView = new Minionette.View();
+                    this.view.addRegion('region', subView);
+                    var spy = this.sinon.spy(this.view.region, 'reattach');
+
+                    this.view.render();
+
+                    expect(spy).to.have.been.called;
+                });
 
                 it("returns the view", function() {
                     var ret = this.view.render();
 
                     expect(ret).to.equal(this.view);
                 });
+
+                it("Integration Test", function() {
+                    var subView = new Minionette.View({tagName: 'p'});
+                    subView.template = function() {
+                        return 'subView';
+                    };
+                    this.view.addRegion('region', subView).render();
+                    this.view.template = _.template('<p>before</p><%= view("region") %><p>after</p>');
+
+                    this.view.render();
+
+                    expect(this.view.$el).to.contain('before');
+                    expect(this.view.$el).to.contain('subView');
+                    expect(this.view.$el).to.contain('after');
+                });
+
             });
 
             describe("#_jqueryRemove()", function() {
