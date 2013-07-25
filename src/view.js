@@ -2,7 +2,7 @@ Minionette.View = Backbone.View.extend({
     constructor: function(options) {
         this._initializeRegions(options || {});
 
-        _.bindAll(this, '_jqueryRemove');
+        _.bindAll(this, '_jqueryRemove', '_viewHelper');
         Backbone.View.apply(this, arguments);
 
         // Have the view listenTo the model and collection.
@@ -22,8 +22,7 @@ Minionette.View = Backbone.View.extend({
     // to this.template
     // Override this in a subclass to something useful.
     serializeData: function() {
-        //TODO: FIX THIS
-        return {};
+        return {view: this._viewHelper};
     },
 
     // When delegating events, bind this view to jQuery's special remove event.
@@ -118,5 +117,14 @@ Minionette.View = Backbone.View.extend({
         }, this);
     },
 
+    // TODO: Comment
+    _viewHelper: function(view) {
+        if (view) {
+            var region = this._regions[view];
+            if (region) {
+                return region.render().$el.html();
+            }
+        }
+        return '';
     }
 });
