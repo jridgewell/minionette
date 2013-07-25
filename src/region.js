@@ -6,6 +6,8 @@ Minionette.Region = function(options) {
     this._ensureView();
 };
 
+Minionette.Region.extend = Backbone.View.extend;
+
 _.extend(Minionette.Region.prototype, Backbone.Events, {
     _View: Backbone.View.extend({
         tagName: 'span',
