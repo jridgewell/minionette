@@ -25,7 +25,7 @@ Minionette.View = Backbone.View.extend({
     // Allows us to clean up the view, even if you remove this.$el with jQuery.
     // http://blog.alexmaccaw.com/jswebapps-memory-management
     delegateEvents: function() {
-        Backbone.View.prototype.delegateEvents.apply(this, arguments);
+        Minionette.View.__super__.delegateEvents.apply(this, arguments);
 
         this.$el.on('remove.delegateEvents' + this.cid, this._jqueryRemove);
     },
@@ -39,7 +39,7 @@ Minionette.View = Backbone.View.extend({
             this._removeFromParent();
             _.invoke(this._regions, 'remove');
 
-            Backbone.View.prototype.remove.apply(this, arguments);
+            Minionette.View.__super__.remove.apply(this, arguments);
 
             this.trigger('remove');
         }
