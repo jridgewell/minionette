@@ -1,7 +1,8 @@
 // Force jQuery to emit remove events.
 // Our views bind to it to see if they
 // have been removed and should be cleaned.
-if ($) {
+(function($) {
+    if (!$) { return; }
     var _cleanData = $.cleanData;
     $.cleanData = function(elems) {
         _.each(elems, function(elem) {
@@ -11,4 +12,4 @@ if ($) {
         });
         _cleanData(elems);
     };
-}
+})(jQuery);
