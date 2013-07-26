@@ -62,8 +62,20 @@ define(function() {
                 });
             });
 
-            describe("Regsions", function() {
-                xit('regions');
+            describe("Regions", function() {
+                before(function() {
+                    this.regionView = new Minionette.View();
+                    this.RegionTest = Minionette.View.extend({
+                        regions: {
+                            region: this.regionView
+                        }
+                    });
+                });
+
+                it("attaches regions to the view", function() {
+                    var view = new this.RegionTest();
+                    expect(view.region.view).to.equal(this.regionView);
+                });
             });
         });
 
@@ -213,13 +225,13 @@ define(function() {
                 });
 
                 it("reattaches regions", function() {
-                    var subView = new Minionette.View();
+                    var subView = (new Minionette.View({tagName: 'p'})).render();
+                    this.view.template = _.template("<%= view('region') %>");
                     this.view.addRegion('region', subView);
-                    var spy = this.sinon.spy(this.view.region, 'reattach');
 
                     this.view.render();
 
-                    expect(spy).to.have.been.called;
+                    expect(this.view.$(subView.$el)).to.exist;
                 });
 
                 it("returns the view", function() {
@@ -230,17 +242,13 @@ define(function() {
 
                 it("Integration Test", function() {
                     var subView = new Minionette.View({tagName: 'p'});
-                    subView.template = function() {
-                        return 'subView';
-                    };
+                    subView.template = _.template('subView');
                     this.view.addRegion('region', subView).render();
                     this.view.template = _.template('<p>before</p><%= view("region") %><p>after</p>');
 
                     this.view.render();
 
-                    expect(this.view.$el).to.contain('before');
-                    expect(this.view.$el).to.contain('subView');
-                    expect(this.view.$el).to.contain('after');
+                    expect(this.view.$el).to.contain('beforesubViewafter');
                 });
 
             });
@@ -262,18 +270,6 @@ define(function() {
 
                     expect(spy).to.have.been.called;
                 });
-            });
-
-            describe("#_removeView", function() {
-                xit("do something");
-            })
-
-            describe("#_findRegionByView", function() {
-                xit("do something");
-            })
-
-            describe("#_initializeRegions()", function() {
-                xit("do something");
             });
 
             describe("#addRegion()", function() {
