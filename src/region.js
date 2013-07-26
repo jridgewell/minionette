@@ -62,6 +62,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     },
 
     reattach: function($context) {
+        if (!this._detachedView) { return; }
         $context = $context || Backbone.$(document.body);
         var viewSelector = '[data-cid=' + this.view.cid + ']',
             newView = this._detachedView;
