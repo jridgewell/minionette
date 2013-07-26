@@ -120,7 +120,7 @@ define(function() {
                 it("appends the new modelView's el to this.$el", function() {
                     var view = this.view.addOne(this.model);
 
-                    expect(this.view.$(view.el)[0]).to.equal(view.el);
+                    expect(this.view.$el).to.have(view.$el);
                 });
             });
 

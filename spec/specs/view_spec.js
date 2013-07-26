@@ -231,7 +231,7 @@ define(function() {
 
                     this.view.render();
 
-                    expect(this.view.$(subView.$el)).to.exist;
+                    expect(this.view.$el).to.have(subView.$el);
                 });
 
                 it("returns the view", function() {
