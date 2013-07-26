@@ -61,10 +61,10 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         return this;
     },
 
-    reattach: function($context) {
+    reattach: function() {
         if (!this._detachedView) { return; }
-        $context = $context || Backbone.$(document.body);
-        var viewSelector = '[data-cid=' + this.view.cid + ']',
+        var $context = (this._parent && this._parent.$el) || Backbone.$(document.body),
+            viewSelector = '[data-cid=' + this.view.cid + ']',
             newView = this._detachedView;
 
         $context.find(viewSelector).replaceWith(newView.$el);

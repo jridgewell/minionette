@@ -57,7 +57,7 @@ Minionette.View = Backbone.View.extend({
         this.$el.html(this.template(this.serializeData()));
 
         // Reattach all our regions
-        _.invoke(this._regions, 'reattach', this.$el);
+        _.invoke(this._regions, 'reattach');
 
         this.trigger('render');
         return this;
@@ -67,8 +67,12 @@ Minionette.View = Backbone.View.extend({
     // Also attaches it to this._regions[name], for
     // internal management.
     addRegion: function(name, view) {
-        this[name] = this._regions[name] = new this.Region({view: view});
-        return this[name];
+        var region = new this.Region({view: view});
+
+        region._parent = this;
+        this[name] = this._regions[name] = region;
+
+        return region;
     },
 
     // A remove helper to remove this view from it's parent
