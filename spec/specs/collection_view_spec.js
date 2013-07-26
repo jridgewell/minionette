@@ -111,12 +111,6 @@ define(function() {
                     expect(view).to.be.instanceOf(Backbone.View);
                 });
 
-                it("add the new modelView to _modelViews", function() {
-                    var view = this.view.addOne(this.model);
-
-                    expect(_.values(this.view._modelViews)).to.include(view);
-                });
-
                 it("sets the new modelView's _parent to this", function() {
                     var view = this.view.addOne(this.model);
 
