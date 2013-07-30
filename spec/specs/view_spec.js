@@ -315,10 +315,6 @@ define(function() {
                 });
             });
 
-            describe("#_initializeRegions()", function() {
-                xit("do something");
-            });
-
             describe("#addRegion()", function() {
                 xit("do something");
             });
