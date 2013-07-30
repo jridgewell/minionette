@@ -316,7 +316,43 @@ define(function() {
             });
 
             describe("#addRegion()", function() {
-                xit("do something");
+                beforeEach(function() {
+                    this.innerView = new Minionette.View();
+                    this.region = this.view.addRegion('region', this.innerView);
+                });
+                afterEach(function() {
+                    this.innerView.remove();
+                    delete this.region;
+                    delete this.innerView;
+                });
+
+                it("creates new region from #Region", function() {
+                    var spy = this.sinon.spy(this.view, 'Region');
+
+                    this.view.addRegion('region', this.innerView);
+
+                    expect(spy).to.have.been.called;
+                });
+
+                it("sets region#parent to this", function() {
+                    expect(this.view.region._parent).to.equal(this.view);
+                });
+
+                it("sets this#[region] and this#_regions[region] to the region", function() {
+                    expect(this.view.region).to.equal(this.region);
+                    expect(this.view._regions.region).to.equal(this.region);
+                });
+
+                it("returns the region", function() {
+                    var region = new Minionette.Region();
+                    this.view.Region = function() {
+                        return region;
+                    }
+
+                    var ret = this.view.addRegion('region', this.innerView);
+
+                    expect(ret).to.equal(region);
+                });
             });
         });
     });
