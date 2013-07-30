@@ -5,6 +5,11 @@ define(function() {
                 this.collection = new Backbone.Collection();
                 this.view = new Minionette.CollectionView({collection: this.collection});
             });
+            afterEach(function() {
+                this.view.remove();
+                delete this.collection;
+                delete this.view;
+            });
 
             it("sets ModelView to Backbone.View", function() {
                 expect(this.view.ModelView).to.equal(Backbone.View);
@@ -77,6 +82,10 @@ define(function() {
                 beforeEach(function() {
                     this.model = new Backbone.Model();
                 });
+                afterEach(function() {
+                    this.model.destroy();
+                    delete this.model;
+                });
 
                 it("triggers 'addOne:before' event", function() {
                     var spy = this.sinon.spy();
@@ -111,22 +120,16 @@ define(function() {
                     expect(view).to.be.instanceOf(Backbone.View);
                 });
 
-                it("add the new modelView to _subViews", function() {
+                it("sets the new modelView's _parent to this", function() {
                     var view = this.view.addOne(this.model);
 
-                    expect(_.values(this.view._subViews)).to.include(view);
-                });
-
-                it("sets the new modelView's _parentView to this", function() {
-                    var view = this.view.addOne(this.model);
-
-                    expect(view._parentView).to.equal(this.view);
+                    expect(view._parent).to.equal(this.view);
                 });
 
                 it("appends the new modelView's el to this.$el", function() {
                     var view = this.view.addOne(this.model);
 
-                    expect(this.view.$(view.el)[0]).to.equal(view.el);
+                    expect(this.view.$el).to.have(view.$el);
                 });
             });
 
@@ -134,6 +137,12 @@ define(function() {
                 beforeEach(function() {
                     this.model = new Backbone.Model();
                     this.modelView = this.view.addOne(this.model);
+                });
+                afterEach(function() {
+                    this.modelView.remove();
+                    this.model.destroy();
+                    delete this.model;
+                    delete this.modelView;
                 });
 
                 it("triggers 'removeOne:before' event", function() {
@@ -161,28 +170,26 @@ define(function() {
                 });
 
                 it("calls #remove() on the view", function() {
-                    var spy = this.sinon.spy(this.modelView, 'remove');
+                    var stub = this.sinon.stub(this.modelView, 'remove');
 
                     this.view.removeOne(this.model);
 
-                    expect(spy).to.have.been.called;
+                    expect(stub).to.have.been.called;
                 });
             });
 
             describe("#_getModelView()", function() {
-                beforeEach(function() {
-                    this.View = Minionette.CollectionView.extend({
-                        ModelView: 'DefaultModelView'
-                    });
+                var View = Minionette.CollectionView.extend({
+                    ModelView: 'DefaultModelView'
                 });
 
                 it("returns this#ModelView", function() {
-                    var view = new this.View();
+                    var view = new View();
                     expect(view._getModelView()).to.equal('DefaultModelView');
                 });
 
                 it("returns ModelView passed in at instantiation", function() {
-                    var view = new this.View({ModelView: 'instantiation'});
+                    var view = new View({ModelView: 'instantiation'});
                     expect(view._getModelView()).to.equal('instantiation');
                 });
             });

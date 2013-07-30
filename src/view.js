@@ -1,18 +1,16 @@
 Minionette.View = Backbone.View.extend({
-    constructor: function() {
+    constructor: function(options) {
+        this._initializeRegions(options || {});
+
+        _.bindAll(this, '_jqueryRemove', '_viewHelper');
         Backbone.View.apply(this, arguments);
 
-        // Keep track of our subviews.
-        this._subViews = {};
-
         // Have the view listenTo the model and collection.
-        this._listenToEvents(this.model, this.modelEvents);
-        this._listenToEvents(this.collection, this.collectionEvents);
+        this._listenToEvents(this.model, _.result(this, 'modelEvents'));
+        this._listenToEvents(this.collection, _.result(this, 'collectionEvents'));
     },
 
-    // The Parent View of this View
-    // Defaults to nothing
-    _parentView: null,
+    Region: Minionette.Region,
 
     // A default template that will clear this.$el.
     // Override this in a subclass to something useful.
@@ -21,99 +19,83 @@ Minionette.View = Backbone.View.extend({
     // A default function that will have it's return passed
     // to this.template
     // Override this in a subclass to something useful.
-    serializeData: function() { return {}; },
+    serializeData: function() {
+        return {};
+    },
+
+    // The actual "serializeData" that fed into the this.template.
+    // Used so a subclass can override this.serializeData and still
+    // have the `view` helper.
+    _serializeData: function() {
+        return _.extend({view: this._viewHelper}, this.serializeData());
+    },
 
     // When delegating events, bind this view to jQuery's special remove event.
     // Allows us to clean up the view, even if you remove this.$el with jQuery.
     // http://blog.alexmaccaw.com/jswebapps-memory-management
     delegateEvents: function() {
-        Backbone.View.prototype.delegateEvents.apply(this, arguments);
+        Minionette.View.__super__.delegateEvents.apply(this, arguments);
 
-        _.bindAll(this, '_jqueryRemove');
         this.$el.on('remove.delegateEvents' + this.cid, this._jqueryRemove);
     },
 
     // A useful remove method to that triggers events.
     remove: function() {
-        this.trigger('remove:before');
-        this._removeFromParentView();
-        this._removeSubViews();
-        Backbone.View.prototype.remove.apply(this, arguments);
-        this.trigger('remove');
+        if (!this._isRemoving) {
+            this._isRemoving = true;
+            this.trigger('remove:before');
+
+            this._removeFromParent();
+            _.invoke(this._regions, 'remove');
+
+            Minionette.View.__super__.remove.apply(this, arguments);
+
+            this.trigger('remove');
+        }
     },
 
     // A useful default render method.
     render: function() {
         this.trigger('render:before');
 
-        // Detach all our subviews, so they don't need to be re-rendered.
-        _.each(this._subViews, function(view) { view.$el.detach(); });
+        // Detach all our regions, so they don't need to be re-rendered.
+        _.invoke(this._regions, 'detach');
 
-        this.$el.html(this.template(this.serializeData()));
+        this.$el.html(this.template(this._serializeData()));
 
-        // Listen for render events to reattach subviews.
+        // Reattach all our regions
+        _.invoke(this._regions, 'reattach');
+
         this.trigger('render');
         return this;
     },
 
-    // Attach a subview to an element in my template.
-    // `selector` is a dom selector to attach to.
-    // `view` is the subview to attach the selector to.
-    // `replace` is a boolean.
-    //    `False` (default), set view's $el to the selector.
-    //    `True`, replace the selector with view's $el.
-    // Alternate syntax by passing in an object for selector.
-    //    With "selector": subview
-    //    Replace will be the second param in this case.
-    attach: function (selector, view, replace) {
-        var selectors;
-        if (_.isObject(selector)) {
-            selectors = selector;
-            replace = view;
-        } else {
-            selectors = {};
-            selectors[selector] = view;
-        }
-        if (!selectors) { return; }
+    // Adds the Region "name" to as this[name].
+    // Also attaches it to this._regions[name], for
+    // internal management.
+    addRegion: function(name, view) {
+        var region = new this.Region({view: view});
 
-        _.each(selectors, function (view, selector) {
-            this._addSubView(view);
-            if (replace) {
-                this.$(selector).replaceWith(view.el);
-            } else {
-                view.setElement(this.$(selector)).render();
-            }
-        }, this);
+        region._parent = this;
+        this[name] = this._regions[name] = region;
+
+        return region;
     },
 
     // A remove helper to remove this view from it's parent
-    _removeFromParentView: function() {
-        if (this._parentView && this._parentView._removeSubView) {
-            this._parentView._removeSubView(this);
+    _removeFromParent: function() {
+        if (this._parent && this._parent._removeView) {
+            this._parent._removeView(this);
+            this._parent = null;
         }
     },
 
-    _addSubView: function(view) {
-        this._subViews[view.cid] = view;
-        view._parentView = this;
-    },
-
-    _removeSubView: function(subView) {
-        delete this._subViews[subView.cid];
-    },
-
-    // A remove helper to clear our subviews.
-    _removeSubViews: function() {
-        _.invoke(this._subViews, 'remove');
-    },
-
-    // Does the same thing as this.remove(), without
-    // actually removing the element. Done to prevent
-    // us from removing an element that is already removed.
+    // A proxy method to #remove()
+    // Done so we don't _.bindall() to
+    // #remove()
     _jqueryRemove: function() {
         this.trigger('remove:jquery');
-        this._removeFromParentView();
-        this.stopListening();
+        this.remove();
     },
 
     // Loop through the events given, and listen to
@@ -122,9 +104,35 @@ Minionette.View = Backbone.View.extend({
         if (!entity) { return; }
         _.each(events, function(method, event) {
             if (!_.isFunction(method)) { method = this[method]; }
-            if (method) {
-                this.listenTo(entity, event, method);
-            }
+            this.listenTo(entity, event, method);
         }, this);
+    },
+
+    // Takes the #regions object and creates the regions,
+    // using the keys as the name and the values as the original
+    // view. Keys are all that is required, passing in a false-y
+    // value will make Region use a placeholder span element.
+    _initializeRegions: function(options) {
+        // Initialize our regions object
+        this._regions = {};
+
+        // Pull regions from instantiated options.
+        var regions = this.regions;
+        if (options.regions) { regions = options.regions; }
+
+        // Add the regions
+        _.each(regions, function(view, name) {
+            this.addRegion(name, view);
+        }, this);
+    },
+
+    // A helper that is passed to #template() that will
+    // render regions inline.
+    _viewHelper: function(view) {
+        var region = this._regions[view];
+        if (region) {
+            return region.render().el.outerHTML;
+        }
+        return '';
     }
 });
