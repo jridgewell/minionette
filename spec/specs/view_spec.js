@@ -93,7 +93,8 @@ define(function() {
                 it("has #_viewHelper as 'view' key", function() {
                     expect(this.view.serializeData().view).to.equal(this.view._viewHelper);
                 });
-            })
+            });
+
             describe('#_viewHelper()', function() {
                 beforeEach(function() {
                     this.innerView = new Minionette.View({tagName: 'p'});
