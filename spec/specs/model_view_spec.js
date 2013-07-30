@@ -41,7 +41,7 @@ define(function() {
 
                     this.model.set('test', 'test');
 
-                    expect(ret['test']).to.not.equal('test');
+                    expect(ret.test).to.not.equal('test');
                 });
             });
         });

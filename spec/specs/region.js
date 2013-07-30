@@ -5,7 +5,7 @@ define(function() {
         });
         function addInnerView(name, parentView) {
             var v = new Minionette.View({tagName: 'p'});
-            v.template = _.template("test")
+            v.template = _.template("test");
             v.render();
             parentView.addRegion(name, v);
             parentView.render();
@@ -237,7 +237,7 @@ define(function() {
             });
 
             it("only resets if #view equals passed in view", function() {
-                var v = new Minionette.View;
+                var v = new Minionette.View();
 
                 this.region._removeView(v);
 
