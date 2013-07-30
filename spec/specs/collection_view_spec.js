@@ -9,7 +9,7 @@ define(function() {
                 this.view.remove();
                 delete this.collection;
                 delete this.view;
-            })
+            });
 
             it("sets ModelView to Backbone.View", function() {
                 expect(this.view.ModelView).to.equal(Backbone.View);
