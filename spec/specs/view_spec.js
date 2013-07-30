@@ -16,10 +16,6 @@ define(function() {
                 expect(spy).to.have.been.called;
             });
 
-            it("initializes _subViews", function() {
-                expect(this.view._subViews).to.exist;
-            });
-
             describe("Model Events", function() {
                 before(function() {
                     this.spy = this.sinon.spy();
