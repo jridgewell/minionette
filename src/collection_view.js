@@ -72,7 +72,7 @@ Minionette.CollectionView = Minionette.View.extend({
         this._modelViews[modelView.cid] = modelView;
         modelView._parent = this;
 
-        this.$el.append(modelView.render().el);
+        this.$el.append(modelView.render().$el);
         return modelView;
     },
 
