@@ -43,11 +43,11 @@ define(function() {
 
         describe("#render()", function() {
             it("calls #view#render()", function() {
-                var spy = this.sinon.spy(this.view, 'render');
+                var stub = this.sinon.stub(this.view, 'render');
 
                 this.region.render();
 
-                expect(spy).to.have.been.called;
+                expect(stub).to.have.been.called;
             });
 
             it("returns #view#render()", function() {
@@ -81,11 +81,11 @@ define(function() {
             });
 
             it("calls #view#remove()", function() {
-                var spy = this.sinon.spy(this.view, 'remove');
+                var stub = this.sinon.stub(this.view, 'remove');
 
                 this.region.attach(this.newView);
 
-                expect(spy).to.have.been.called;
+                expect(stub).to.have.been.called;
             });
 
             it("sets #view to newView", function() {
@@ -179,11 +179,11 @@ define(function() {
 
         describe("#remove()", function() {
             it("calls #view#remove()", function() {
-                var spy = this.sinon.spy(this.view, 'remove');
+                var stub = this.sinon.stub(this.view, 'remove');
 
                 this.region.remove();
 
-                expect(spy).to.have.been.called;
+                expect(stub).to.have.been.called;
             });
 
             it("replaces view#el with _view#el", function() {
@@ -213,11 +213,11 @@ define(function() {
             });
 
             it("doesn't call #remove on old #view", function() {
-                var spy = this.sinon.spy(this.view, 'remove');
+                var stub = this.sinon.stub(this.view, 'remove');
 
                 this.region.reset();
 
-                expect(spy).to.not.have.been.called;
+                expect(stub).to.not.have.been.called;
             });
         });
 
@@ -238,11 +238,11 @@ define(function() {
             });
 
             it("doesn't call #remove on old #view", function() {
-                var spy = this.sinon.spy(this.view, 'remove');
+                var stub = this.sinon.stub(this.view, 'remove');
 
                 this.region._removeView(this.view);
 
-                expect(spy).to.not.have.been.called;
+                expect(stub).to.not.have.been.called;
             });
 
             it("only resets if #view equals passed in view", function() {

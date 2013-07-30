@@ -24,11 +24,11 @@ define(function() {
 
             describe("#serializeData()", function() {
                 it("calls Minionette.View#serializeData()", function() {
-                    var spy = this.sinon.spy(Minionette.View.prototype, 'serializeData');
+                    var stub = this.sinon.stub(Minionette.View.prototype, 'serializeData');
 
                     this.view.serializeData();
 
-                    expect(spy).to.have.been.called;
+                    expect(stub).to.have.been.called;
                 });
 
                 it("adds #model#attributes to return", function() {
