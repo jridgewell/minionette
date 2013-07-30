@@ -370,7 +370,7 @@ define(function() {
                     var region = new Minionette.Region();
                     this.view.Region = function() {
                         return region;
-                    }
+                    };
 
                     var ret = this.view.addRegion('region', this.innerView);
 
