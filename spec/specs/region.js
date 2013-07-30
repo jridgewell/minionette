@@ -142,7 +142,21 @@ define(function() {
                 this.region.detach();
             });
 
-            xit("scopes #reattach() to _parent", function() {
+            it("scopes #reattach() to _parent", function() {
+                var v = new Minionette.View({tagName: 'p'});
+                v.template = _.template("test")
+                v.render();
+                this.view.template = _.template('<p>test</p><%= view("region") %><p>test</p>')
+                this.view.addRegion('region', v);
+                this.view.render();
+                this.view.region.detach();
+                this.view.remove(); // Make sure view isn't in the document.body
+
+                var expectedIndex = this.view.region.view.$el.index();
+
+                this.view.region.reattach();
+
+                expect(v.$el.index()).to.equal(expectedIndex);
             });
 
             it("replaces view#el with _detachedView#el", function() {
