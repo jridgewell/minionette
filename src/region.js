@@ -1,8 +1,7 @@
 //TODO: Comments
 Minionette.Region = function(options) {
-    options || (options = {});
     this.cid = _.uniqueId('subview');
-    if (options.view) { this.view = options.view; }
+    if (options && options.view) { this.view = options.view; }
     this._ensureView();
 };
 
@@ -17,29 +16,27 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     }),
 
     _ensureView: function() {
-        this._view = (new this._View()).render();
-        if (!this.view || !(this.view instanceof Backbone.View)) {
+        this._view = (new this._View());
+        if (!(this.view instanceof Backbone.View)) {
             this.view = this._view;
         }
         this._assignParent(this.view);
     },
 
     reset: function() {
-        this.attach(this._view, true);
+        this.attach(this._view);
     },
 
     render: function() {
         return this.view.render();
     },
 
-    attach: function(view, detach) {
+    attach: function(view) {
         this._assignParent(view);
 
-        this.view.$el.after(view.$el).detach();
+        this.view.$el.after(view.$el);
+        this.view.$el.detach();
 
-        if (!detach) {
-            this.view.remove();
-        }
         this.view = view;
 
         return view;

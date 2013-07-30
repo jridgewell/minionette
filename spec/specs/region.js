@@ -80,12 +80,12 @@ define(function() {
                 expect(this.newView.$el.index()).to.equal(expectedIndex);
             });
 
-            it("calls #view#remove()", function() {
+            it("doesn't call #view#remove()", function() {
                 var stub = this.sinon.stub(this.view, 'remove');
 
                 this.region.attach(this.newView);
 
-                expect(stub).to.have.been.called;
+                expect(stub).to.not.have.been.called;
             });
 
             it("sets #view to newView", function() {
