@@ -10,6 +10,7 @@ Minionette.View = Backbone.View.extend({
         this._listenToEvents(this.collection, _.result(this, 'collectionEvents'));
     },
 
+    // The Region class to create new regions from.
     Region: Minionette.Region,
 
     // A default template that will clear this.$el.
@@ -23,7 +24,7 @@ Minionette.View = Backbone.View.extend({
         return {};
     },
 
-    // The actual "serializeData" that fed into the this.template.
+    // The actual "serializeData" that is fed into the this.template.
     // Used so a subclass can override this.serializeData and still
     // have the `view` helper.
     _serializeData: function() {
@@ -70,7 +71,7 @@ Minionette.View = Backbone.View.extend({
         return this;
     },
 
-    // Adds the Region "name" to as this[name].
+    // Adds the region "name" to this as this[name].
     // Also attaches it to this._regions[name], for
     // internal management.
     addRegion: function(name, view) {
@@ -117,7 +118,7 @@ Minionette.View = Backbone.View.extend({
         this._regions = {};
 
         // Pull regions from instantiated options.
-        var regions = this.regions;
+        var regions = _.result(this, 'regions');
         if (options.regions) { regions = options.regions; }
 
         // Add the regions
