@@ -1,16 +1,24 @@
 define(function() {
     describe('Minionette.Region', function() {
+        var RegionView = Minionette.View.extend({
+            template: _.template('<p>test</p><%= view("region") %><p>test</p>')
+        });
+        function addInnerView(name, parentView) {
+            var v = new Minionette.View({tagName: 'p'});
+            v.template = _.template("test")
+            v.render();
+            parentView.addRegion(name, v);
+            parentView.render();
+            return v;
+        }
         beforeEach(function() {
-            this.view = new Minionette.View();
+            this.view = new RegionView();
             this.region = new Minionette.Region({view: this.view});
         });
 
         describe("#_configure()", function() {
             it("picks view out of initialization options", function() {
-                var view = new Backbone.View(),
-                    region = new Minionette.Region({view: view})
-
-                expect(region.view).to.equal(view);
+                expect(this.region.view).to.equal(this.view);
             });
         });
 
@@ -55,14 +63,8 @@ define(function() {
             });
 
             it("replaces current view#el with newView#el (the same index in parent)", function() {
-                var v = new Minionette.View({tagName: 'p'});
-                v.template = _.template("test")
-                v.render();
-                this.view.template = _.template('<p>test</p><%= view("region") %><p>test</p>')
-                this.view.addRegion('region', v);
-                this.view.render();
-
-                var expectedIndex = v.$el.index();
+                var v = addInnerView('region', this.view),
+                    expectedIndex = v.$el.index();
 
                 this.view.region.attach(this.newView);
 
@@ -92,11 +94,11 @@ define(function() {
 
         describe("#detach()", function() {
             it("sets #_detachedView to the old #view", function() {
-                var v = this.region.view;
+                var oldView = this.region.view;
 
                 this.region.detach();
 
-                expect(this.region._detachedView).to.equal(v);
+                expect(this.region._detachedView).to.equal(oldView);
             });
 
             it("sets #view to #_view", function() {
@@ -106,18 +108,12 @@ define(function() {
             });
 
             it("replaces current view#el with _view#el (the same index in parent)", function() {
-                var v = new Minionette.View({tagName: 'p'});
-                v.template = _.template("test")
-                v.render();
-                this.view.template = _.template('<p>test</p><%= view("region") %><p>test</p>')
-                this.view.addRegion('region', v);
-                this.view.render();
-
-                var expectedIndex = v.$el.index();
+                var v = addInnerView('region', this.view),
+                    expectedIndex = v.$el.index();
 
                 this.view.region.detach();
 
-                expect(this.view.region.view.$el.index()).to.equal(expectedIndex);
+                expect(this.view.region._view.$el.index()).to.equal(expectedIndex);
             });
 
             it("calls #view#$el#detach()", function() {
@@ -143,14 +139,9 @@ define(function() {
             });
 
             it("scopes #reattach() to _parent", function() {
-                var v = new Minionette.View({tagName: 'p'});
-                v.template = _.template("test")
-                v.render();
-                this.view.template = _.template('<p>test</p><%= view("region") %><p>test</p>')
-                this.view.addRegion('region', v);
-                this.view.render();
-                this.view.region.detach();
                 this.view.remove(); // Make sure view isn't in the document.body
+                var v = addInnerView('region', this.view);
+                this.view.region.detach();
 
                 var expectedIndex = this.view.region.view.$el.index();
 
@@ -160,12 +151,7 @@ define(function() {
             });
 
             it("replaces view#el with _detachedView#el", function() {
-                var v = new Minionette.View({tagName: 'p'});
-                v.template = _.template("test")
-                v.render();
-                this.view.template = _.template('<p>test</p><%= view("region") %><p>test</p>')
-                this.view.addRegion('region', v);
-                this.view.render();
+                var v = addInnerView('region', this.view);
                 this.view.region.detach();
 
                 var expectedIndex = this.view.region.view.$el.index();
@@ -192,41 +178,29 @@ define(function() {
             });
 
             it("replaces view#el with _view#el", function() {
-                var v = new Minionette.View({tagName: 'p'});
-                v.template = _.template("test")
-                v.render();
-                this.view.template = _.template('<p>test</p><%= view("region") %><p>test</p>')
-                this.view.addRegion('region', v);
-                this.view.render();
-
-                var expectedIndex = this.view.region.view.$el.index();
+                var v = addInnerView('region', this.view),
+                    expectedIndex = v.$el.index();
 
                 this.view.region.remove();
 
-                expect(this.view.region.view.$el.index()).to.equal(expectedIndex);
+                expect(this.view.region._view.$el.index()).to.equal(expectedIndex);
             });
 
             it("returns removedView", function() {
-                var ret = this.region.remove();
+                var removedView = this.region.remove();
 
-                expect(ret).to.equal(this.view);
+                expect(removedView).to.equal(this.view);
             });
         });
 
         describe("#reset()", function() {
             it("replaces view#el with _view#el", function() {
-                var v = new Minionette.View({tagName: 'p'});
-                v.template = _.template("test")
-                v.render();
-                this.view.template = _.template('<p>test</p><%= view("region") %><p>test</p>')
-                this.view.addRegion('region', v);
-                this.view.render();
-
-                var expectedIndex = this.view.region.view.$el.index();
+                var v = addInnerView('region', this.view),
+                    expectedIndex = v.$el.index();
 
                 this.view.region.reset();
 
-                expect(this.view.region.view.$el.index()).to.equal(expectedIndex);
+                expect(this.view.region._view.$el.index()).to.equal(expectedIndex);
             });
 
             it("doesn't call #remove on old #view", function() {
@@ -239,10 +213,27 @@ define(function() {
         });
 
         describe("#_removeView()", function() {
-            it("sets #view to empty element", function() {
-                this.region.reset(this.view);
+            it("sets #view to #_view", function() {
+                this.region._removeView(this.view);
 
-                expect(this.region.view.$el).to.be.empty;
+                expect(this.region.view).to.equal(this.region._view);
+            });
+
+            it("replaces view#el with _view#el", function() {
+                var v = addInnerView('region', this.view),
+                    expectedIndex = v.$el.index();
+
+                this.view.region.reset();
+
+                expect(this.view.region._view.$el.index()).to.equal(expectedIndex);
+            });
+
+            it("doesn't call #remove on old #view", function() {
+                var spy = this.sinon.spy(this.view, 'remove');
+
+                this.region._removeView(this.view);
+
+                expect(spy).to.not.have.been.called;
             });
 
             it("only resets if #view equals passed in view", function() {
