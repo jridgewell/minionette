@@ -94,7 +94,31 @@ define(function() {
                     expect(this.view.serializeData().view).to.equal(this.view._viewHelper);
                 });
             })
-            xit("#_viewHelper()");
+            describe('#_viewHelper()', function() {
+                beforeEach(function() {
+                    this.innerView = new Minionette.View({tagName: 'p'});
+                    this.innerView.template = _.template('test');
+                    this.view.addRegion('region', this.innerView);
+                });
+                it("return a blank string if passed in region name isn't set", function() {
+                    var ret = this.view._viewHelper('notset');
+
+                    expect(ret).to.equal('');
+                });
+
+                it("renders the region", function() {
+                    var spy = this.sinon.spy(this.innerView, 'render');
+                    this.view._viewHelper('region');
+
+                    expect(spy).to.have.been.called;
+                });
+
+                it("returns the regions rendered outerHTML", function() {
+                    var ret = this.view._viewHelper('region');
+
+                    expect(ret).to.equal('<p>test</p>');
+                });
+            });
 
             describe("#delegateEvents()", function() {
                 it("calls Backbone.View's #delegateEvents()", function() {
@@ -266,6 +290,10 @@ define(function() {
 
                     expect(spy).to.have.been.called;
                 });
+            });
+
+            describe("#_initializeRegions()", function() {
+                xit("do something");
             });
 
             describe("#addRegion()", function() {
