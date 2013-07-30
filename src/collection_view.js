@@ -23,7 +23,7 @@ Minionette.CollectionView = Minionette.View.extend({
         var ModelView = this._getModelView();
 
 
-        var $el = this.$el.html(this.template(this._serializeData()));
+        var $el = this.$el.html(this.template(this._serialize()));
         // Use a DocumentFragment to speed up #render()
         this.$el = $(document.createDocumentFragment());
 

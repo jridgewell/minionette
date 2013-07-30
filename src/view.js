@@ -20,15 +20,15 @@ Minionette.View = Backbone.View.extend({
     // A default function that will have it's return passed
     // to this.template
     // Override this in a subclass to something useful.
-    serializeData: function() {
+    serialize: function() {
         return {};
     },
 
-    // The actual "serializeData" that is fed into the this.template.
-    // Used so a subclass can override this.serializeData and still
+    // The actual "serialize" that is fed into the this.template.
+    // Used so a subclass can override this.serialize and still
     // have the `view` helper.
-    _serializeData: function() {
-        return _.extend({view: this._viewHelper}, this.serializeData());
+    _serialize: function() {
+        return _.extend({view: this._viewHelper}, this.serialize());
     },
 
     // When delegating events, bind this view to jQuery's special remove event.
@@ -62,7 +62,7 @@ Minionette.View = Backbone.View.extend({
         // Detach all our regions, so they don't need to be re-rendered.
         _.invoke(this._regions, 'detach');
 
-        this.$el.html(this.template(this._serializeData()));
+        this.$el.html(this.template(this._serialize()));
 
         // Reattach all our regions
         _.invoke(this._regions, 'reattach');

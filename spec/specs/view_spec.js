@@ -102,36 +102,36 @@ define(function() {
                 expect(this.view.Region).to.equal(Minionette.Region);
             });
 
-            describe("#serializeData()", function() {
+            describe("#serialize()", function() {
                 it("returns an object", function() {
-                    expect(this.view.serializeData()).to.be.an.object;
+                    expect(this.view.serialize()).to.be.an.object;
                 });
             });
 
-            describe("#_serializeData()", function() {
-                it("merges #serializeData()", function() {
+            describe("#_serialize()", function() {
+                it("merges #serialize()", function() {
                     var key = _.uniqueId(),
                         value = _.uniqueId();
-                    this.view.serializeData = function() {
+                    this.view.serialize = function() {
                         var obj = {};
                         obj[key] = value;
                         return obj;
                     };
 
-                    expect(this.view._serializeData()[key]).to.equal(value);
+                    expect(this.view._serialize()[key]).to.equal(value);
                 });
 
-                it("can have view overridden by #serializeData()", function() {
+                it("can have view overridden by #serialize()", function() {
                     var value = _.uniqueId();
-                    this.view.serializeData = function() {
+                    this.view.serialize = function() {
                         return {view: value};
                     };
 
-                    expect(this.view._serializeData().view).to.equal(value);
+                    expect(this.view._serialize().view).to.equal(value);
                 });
 
                 it("has #_viewHelper as 'view' key", function() {
-                    expect(this.view._serializeData().view).to.equal(this.view._viewHelper);
+                    expect(this.view._serialize().view).to.equal(this.view._viewHelper);
                 });
             });
 
@@ -266,16 +266,16 @@ define(function() {
                     expect(spy).to.have.been.called;
                 });
 
-                it("passes #_serializeData() output to #template()", function() {
+                it("passes #_serialize() output to #template()", function() {
                     var stub = this.sinon.stub(this.view, 'template'),
-                        serializeData = _.uniqueId();
-                    this.view._serializeData = function() {
-                        return serializeData;
+                        serialize = _.uniqueId();
+                    this.view._serialize = function() {
+                        return serialize;
                     };
 
                     this.view.render();
 
-                    expect(stub).to.have.been.calledWith(serializeData);
+                    expect(stub).to.have.been.calledWith(serialize);
                 });
 
                 it("passes #template() output to $el#html()", function() {
