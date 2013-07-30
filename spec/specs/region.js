@@ -164,7 +164,7 @@ define(function() {
             it("deletes #_detachedView so it can't be re#attach()ed", function() {
                 this.region.reattach();
 
-                expect(this.region._detachedView).to.not.be.defined;
+                expect(this.region._detachedView).to.not.exist;
             });
         });
 
