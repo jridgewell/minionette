@@ -42,7 +42,7 @@ define(function() {
 
                 this.region.render();
 
-                expect(this.spy).to.have.been.called;
+                expect(spy).to.have.been.called;
             });
 
             it("returns #view#render()", function() {
