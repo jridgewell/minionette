@@ -15,6 +15,11 @@ define(function() {
             this.view = new RegionView();
             this.region = new Minionette.Region({view: this.view});
         });
+        afterEach(function() {
+            this.view.remove();
+            delete this.view;
+            delete this.region;
+        });
 
         describe("#_configure()", function() {
             it("picks view out of initialization options", function() {
@@ -60,6 +65,10 @@ define(function() {
         describe("#attach()", function() {
             beforeEach(function() {
                 this.newView = new Minionette.View();
+            });
+            afterEach(function() {
+                this.newView.remove();
+                delete this.newView;
             });
 
             it("replaces current view#el with newView#el (the same index in parent)", function() {

@@ -5,6 +5,7 @@ define(function() {
         });
         afterEach(function() {
             this.element.remove();
+            delete this.element;
         });
 
         it("doesn't trigger on jQuery#off()", function() {
@@ -30,6 +31,9 @@ define(function() {
                 this.spy = this.sinon.spy();
                 this.element.on('remove', this.spy);
             });
+            afterEach(function() {
+                delete this.spy;
+            });
 
             it("triggers on jQuery#remove()", function() {
                 this.element.remove();
@@ -44,6 +48,11 @@ define(function() {
                 this.nestedElement = $('<div />');
                 this.element.append(this.nestedElement);
                 this.nestedElement.on('remove', this.spy);
+            });
+            afterEach(function() {
+                this.nestedElement.remove();
+                delete this.spy;
+                delete this.nestedElement;
             });
 
             it("triggers on jQuery#remove() on parent element", function() {
