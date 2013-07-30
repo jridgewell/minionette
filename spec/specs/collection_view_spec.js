@@ -170,11 +170,11 @@ define(function() {
                 });
 
                 it("calls #remove() on the view", function() {
-                    var spy = this.sinon.spy(this.modelView, 'remove');
+                    var stub = this.sinon.stub(this.modelView, 'remove');
 
                     this.view.removeOne(this.model);
 
-                    expect(spy).to.have.been.called;
+                    expect(stub).to.have.been.called;
                 });
             });
 

@@ -10,11 +10,11 @@ define(function() {
 
         describe("constructor", function() {
             it("calls Backbone.View's constructor", function() {
-                var spy = this.sinon.spy(Backbone, 'View');
+                var stub = this.sinon.stub(Backbone, 'View');
 
                 new Minionette.View();
 
-                expect(spy).to.have.been.called;
+                expect(stub).to.have.been.called;
             });
 
             describe("Model Events", function() {
@@ -145,30 +145,30 @@ define(function() {
 
             describe("#delegateEvents()", function() {
                 it("calls Backbone.View's #delegateEvents()", function() {
-                    var spy = this.sinon.spy(Backbone.View.prototype, 'delegateEvents');
+                    var stub = this.sinon.stub(Backbone.View.prototype, 'delegateEvents');
 
                     this.view.delegateEvents();
 
-                    expect(spy).to.have.been.called;
+                    expect(stub).to.have.been.called;
                 });
 
                 it("sets #_jqueryRemove() listener on $el 'remove' event", function() {
-                    var spy = this.sinon.spy(this.view, '_jqueryRemove');
+                    var stub = this.sinon.stub(this.view, '_jqueryRemove');
                     this.view.delegateEvents();
 
                     this.view.$el.trigger('remove');
 
-                    expect(spy).to.have.been.called;
+                    expect(stub).to.have.been.called;
                 });
 
                 it("sets #_jqueryRemove() listener that is compatible with #undelegateEvents()", function() {
-                    var spy = this.sinon.spy(this.view, '_jqueryRemove');
+                    var stub = this.sinon.stub(this.view, '_jqueryRemove');
                     this.view.delegateEvents();
                     this.view.undelegateEvents();
 
                     this.view.$el.trigger('remove');
 
-                    expect(spy).to.not.have.been.called;
+                    expect(stub).to.not.have.been.called;
                 });
             });
 
@@ -194,21 +194,21 @@ define(function() {
                 it("removes from parent view", function() {
                     var parentView = new Minionette.View();
                     parentView.addRegion('region', this.view);
-                    var spy = this.sinon.spy(parentView.region, '_removeView');
+                    var stub = this.sinon.stub(parentView.region, '_removeView');
 
                     this.view.remove();
 
-                    expect(spy).to.have.been.called;
+                    expect(stub).to.have.been.called;
                 });
 
                 it("removes regions", function() {
                     var parentView = new Minionette.View(),
-                        spy = this.sinon.spy(this.view, 'remove');
+                        stub = this.sinon.stub(this.view, 'remove');
                     parentView.addRegion('region', this.view);
 
                     parentView.remove();
 
-                    expect(spy).to.have.been.called;
+                    expect(stub).to.have.been.called;
                 });
             });
 
@@ -244,7 +244,7 @@ define(function() {
                 });
 
                 it("passes #serializeData() output to #template()", function() {
-                    var spy = this.sinon.spy(this.view, 'template'),
+                    var stub = this.sinon.stub(this.view, 'template'),
                     serializeData = _.uniqueId;
                     this.view.serializeData = function() {
                         return serializeData;
@@ -252,11 +252,11 @@ define(function() {
 
                     this.view.render();
 
-                    expect(spy).to.have.been.calledWith(serializeData);
+                    expect(stub).to.have.been.calledWith(serializeData);
                 });
 
                 it("passes #template() output to $el#html()", function() {
-                    var spy = this.sinon.spy(this.view.$el, 'html'),
+                    var stub = this.sinon.stub(this.view.$el, 'html'),
                     template = _.uniqueId;
                     this.view.template = function() {
                         return template;
@@ -264,7 +264,7 @@ define(function() {
 
                     this.view.render();
 
-                    expect(spy).to.have.been.calledWith(template);
+                    expect(stub).to.have.been.calledWith(template);
                 });
 
                 it("reattaches regions", function() {
@@ -307,11 +307,11 @@ define(function() {
                 });
 
                 it("calls #remove()", function() {
-                    var spy = this.sinon.spy(this.view, 'remove');
+                    var stub = this.sinon.stub(this.view, 'remove');
 
                     this.view._jqueryRemove();
 
-                    expect(spy).to.have.been.called;
+                    expect(stub).to.have.been.called;
                 });
             });
 
