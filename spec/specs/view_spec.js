@@ -106,9 +106,32 @@ define(function() {
                 it("returns an object", function() {
                     expect(this.view.serializeData()).to.be.an.object;
                 });
+            });
+
+            describe("#_serializeData()", function() {
+                it("merges #serializeData()", function() {
+                    var key = _.uniqueId(),
+                        value = _.uniqueId();
+                    this.view.serializeData = function() {
+                        var obj = {};
+                        obj[key] = value;
+                        return obj;
+                    };
+
+                    expect(this.view._serializeData()[key]).to.equal(value);
+                });
+
+                it("can have view overridden by #serializeData()", function() {
+                    var value = _.uniqueId();
+                    this.view.serializeData = function() {
+                        return {view: value};
+                    };
+
+                    expect(this.view._serializeData().view).to.equal(value);
+                });
 
                 it("has #_viewHelper as 'view' key", function() {
-                    expect(this.view.serializeData().view).to.equal(this.view._viewHelper);
+                    expect(this.view._serializeData().view).to.equal(this.view._viewHelper);
                 });
             });
 
@@ -243,10 +266,10 @@ define(function() {
                     expect(spy).to.have.been.called;
                 });
 
-                it("passes #serializeData() output to #template()", function() {
+                it("passes #_serializeData() output to #template()", function() {
                     var stub = this.sinon.stub(this.view, 'template'),
-                    serializeData = _.uniqueId;
-                    this.view.serializeData = function() {
+                        serializeData = _.uniqueId();
+                    this.view._serializeData = function() {
                         return serializeData;
                     };
 
@@ -257,7 +280,7 @@ define(function() {
 
                 it("passes #template() output to $el#html()", function() {
                     var stub = this.sinon.stub(this.view.$el, 'html'),
-                    template = _.uniqueId;
+                    template = _.uniqueId();
                     this.view.template = function() {
                         return template;
                     };

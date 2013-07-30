@@ -23,31 +23,11 @@ define(function() {
             });
 
             describe("#serializeData()", function() {
-                it("calls Minionette.View#serializeData()", function() {
-                    var stub = this.sinon.stub(Minionette.View.prototype, 'serializeData');
-
-                    this.view.serializeData();
-
-                    expect(stub).to.have.been.called;
-                });
-
-                it("adds #model#attributes to return", function() {
+                it("returns #model#attributes", function() {
                     this.model.set(_.uniqueId(), _.uniqueId());
                     var ret = this.view.serializeData();
 
-                    _.each(this.model.attributes, function(value, key) {
-                        expect(ret[key]).equal(value);
-                    });
-                    expect(ret).to.not.deep.equal(this.model.attributes);
-                });
-
-                it("returns cloned model.attributes", function() {
-                    this.model.set(_.uniqueId(), _.uniqueId());
-                    var ret = this.view.serializeData();
-
-                    this.model.set('test', 'test');
-
-                    expect(ret.test).to.not.equal('test');
+                    expect(ret).to.deep.equal(this.model.attributes);
                 });
             });
         });
