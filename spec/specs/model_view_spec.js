@@ -22,10 +22,10 @@ define(function() {
                 });
             });
 
-            describe("#serializeData()", function() {
+            describe("#serialize()", function() {
                 it("returns #model#attributes", function() {
                     this.model.set(_.uniqueId(), _.uniqueId());
-                    var ret = this.view.serializeData();
+                    var ret = this.view.serialize();
 
                     expect(ret).to.deep.equal(this.model.attributes);
                 });
