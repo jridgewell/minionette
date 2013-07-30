@@ -83,6 +83,14 @@ Minionette.View = Backbone.View.extend({
         return region;
     },
 
+    // Adds multiple regions to the view. Takes
+    // an object with {regioneName: view} syntax
+    addRegions: function(regions) {
+        _.each(regions, function(view, name) {
+            this.addRegion(name, view);
+        }, this);
+    },
+
     // A remove helper to remove this view from it's parent
     _removeFromParent: function() {
         if (this._parent && this._parent._removeView) {
@@ -122,9 +130,7 @@ Minionette.View = Backbone.View.extend({
         if (options.regions) { regions = options.regions; }
 
         // Add the regions
-        _.each(regions, function(view, name) {
-            this.addRegion(name, view);
-        }, this);
+        this.addRegions(regions);
     },
 
     // A helper that is passed to #template() that will

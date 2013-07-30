@@ -377,6 +377,21 @@ define(function() {
                     expect(ret).to.equal(region);
                 });
             });
+
+            describe("#addRegions()", function() {
+                it("creates a region for each key:value pair", function() {
+                    var view1 = new Minionette.View(),
+                        view2 = new Minionette.View();
+
+                    this.view.addRegions({
+                        view1: view1,
+                        view2: view2
+                    });
+
+                    expect(this.view.view1.view).to.equal(view1);
+                    expect(this.view.view2.view).to.equal(view2);
+                });
+            });
         });
     });
 });
