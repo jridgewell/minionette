@@ -34,6 +34,11 @@
               </a>
             
               
+              <a class="source" href="region.html">
+                region.js
+              </a>
+            
+              
               <a class="source" href="view.html">
                 view.js
               </a>
@@ -96,7 +101,7 @@ Override this to provide custom data.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    serializeData: <span class="keyword">function</span>() {
-        <span class="keyword">return</span> _.clone(<span class="keyword">this</span>.model.attributes);
+        <span class="keyword">return</span> <span class="keyword">this</span>.model.attributes;
     }
 });</pre></div></div>
             

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>region.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="collection_view.html">
+                collection_view.js
+              </a>
+            
+              
+              <a class="source" href="jquery.cleanData.html">
+                jquery.cleanData.js
+              </a>
+            
+              
+              <a class="source" href="model_view.html">
+                model_view.js
+              </a>
+            
+              
+              <a class="source" href="region.html">
+                region.js
+              </a>
+            
+              
+              <a class="source" href="view.html">
+                view.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>region.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Minionette.Region = <span class="keyword">function</span>(options) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Setup a unique id for this region.
+Not really necessary, but it doesn&#39;t hurt.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>.cid = _.uniqueId(<span class="string">'subview'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Use the view specified at instantiation.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> (options &amp;&amp; options.view) { <span class="keyword">this</span>.view = options.view; }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Make sure we have a view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>._ensureView();
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Allow Regions to be extended.
+Backbone&#39;s extend is generic, just copy it over.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>Minionette.Region.extend = Backbone.View.extend;
+
+_.extend(Minionette.Region.prototype, Backbone.Events, {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>The place holder view&#39;s class</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _View: Backbone.View.extend({</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Set it to a span, so when it&#39;s empty it&#39;s
+collapsed on the DOM.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        tagName: <span class="string">'span'</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Use the data-cid attribute as a unique
+attribute. Used for reattaching a detached view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        attributes: <span class="keyword">function</span>() {
+            <span class="keyword">return</span> {<span class="string">'data-cid'</span>: <span class="keyword">this</span>.cid};
+        }
+    }),</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Ensures the region has a view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _ensureView: <span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Instantiate our place holder view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._view = <span class="keyword">new</span> <span class="keyword">this</span>._View();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Make sure the view is an instance of Backbone.View
+(or a subclass). If not, set the view to our place holder
+view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> (!(<span class="keyword">this</span>.view <span class="keyword">instanceof</span> Backbone.View)) {
+            <span class="keyword">this</span>.view = <span class="keyword">this</span>._view;
+        }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>And set our view&#39;s _parent to this region.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._assignParent(<span class="keyword">this</span>.view);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>A helper method to reset the region&#39;s view to the
+place holder view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    reset: <span class="keyword">function</span>() {
+        <span class="keyword">this</span>.attach(<span class="keyword">this</span>._view);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>A proxy method to the view&#39;s render().</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    render: <span class="keyword">function</span>() {
+        <span class="keyword">return</span> <span class="keyword">this</span>.view.render();
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Attaches newView. This sets newView#$el
+at the same index (inside the parent element)
+as the old view, and detaches the old view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    attach: <span class="keyword">function</span>(newView) {
+        <span class="keyword">this</span>._assignParent(newView);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Places newView after the current view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.view.$el.after(newView.$el);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>And detaches the view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.view.$el.detach();
+
+        <span class="keyword">this</span>.view = newView;
+
+        <span class="keyword">return</span> newView;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Replaces the old view with the place holder
+view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    remove: <span class="keyword">function</span>() {
+        <span class="keyword">var</span> oldView = <span class="keyword">this</span>.view;
+
+        <span class="keyword">this</span>.reset();
+        oldView.remove();
+
+        <span class="keyword">return</span> oldView;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Detaches the current view, replacing it with
+the place holder. Convenient for detaching
+during rendering.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    detach: <span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Store the current view for later reattaching.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._detachedView = <span class="keyword">this</span>.view;
+        <span class="keyword">this</span>.reset();
+
+        <span class="keyword">return</span> <span class="keyword">this</span>;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Reattaches the detached view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    reattach: <span class="keyword">function</span>() {
+        <span class="keyword">if</span> (!<span class="keyword">this</span>._detachedView) { <span class="keyword">return</span>; }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>$context is a scoped context in which to search
+for the current view&#39;s element in.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> $context = (<span class="keyword">this</span>._parent &amp;&amp; <span class="keyword">this</span>._parent.$el) || Backbone.$(document.body),
+            viewSelector = <span class="string">'[data-cid='</span> + <span class="keyword">this</span>.view.cid + <span class="string">']'</span>,
+            newView = <span class="keyword">this</span>._detachedView;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>We then replace the current view with the detached view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        $context.find(viewSelector).replaceWith(newView.$el);
+
+        <span class="keyword">delete</span> <span class="keyword">this</span>._detachedView;
+        <span class="keyword">this</span>.view = newView;
+
+        <span class="keyword">return</span> newView;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>A hook method that is called during
+a view#remove(). Allows a view to be removed,
+replacing it with the place holder.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _removeView: <span class="keyword">function</span>(view) {
+        <span class="keyword">if</span> (<span class="keyword">this</span>.view === view) {
+            <span class="keyword">this</span>.reset();
+        }
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Sets view#_parent to this region.
+So view#remove() can hook into our
+_removeView().</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _assignParent: <span class="keyword">function</span>(view) {
+        view._parent = <span class="keyword">this</span>;
+    }
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
