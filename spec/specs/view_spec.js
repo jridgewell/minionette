@@ -17,7 +17,7 @@ define(function() {
             });
 
             it("initializes _subViews", function() {
-                expect(this.view._subViews).to.be.defined;
+                expect(this.view._subViews).to.exist;
             });
 
             describe("Model Events", function() {
@@ -81,8 +81,8 @@ define(function() {
 
         describe("instances", function() {
             it("creates #template()", function() {
-                expect(this.view.template).to.be.defined;
-                expect(this.view.template()).to.be.defined;
+                expect(this.view.template).to.exist;
+                expect(this.view.template()).to.exist;
             });
 
             it("sets Region to Minionette.Region", function() {
