@@ -5,6 +5,11 @@ define(function() {
                 this.collection = new Backbone.Collection();
                 this.view = new Minionette.CollectionView({collection: this.collection});
             });
+            afterEach(function() {
+                this.view.remove();
+                delete this.collection;
+                delete this.view;
+            })
 
             it("sets ModelView to Backbone.View", function() {
                 expect(this.view.ModelView).to.equal(Backbone.View);
@@ -77,6 +82,10 @@ define(function() {
                 beforeEach(function() {
                     this.model = new Backbone.Model();
                 });
+                afterEach(function() {
+                    this.model.destroy();
+                    delete this.model;
+                });
 
                 it("triggers 'addOne:before' event", function() {
                     var spy = this.sinon.spy();
@@ -129,6 +138,12 @@ define(function() {
                     this.model = new Backbone.Model();
                     this.modelView = this.view.addOne(this.model);
                 });
+                afterEach(function() {
+                    this.modelView.remove();
+                    this.model.destroy();
+                    delete this.model;
+                    delete this.modelView;
+                });
 
                 it("triggers 'removeOne:before' event", function() {
                     var spy = this.sinon.spy();
@@ -164,19 +179,17 @@ define(function() {
             });
 
             describe("#_getModelView()", function() {
-                beforeEach(function() {
-                    this.View = Minionette.CollectionView.extend({
-                        ModelView: 'DefaultModelView'
-                    });
+                var View = Minionette.CollectionView.extend({
+                    ModelView: 'DefaultModelView'
                 });
 
                 it("returns this#ModelView", function() {
-                    var view = new this.View();
+                    var view = new View();
                     expect(view._getModelView()).to.equal('DefaultModelView');
                 });
 
                 it("returns ModelView passed in at instantiation", function() {
-                    var view = new this.View({ModelView: 'instantiation'});
+                    var view = new View({ModelView: 'instantiation'});
                     expect(view._getModelView()).to.equal('instantiation');
                 });
             });

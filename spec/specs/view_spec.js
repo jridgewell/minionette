@@ -5,6 +5,7 @@ define(function() {
         });
         afterEach(function() {
             this.view.remove();
+            delete this.view;
         });
 
         describe("constructor", function() {
@@ -25,6 +26,12 @@ define(function() {
                         }
                     });
                     this.model = new Backbone.Model();
+                });
+                after(function() {
+                    this.model.destroy();
+                    delete this.spy;
+                    delete this.ModelEventTest;
+                    delete this.model;
                 });
 
                 it("listens for model events", function() {
@@ -47,6 +54,11 @@ define(function() {
                     });
                     this.collection = new Backbone.Collection();
                 });
+                after(function() {
+                    delete this.spy;
+                    delete this.CollectionEventTest;
+                    delete this.collection;
+                });
 
                 it("listens for collection events", function() {
                     var view = new this.CollectionEventTest({collection: this.collection});
@@ -66,6 +78,11 @@ define(function() {
                             region: this.regionView
                         }
                     });
+                });
+                after(function() {
+                    this.regionView.remove();
+                    delete this.regionView;
+                    delete this.RegionTest;
                 });
 
                 it("attaches regions to the view", function() {
@@ -101,6 +118,11 @@ define(function() {
                     this.innerView.template = _.template('test');
                     this.view.addRegion('region', this.innerView);
                 });
+                afterEach(function() {
+                    this.innerView.remove();
+                    delete this.innerView;
+                });
+
                 it("return a blank string if passed in region name isn't set", function() {
                     var ret = this.view._viewHelper('notset');
 

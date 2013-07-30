@@ -5,6 +5,12 @@ define(function() {
                 this.model = new Backbone.Model();
                 this.view = new Minionette.ModelView({model: this.model});
             });
+            afterEach(function() {
+                this.model.destroy();
+                this.view.remove();
+                delete this.model;
+                delete this.view;
+            });
 
             describe("Model Events", function() {
                 it("#render() on model's 'change' event", function() {
