@@ -25,9 +25,7 @@ Minionette.CollectionView = Minionette.View.extend({
         this.trigger('render');
 
         // Dump all our modelViews.
-        // They will be removed by the jQuery#remove
-        // listener when we clear $el
-        this._modelViews = {};
+        this._removeModelViews();
 
         var $el = this.$el.html(this.template(this._serialize()));
         // Use a DocumentFragment to speed up #render()
