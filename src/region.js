@@ -78,16 +78,23 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         return newView;
     },
 
-    // Replaces the old view with the place holder
-    // view.
+    // Removes this region, and it's view.
     remove: function() {
-        var oldView = this.view;
+        this._removeViews();
+        this._removeFromParent();
+    },
 
-        this.reset();
-        oldView.remove();
-        delete this._detachedView;
+    _removeViews: function() {
+        this.view.remove();
+        this._view.remove();
+        this._detachedView && this._detachedView.remove();
+    },
 
-        return oldView;
+    _removeFromParent: function() {
+        if (this._parent && this._parent._removeRegion) {
+            this._parent._removeRegion(this);
+        }
+        this._parent = null;
     },
 
     // Detaches the current view, replacing it with
