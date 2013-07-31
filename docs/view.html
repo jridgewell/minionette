@@ -68,10 +68,7 @@
             
             <div class="content"><div class='highlight'><pre>Minionette.View = Backbone.View.extend({
     constructor: <span class="keyword">function</span>(options) {
-        <span class="keyword">this</span>._initializeRegions(options || {});
-
-        _.bindAll(<span class="keyword">this</span>, <span class="string">'_jqueryRemove'</span>, <span class="string">'_viewHelper'</span>);
-        Backbone.View.apply(<span class="keyword">this</span>, arguments);</pre></div></div>
+        options || (options = {});</pre></div></div>
             
         </li>
         
@@ -82,13 +79,16 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Have the view listenTo the model and collection.</p>
+              <p>Ensure we have a Region to initialize
+new regions from.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._listenToEvents(<span class="keyword">this</span>.model, _.result(<span class="keyword">this</span>, <span class="string">'modelEvents'</span>));
-        <span class="keyword">this</span>._listenToEvents(<span class="keyword">this</span>.collection, _.result(<span class="keyword">this</span>, <span class="string">'collectionEvents'</span>));
-    },</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._ensureRegion(options);
+        <span class="keyword">this</span>._initializeRegions(options);
+
+        _.bindAll(<span class="keyword">this</span>, <span class="string">'_jqueryRemove'</span>, <span class="string">'_viewHelper'</span>);
+        Backbone.View.apply(<span class="keyword">this</span>, arguments);</pre></div></div>
             
         </li>
         
@@ -99,11 +99,13 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>The Region class to create new regions from.</p>
+              <p>Have the view listenTo the model and collection.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    Region: Minionette.Region,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._listenToEvents(<span class="keyword">this</span>.model, _.result(<span class="keyword">this</span>, <span class="string">'modelEvents'</span>));
+        <span class="keyword">this</span>._listenToEvents(<span class="keyword">this</span>.collection, _.result(<span class="keyword">this</span>, <span class="string">'collectionEvents'</span>));
+    },</pre></div></div>
             
         </li>
         
@@ -136,7 +138,7 @@ Override this in a subclass to something useful.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    serializeData: <span class="keyword">function</span>() {
+            <div class="content"><div class='highlight'><pre>    serialize: <span class="keyword">function</span>() {
         <span class="keyword">return</span> {};
     },</pre></div></div>
             
@@ -149,14 +151,14 @@ Override this in a subclass to something useful.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>The actual &quot;serializeData&quot; that is fed into the this.template.
-Used so a subclass can override this.serializeData and still
+              <p>The actual &quot;serialize&quot; that is fed into the this.template.
+Used so a subclass can override this.serialize and still
 have the <code>view</code> helper.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    _serializeData: <span class="keyword">function</span>() {
-        <span class="keyword">return</span> _.extend({view: <span class="keyword">this</span>._viewHelper}, <span class="keyword">this</span>.serializeData());
+            <div class="content"><div class='highlight'><pre>    _serialize: <span class="keyword">function</span>() {
+        <span class="keyword">return</span> _.extend({view: <span class="keyword">this</span>._viewHelper}, <span class="keyword">this</span>.serialize());
     },</pre></div></div>
             
         </li>
@@ -238,7 +240,7 @@ Allows us to clean up the view, even if you remove this.$el with jQuery.
             
             <div class="content"><div class='highlight'><pre>        _.invoke(<span class="keyword">this</span>._regions, <span class="string">'detach'</span>);
 
-        <span class="keyword">this</span>.$el.html(<span class="keyword">this</span>.template(<span class="keyword">this</span>._serializeData()));</pre></div></div>
+        <span class="keyword">this</span>.$el.html(<span class="keyword">this</span>.template(<span class="keyword">this</span>._serialize()));</pre></div></div>
             
         </li>
         
@@ -292,6 +294,26 @@ internal management.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
+              <p>Adds multiple regions to the view. Takes
+an object with {regioneName: view} syntax</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    addRegions: <span class="keyword">function</span>(regions) {
+        _.each(regions, <span class="keyword">function</span>(view, name) {
+            <span class="keyword">this</span>.addRegion(name, view);
+        }, <span class="keyword">this</span>);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
               <p>A remove helper to remove this view from it&#39;s parent</p>
 
             </div>
@@ -306,11 +328,11 @@ internal management.</p>
         </li>
         
         
-        <li id="section-14">
+        <li id="section-15">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-14">&#182;</a>
+                <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
               <p>A proxy method to #remove()
 Done so we don&#39;t _.bindall() to</p>
@@ -326,11 +348,11 @@ Done so we don&#39;t _.bindall() to</p>
         </li>
         
         
-        <li id="section-15">
+        <li id="section-16">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-15">&#182;</a>
+                <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
               <p>Loop through the events given, and listen to
 entity&#39;s event.</p>
@@ -348,11 +370,29 @@ entity&#39;s event.</p>
         </li>
         
         
-        <li id="section-16">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-16">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Sets this.Region. Prioritizes instantiated options.Region,
+then a subclass&#39; prototype Region, and defaults to Minionette.Region</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _ensureRegion: <span class="keyword">function</span>(options) {
+        <span class="keyword">this</span>.Region = options.Region || <span class="keyword">this</span>.Region || Minionette.Region;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Takes the #regions object and creates the regions,
 using the keys as the name and the values as the original
@@ -366,11 +406,11 @@ value will make Region use a placeholder span element.</p>
         </li>
         
         
-        <li id="section-17">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-17">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Initialize our regions object</p>
 
@@ -381,11 +421,11 @@ value will make Region use a placeholder span element.</p>
         </li>
         
         
-        <li id="section-18">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-18">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Pull regions from instantiated options.</p>
 
@@ -397,29 +437,27 @@ value will make Region use a placeholder span element.</p>
         </li>
         
         
-        <li id="section-19">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-19">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Add the regions</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        _.each(regions, <span class="keyword">function</span>(view, name) {
-            <span class="keyword">this</span>.addRegion(name, view);
-        }, <span class="keyword">this</span>);
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.addRegions(regions);
     },</pre></div></div>
             
         </li>
         
         
-        <li id="section-20">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>A helper that is passed to #template() that will
 render regions inline.</p>

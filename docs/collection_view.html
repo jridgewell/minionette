@@ -66,7 +66,8 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>Minionette.CollectionView = Minionette.View.extend({</pre></div></div>
+            <div class="content"><div class='highlight'><pre>Minionette.CollectionView = Minionette.View.extend({
+    constructor: <span class="keyword">function</span>(options) {</pre></div></div>
             
         </li>
         
@@ -77,11 +78,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>The View class to render the collection as.</p>
+              <p>Initialize a object for our modelViews</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    ModelView: Backbone.View,</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._modelViews = {};</pre></div></div>
             
         </li>
         
@@ -91,6 +92,25 @@
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Ensure this has a ModelView to initialize
+new modelViews from.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._ensureModelView(options || {});
+
+        Minionette.View.apply(<span class="keyword">this</span>, arguments);
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>Listen to the default events.</p>
 
@@ -106,11 +126,11 @@
         </li>
         
         
-        <li id="section-4">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>A default useful render function.</p>
 
@@ -122,11 +142,11 @@
         </li>
         
         
-        <li id="section-5">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Dump all our modelViews.
 They will be removed by the jQuery#remove
@@ -134,25 +154,9 @@ listener when we clear $el</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._modelViews = {};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-6">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
-              </div>
-              <p>Collect the ModelView class.</p>
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._modelViews = {};
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> ModelView = <span class="keyword">this</span>._getModelView();
-
-
-        <span class="keyword">var</span> $el = <span class="keyword">this</span>.$el.html(<span class="keyword">this</span>.template(<span class="keyword">this</span>._serializeData()));</pre></div></div>
+        <span class="keyword">var</span> $el = <span class="keyword">this</span>.$el.html(<span class="keyword">this</span>.template(<span class="keyword">this</span>._serialize()));</pre></div></div>
             
         </li>
         
@@ -182,9 +186,7 @@ listener when we clear $el</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.collection.each(<span class="keyword">function</span>(model) {
-            <span class="keyword">this</span>._addModelView(model, ModelView);
-        }, <span class="keyword">this</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.collection.each(<span class="keyword">this</span>._addModelView, <span class="keyword">this</span>);</pre></div></div>
             
         </li>
         
@@ -235,8 +237,7 @@ and set that as this.$el</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> ModelView = <span class="keyword">this</span>._getModelView(),
-            view = <span class="keyword">this</span>._addModelView(model, ModelView);
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> view = <span class="keyword">this</span>._addModelView(model);
 
         <span class="keyword">this</span>.trigger(<span class="string">'addOne'</span>);
         <span class="keyword">return</span> view;
@@ -278,8 +279,8 @@ and set that as this.$el</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    _addModelView: <span class="keyword">function</span>(model, ModelView) {
-        <span class="keyword">var</span> modelView = <span class="keyword">new</span> ModelView({model: model});</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    _addModelView: <span class="keyword">function</span>(model) {
+        <span class="keyword">var</span> modelView = <span class="keyword">new</span> <span class="keyword">this</span>.ModelView({model: model});</pre></div></div>
             
         </li>
         
@@ -294,8 +295,7 @@ and set that as this.$el</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._modelViews || (<span class="keyword">this</span>._modelViews = {});
-        <span class="keyword">this</span>._modelViews[modelView.cid] = modelView;
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._modelViews[modelView.cid] = modelView;
         modelView._parent = <span class="keyword">this</span>;
 
         <span class="keyword">this</span>.$el.append(modelView.render().$el);
@@ -311,17 +311,12 @@ and set that as this.$el</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>Find the correct ModelView to use.
-Prioritizes the one passed at initialization.</p>
+              <p>Find the view associated with a model from our modelViews.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    _getModelView: <span class="keyword">function</span>() {
-        <span class="keyword">var</span> ModelView = <span class="keyword">this</span>.ModelView;
-        <span class="keyword">if</span> (<span class="keyword">this</span>.options &amp;&amp; <span class="keyword">this</span>.options.ModelView) {
-            ModelView = <span class="keyword">this</span>.options.ModelView;
-        }
-        <span class="keyword">return</span> ModelView;
+            <div class="content"><div class='highlight'><pre>    _findModelViewByModel: <span class="keyword">function</span>(model) {
+        <span class="keyword">return</span> _.findWhere(<span class="keyword">this</span>._modelViews, {model: model});
     },</pre></div></div>
             
         </li>
@@ -333,12 +328,13 @@ Prioritizes the one passed at initialization.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>Find the view associated with a model from our modelViews.</p>
+              <p>Sets this.ModelView. Prioritizes instantiated options.ModelView,
+then a subclass&#39; prototype ModelView, and defaults to Backbone.View</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    _findModelViewByModel: <span class="keyword">function</span>(model) {
-        <span class="keyword">return</span> _.findWhere(<span class="keyword">this</span>._modelViews, {model: model});
+            <div class="content"><div class='highlight'><pre>    _ensureModelView: <span class="keyword">function</span>(options) {
+        <span class="keyword">this</span>.ModelView = options.ModelView || <span class="keyword">this</span>.ModelView || Backbone.View;
     }
 });</pre></div></div>
             
