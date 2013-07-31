@@ -128,7 +128,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // replacing it with the place holder.
     _removeView: function(view) {
         if (this.view === view) {
-            this.remove();
+            this.reset(true);
         }
     },
 
