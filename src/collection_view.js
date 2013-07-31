@@ -7,6 +7,9 @@ Minionette.CollectionView = Minionette.View.extend({
         this._ensureModelView(options || {});
 
         Minionette.View.apply(this, arguments);
+
+        // Make sure we remove our modelViews when this is removed.
+        this.listenTo(this, 'remove', this._removeModelViews);
     },
 
     // Listen to the default events.
@@ -70,6 +73,18 @@ Minionette.CollectionView = Minionette.View.extend({
 
         this.$el.append(modelView.render().$el);
         return modelView;
+    },
+
+    // A hook method that is called during
+    // a view#remove().
+    _removeView: function(view) {
+        delete this._modelViews[view.cid];
+    },
+
+    // A callback method bound to the 'remove:before'
+    // event.
+    _removeModelViews: function() {
+        _.invoke(this._modelViews, 'remove');
     },
 
     // Sets this.ModelView. Prioritizes instantiated options.ModelView,
