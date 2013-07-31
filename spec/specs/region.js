@@ -176,14 +176,6 @@ define(function() {
         });
 
         describe("#remove()", function() {
-            it("calls #_view#remove()", function() {
-                var stub = this.sinon.stub(this.region._view, 'remove');
-
-                this.region.remove();
-
-                expect(stub).to.have.been.called;
-            });
-
             it("calls #view#remove()", function() {
                 var stub = this.sinon.stub(this.view, 'remove');
 
