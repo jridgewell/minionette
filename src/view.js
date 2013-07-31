@@ -79,6 +79,7 @@ Minionette.View = Backbone.View.extend({
     // internal management.
     addRegion: function(name, view) {
         var region = new this.Region({view: view});
+        if (this._regions[name]) { this._regions[name].remove(); }
 
         region.name = name;
         region._parent = this;
@@ -104,8 +105,10 @@ Minionette.View = Backbone.View.extend({
     },
 
     _removeRegion: function(region) {
-        delete this[region.name];
-        delete this._regions[region.name];
+        if (this._regions[region.name]) {
+            delete this[region.name];
+            delete this._regions[region.name];
+        }
     },
 
     // A proxy method to #remove()
