@@ -78,6 +78,7 @@ Minionette.View = Backbone.View.extend({
     addRegion: function(name, view) {
         var region = new this.Region({view: view});
 
+        region.name = name;
         region._parent = this;
         this[name] = this._regions[name] = region;
 
