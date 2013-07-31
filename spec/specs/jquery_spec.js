@@ -4,7 +4,6 @@ define(function() {
             this.element = $('<div />');
         });
         afterEach(function() {
-            this.element.remove();
             delete this.element;
         });
 
@@ -50,7 +49,6 @@ define(function() {
                 this.nestedElement.on('remove', this.spy);
             });
             afterEach(function() {
-                this.nestedElement.remove();
                 delete this.spy;
                 delete this.nestedElement;
             });

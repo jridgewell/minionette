@@ -4,7 +4,6 @@ define(function() {
             this.view = new Minionette.View();
         });
         afterEach(function() {
-            this.view.remove();
             delete this.view;
         });
 
@@ -28,7 +27,6 @@ define(function() {
                     this.model = new Backbone.Model();
                 });
                 after(function() {
-                    this.model.destroy();
                     delete this.spy;
                     delete this.ModelEventTest;
                     delete this.model;
@@ -80,7 +78,6 @@ define(function() {
                     });
                 });
                 after(function() {
-                    this.regionView.remove();
                     delete this.regionView;
                     delete this.RegionTest;
                 });
@@ -142,7 +139,6 @@ define(function() {
                     this.view.addRegion('region', this.innerView);
                 });
                 afterEach(function() {
-                    this.innerView.remove();
                     delete this.innerView;
                 });
 
@@ -344,7 +340,6 @@ define(function() {
                     this.region = this.view.addRegion('region', this.innerView);
                 });
                 afterEach(function() {
-                    this.innerView.remove();
                     delete this.region;
                     delete this.innerView;
                 });
