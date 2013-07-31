@@ -9,11 +9,11 @@ define(function() {
 
         describe("constructor", function() {
             it("calls Backbone.View's constructor", function() {
-                var stub = this.sinon.stub(Backbone, 'View');
+                var spy = this.sinon.spy(Backbone, 'View');
 
                 new Minionette.View();
 
-                expect(stub).to.have.been.called;
+                expect(spy).to.have.been.called;
             });
 
             describe("Model Events", function() {
@@ -84,6 +84,7 @@ define(function() {
 
                 it("attaches regions to the view", function() {
                     var view = new this.RegionTest();
+
                     expect(view.region.view).to.equal(this.regionView);
                 });
             });
@@ -202,23 +203,23 @@ define(function() {
                 });
 
                 it("removes from parent view", function() {
-                    var parentView = new Minionette.View();
-                    parentView.addRegion('region', this.view);
-                    var stub = this.sinon.stub(parentView.region, '_removeView');
+                    var subView = new Minionette.View();
+                    this.view.addRegion('region', subView);
+                    var spy = this.sinon.spy(this.view.region, '_removeView');
 
-                    this.view.remove();
+                    subView.remove();
 
-                    expect(stub).to.have.been.called;
+                    expect(spy).to.have.been.called;
                 });
 
                 it("removes regions", function() {
-                    var parentView = new Minionette.View(),
-                        stub = this.sinon.stub(this.view, 'remove');
-                    parentView.addRegion('region', this.view);
+                    var subView = new Minionette.View(),
+                        spy = this.sinon.spy(subView, 'remove');
+                    this.view.addRegion('region', subView);
 
-                    parentView.remove();
+                    this.view.remove();
 
-                    expect(stub).to.have.been.called;
+                    expect(spy).to.have.been.called;
                 });
             });
 
@@ -308,11 +309,11 @@ define(function() {
                 });
 
                 it("calls #remove()", function() {
-                    var stub = this.sinon.stub(this.view, 'remove');
+                    var spy = this.sinon.spy(this.view, 'remove');
 
                     this.view._jqueryRemove();
 
-                    expect(stub).to.have.been.called;
+                    expect(spy).to.have.been.called;
                 });
             });
 

@@ -44,11 +44,11 @@ define(function() {
 
                 it("removes old modelViews", function() {
                     var view = this.view.addOne(new Backbone.Model()),
-                        stub = this.sinon.stub(view, 'remove');
+                        spy = this.sinon.spy(view, 'remove');
 
                     this.view.render();
 
-                    expect(stub).to.have.been.called;
+                    expect(spy).to.have.been.called;
                 });
 
                 it("returns the view", function() {
@@ -148,22 +148,22 @@ define(function() {
                 });
 
                 it("calls #remove() on the view", function() {
-                    var stub = this.sinon.stub(this.modelView, 'remove');
+                    var spy = this.sinon.spy(this.modelView, 'remove');
 
                     this.view.removeOne(this.model);
 
-                    expect(stub).to.have.been.called;
+                    expect(spy).to.have.been.called;
                 });
             });
 
             describe("#remove()", function() {
                 it("calls #remove() on the modelViews", function() {
                     var view = this.view.addOne(new Backbone.Model()),
-                        stub = this.sinon.stub(view, 'remove');
+                        spy = this.sinon.spy(view, 'remove');
 
                     this.view.remove();
 
-                    expect(stub).to.have.been.called;
+                    expect(spy).to.have.been.called;
                 });
             });
         });
