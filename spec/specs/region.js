@@ -235,14 +235,6 @@ define(function() {
                 expect(this.view.region._view.$el.index()).to.equal(expectedIndex);
             });
 
-            it("doesn't call #remove on old #view", function() {
-                var stub = this.sinon.stub(this.view, 'remove');
-
-                this.region._removeView(this.view);
-
-                expect(stub).to.not.have.been.called;
-            });
-
             it("only resets if #view equals passed in view", function() {
                 var v = new Minionette.View();
 
