@@ -104,6 +104,7 @@ Minionette.View = Backbone.View.extend({
     },
 
     _removeRegion: function(region) {
+        delete this[region.name];
         delete this._regions[region.name];
     },
 
