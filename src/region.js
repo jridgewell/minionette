@@ -78,6 +78,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
         this.reset();
         oldView.remove();
+        delete this._detachedView;
 
         return oldView;
     },
