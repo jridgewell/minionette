@@ -100,6 +100,16 @@ define(function() {
         });
 
         describe("#detach()", function() {
+            it("remove old #_detachedView if it exists", function() {
+                var oldView = this.region.view;
+                this.region.detach();
+                var spy = this.sinon.spy(oldView, 'remove');
+
+                this.region.detach();
+
+                expect(spy).to.have.been.called;
+            });
+
             it("sets #_detachedView to the old #view", function() {
                 var oldView = this.region.view;
 
