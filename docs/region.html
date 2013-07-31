@@ -131,7 +131,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {</pre></div></div>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    _View: Backbone.View.extend({</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    View: Minionette.View.extend({</pre></div></div>
             
         </li>
         
@@ -196,7 +196,7 @@ attribute. Used for reattaching a detached view.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._view = <span class="keyword">new</span> <span class="keyword">this</span>._View();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._view = <span class="keyword">new</span> <span class="keyword">this</span>.View();</pre></div></div>
             
         </li>
         
@@ -212,7 +212,7 @@ if supplied.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        options.view &amp;&amp; (<span class="keyword">this</span>.view = options.view);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> (options.view) { <span class="keyword">this</span>.view = options.view; }</pre></div></div>
             
         </li>
         
@@ -258,13 +258,14 @@ view.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>A helper method to reset the region&#39;s view to the
-place holder view.</p>
+              <p>Resets the region&#39;s view to place holder view.
+Optionally takes a boolean, in which case the
+oldView will just be detached.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    reset: <span class="keyword">function</span>() {
-        <span class="keyword">this</span>.attach(<span class="keyword">this</span>._view);
+            <div class="content"><div class='highlight'><pre>    reset: <span class="keyword">function</span>(detach) {
+        <span class="keyword">this</span>.attach(<span class="keyword">this</span>._view, detach);
     },</pre></div></div>
             
         </li>
@@ -295,12 +296,13 @@ place holder view.</p>
               </div>
               <p>Attaches newView. This sets newView#$el
 at the same index (inside the parent element)
-as the old view, and detaches the old view.</p>
+as the old view, and removes the old view.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    attach: <span class="keyword">function</span>(newView) {
-        <span class="keyword">this</span>._assignParent(newView);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    attach: <span class="keyword">function</span>(newView, detach) {
+        <span class="keyword">this</span>._assignParent(newView);
+        <span class="keyword">var</span> oldView = <span class="keyword">this</span>.view;</pre></div></div>
             
         </li>
         
@@ -332,10 +334,7 @@ as the old view, and detaches the old view.</p>
             
             <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.view.$el.detach();
 
-        <span class="keyword">this</span>.view = newView;
-
-        <span class="keyword">return</span> newView;
-    },</pre></div></div>
+        <span class="keyword">this</span>.view = newView;</pre></div></div>
             
         </li>
         
@@ -346,18 +345,15 @@ as the old view, and detaches the old view.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>Replaces the old view with the place holder
-view.</p>
+              <p>Remove the view</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    remove: <span class="keyword">function</span>() {
-        <span class="keyword">var</span> oldView = <span class="keyword">this</span>.view;
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> (!detach) {
+            oldView.remove();
+        }
 
-        <span class="keyword">this</span>.reset();
-        oldView.remove();
-
-        <span class="keyword">return</span> oldView;
+        <span class="keyword">return</span> newView;
     },</pre></div></div>
             
         </li>
@@ -368,6 +364,37 @@ view.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Removes this region, and it&#39;s view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    remove: <span class="keyword">function</span>() {
+        <span class="keyword">this</span>._removeViews();
+        <span class="keyword">this</span>._removeFromParent();
+    },
+
+    _removeViews: <span class="keyword">function</span>() {
+        <span class="keyword">this</span>.view.remove();
+        <span class="keyword">this</span>._view.remove();
+        <span class="keyword">this</span>._detachedView &amp;&amp; <span class="keyword">this</span>._detachedView.remove();
+    },
+
+    _removeFromParent: <span class="keyword">function</span>() {
+        <span class="keyword">if</span> (<span class="keyword">this</span>._parent &amp;&amp; <span class="keyword">this</span>._parent._removeRegion) {
+            <span class="keyword">this</span>._parent._removeRegion(<span class="keyword">this</span>);
+        }
+        <span class="keyword">this</span>._parent = <span class="literal">null</span>;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>Detaches the current view, replacing it with
 the place holder. Convenient for detaching
@@ -380,18 +407,21 @@ during rendering.</p>
         </li>
         
         
-        <li id="section-20">
+        <li id="section-21">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-20">&#182;</a>
+                <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <p>Store the current view for later reattaching.</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._detachedView = <span class="keyword">this</span>.view;
-        <span class="keyword">this</span>.reset();
+
+        <span class="keyword">if</span> (<span class="keyword">this</span>.view !== <span class="keyword">this</span>._view) {
+            <span class="keyword">this</span>.reset(<span class="literal">true</span>);
+        }
 
         <span class="keyword">return</span> <span class="keyword">this</span>;
     },</pre></div></div>
@@ -399,11 +429,11 @@ during rendering.</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-22">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Reattaches the detached view.</p>
 
@@ -415,11 +445,11 @@ during rendering.</p>
         </li>
         
         
-        <li id="section-22">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>$context is a scoped context in which to search
 for the current view&#39;s element in.</p>
@@ -433,11 +463,11 @@ for the current view&#39;s element in.</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>We then replace the current view with the detached view.</p>
 
@@ -454,11 +484,11 @@ for the current view&#39;s element in.</p>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>A hook method that is called during
 a view#remove(). Allows a view to be removed,
@@ -468,18 +498,18 @@ replacing it with the place holder.</p>
             
             <div class="content"><div class='highlight'><pre>    _removeView: <span class="keyword">function</span>(view) {
         <span class="keyword">if</span> (<span class="keyword">this</span>.view === view) {
-            <span class="keyword">this</span>.reset();
+            <span class="keyword">this</span>.reset(<span class="literal">true</span>);
         }
     },</pre></div></div>
             
         </li>
         
         
-        <li id="section-25">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>Sets view#_parent to this region.
 So view#remove() can hook into our

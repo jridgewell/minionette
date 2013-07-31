@@ -198,14 +198,16 @@ Allows us to clean up the view, even if you remove this.$el with jQuery.
             <div class="content"><div class='highlight'><pre>    remove: <span class="keyword">function</span>() {
         <span class="keyword">if</span> (!<span class="keyword">this</span>._isRemoving) {
             <span class="keyword">this</span>._isRemoving = <span class="literal">true</span>;
-            <span class="keyword">this</span>.trigger(<span class="string">'remove:before'</span>);
+            <span class="keyword">this</span>.trigger(<span class="string">'remove'</span>);
 
             <span class="keyword">this</span>._removeFromParent();
             _.invoke(<span class="keyword">this</span>._regions, <span class="string">'remove'</span>);
 
             Minionette.View.__super__.remove.apply(<span class="keyword">this</span>, arguments);
+            <span class="keyword">delete</span> <span class="keyword">this</span>._jqueryRemove;
+            <span class="keyword">delete</span> <span class="keyword">this</span>._viewHelper;
 
-            <span class="keyword">this</span>.trigger(<span class="string">'remove'</span>);
+            <span class="keyword">this</span>.unbind();
         }
     },</pre></div></div>
             
@@ -223,7 +225,7 @@ Allows us to clean up the view, even if you remove this.$el with jQuery.
             </div>
             
             <div class="content"><div class='highlight'><pre>    render: <span class="keyword">function</span>() {
-        <span class="keyword">this</span>.trigger(<span class="string">'render:before'</span>);</pre></div></div>
+        <span class="keyword">this</span>.trigger(<span class="string">'render'</span>);</pre></div></div>
             
         </li>
         
@@ -257,7 +259,6 @@ Allows us to clean up the view, even if you remove this.$el with jQuery.
             
             <div class="content"><div class='highlight'><pre>        _.invoke(<span class="keyword">this</span>._regions, <span class="string">'reattach'</span>);
 
-        <span class="keyword">this</span>.trigger(<span class="string">'render'</span>);
         <span class="keyword">return</span> <span class="keyword">this</span>;
     },</pre></div></div>
             
@@ -279,6 +280,7 @@ internal management.</p>
             <div class="content"><div class='highlight'><pre>    addRegion: <span class="keyword">function</span>(name, view) {
         <span class="keyword">var</span> region = <span class="keyword">new</span> <span class="keyword">this</span>.Region({view: view});
 
+        region.name = name;
         region._parent = <span class="keyword">this</span>;
         <span class="keyword">this</span>[name] = <span class="keyword">this</span>._regions[name] = region;
 
@@ -321,8 +323,13 @@ an object with {regioneName: view} syntax</p>
             <div class="content"><div class='highlight'><pre>    _removeFromParent: <span class="keyword">function</span>() {
         <span class="keyword">if</span> (<span class="keyword">this</span>._parent &amp;&amp; <span class="keyword">this</span>._parent._removeView) {
             <span class="keyword">this</span>._parent._removeView(<span class="keyword">this</span>);
-            <span class="keyword">this</span>._parent = <span class="literal">null</span>;
         }
+        <span class="keyword">this</span>._parent = <span class="literal">null</span>;
+    },
+
+    _removeRegion: <span class="keyword">function</span>(region) {
+        <span class="keyword">delete</span> <span class="keyword">this</span>[region.name];
+        <span class="keyword">delete</span> <span class="keyword">this</span>._regions[region.name];
     },</pre></div></div>
             
         </li>
