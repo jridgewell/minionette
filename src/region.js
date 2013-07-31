@@ -13,7 +13,7 @@ Minionette.Region.extend = Backbone.View.extend;
 
 _.extend(Minionette.Region.prototype, Backbone.Events, {
     // The place holder view's class
-    _View: Backbone.View.extend({
+    View: Minionette.View.extend({
         // Set it to a span, so when it's empty it's
         // collapsed on the DOM.
         tagName: 'span',
@@ -27,7 +27,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // Ensures the region has a view.
     _ensureView: function(options) {
         // Instantiate our place holder view.
-        this._view = new this._View();
+        this._view = new this.View();
 
         // Set this.view to instantiated options.view
         // if supplied.
