@@ -64,13 +64,13 @@ define(function() {
                         new Backbone.Model({id: _.uniqueId()}),
                         new Backbone.Model({id: _.uniqueId()})
                     ];
+                    this.collection.add(models);
                     var view = new (Minionette.CollectionView.extend({
+                        tagName: 'p',
                         ModelView: Minionette.ModelView.extend({
-                            template: function(model) {return '<p>' + model.id + '</p>';}
+                            template: _.template('<%= id %>')
                         })
                     }))({collection: this.collection});
-                    this.collection.add(models);
-                    view.$el.empty();
 
                     view.render();
 
@@ -175,22 +175,6 @@ define(function() {
                     this.view.removeOne(this.model);
 
                     expect(stub).to.have.been.called;
-                });
-            });
-
-            describe("#_getModelView()", function() {
-                var View = Minionette.CollectionView.extend({
-                    ModelView: 'DefaultModelView'
-                });
-
-                it("returns this#ModelView", function() {
-                    var view = new View();
-                    expect(view._getModelView()).to.equal('DefaultModelView');
-                });
-
-                it("returns ModelView passed in at instantiation", function() {
-                    var view = new View({ModelView: 'instantiation'});
-                    expect(view._getModelView()).to.equal('instantiation');
                 });
             });
         });
