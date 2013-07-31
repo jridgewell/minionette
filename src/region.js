@@ -96,7 +96,10 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     detach: function() {
         // Store the current view for later reattaching.
         this._detachedView = this.view;
-        this.reset();
+
+        if (this.view !== this._view) {
+            this.reset(true);
+        }
 
         return this;
     },
