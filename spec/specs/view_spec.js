@@ -335,6 +335,15 @@ define(function() {
                     expect(spy).to.have.been.called;
                 });
 
+                it("removes the old region if name is the same", function() {
+                    var region = this.view.addRegion('region', this.innerView),
+                        spy = this.sinon.spy(region, 'remove');
+
+                    this.view.addRegion('region', this.innerView);
+
+                    expect(spy).to.have.been.called;
+                });
+
                 it("sets region#name to the name", function() {
                     expect(this.view.region.name).to.equal('region');
                 });
