@@ -101,6 +101,10 @@ Minionette.View = Backbone.View.extend({
         this._parent = null;
     },
 
+    _removeRegion: function(region) {
+        delete this._regions[region.name];
+    },
+
     // A proxy method to #remove()
     // Done so we don't _.bindall() to
     // #remove()
