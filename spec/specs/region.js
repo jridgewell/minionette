@@ -79,11 +79,11 @@ define(function() {
             });
 
             it("calls #remove on old #view", function() {
-                var stub = this.sinon.stub(this.view, 'remove');
+                var spy = this.sinon.spy(this.view, 'remove');
 
                 this.region.attach(this.newView);
 
-                expect(stub).to.have.been.called;
+                expect(spy).to.have.been.called;
             });
 
             it("sets #view to newView", function() {
@@ -177,30 +177,30 @@ define(function() {
 
         describe("#remove()", function() {
             it("calls #view#remove()", function() {
-                var stub = this.sinon.stub(this.view, 'remove');
+                var spy = this.sinon.spy(this.view, 'remove');
 
                 this.region.remove();
 
-                expect(stub).to.have.been.called;
+                expect(spy).to.have.been.called;
             });
 
             it("calls #_view#remove()", function() {
                 var v = addInnerView('region', this.view),
-                    stub = this.sinon.stub(this.region._view, 'remove');
+                    spy = this.sinon.spy(this.region._view, 'remove');
 
                 this.region.remove();
 
-                expect(stub).to.have.been.called;
+                expect(spy).to.have.been.called;
             });
 
             it("calls #_detachedView#remove(), if it exists", function() {
                 var v = addInnerView('region', this.view),
-                    stub = this.sinon.stub(v, 'remove');
+                    spy = this.sinon.spy(v, 'remove');
                 this.view.region.detach();
 
                 this.view.region.remove();
 
-                expect(stub).to.have.been.called;
+                expect(spy).to.have.been.called;
             });
 
             it("removes itself from it's parent", function() {
@@ -223,11 +223,11 @@ define(function() {
             });
 
             it("calls #remove on old #view", function() {
-                var stub = this.sinon.stub(this.view, 'remove');
+                var spy = this.sinon.spy(this.view, 'remove');
 
                 this.region.reset();
 
-                expect(stub).to.have.been.called;
+                expect(spy).to.have.been.called;
             });
         });
 
