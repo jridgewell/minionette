@@ -195,8 +195,8 @@ define(function() {
             });
 
             it("calls #_view#remove()", function() {
-                var v = addInnerView('region', this.view),
-                    spy = this.sinon.spy(this.region._view, 'remove');
+                addInnerView('region', this.view);
+                var spy = this.sinon.spy(this.region._view, 'remove');
 
                 this.region.remove();
 
@@ -214,7 +214,7 @@ define(function() {
             });
 
             it("removes itself from it's parent", function() {
-                var v = addInnerView('region', this.view);
+                addInnerView('region', this.view);
 
                 this.view.region.remove();
 
