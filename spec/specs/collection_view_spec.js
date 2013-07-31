@@ -42,6 +42,15 @@ define(function() {
                     expect(spy).to.have.been.called;
                 });
 
+                it("removes old modelViews", function() {
+                    var view = this.view.addOne(new Backbone.Model()),
+                        stub = this.sinon.stub(view, 'remove');
+
+                    this.view.render();
+
+                    expect(stub).to.have.been.called;
+                });
+
                 it("returns the view", function() {
                     var ret = this.view.render();
 
@@ -142,6 +151,17 @@ define(function() {
                     var stub = this.sinon.stub(this.modelView, 'remove');
 
                     this.view.removeOne(this.model);
+
+                    expect(stub).to.have.been.called;
+                });
+            });
+
+            describe("#remove()", function() {
+                it("calls #remove() on the modelViews", function() {
+                    var view = this.view.addOne(new Backbone.Model()),
+                        stub = this.sinon.stub(view, 'remove');
+
+                    this.view.remove();
 
                     expect(stub).to.have.been.called;
                 });
