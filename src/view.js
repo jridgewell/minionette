@@ -1,6 +1,11 @@
 Minionette.View = Backbone.View.extend({
     constructor: function(options) {
-        this._initializeRegions(options || {});
+        options || (options = {});
+
+        // Ensure we have a Region to initialize
+        // new regions from.
+        this._ensureRegion(options);
+        this._initializeRegions(options);
 
         _.bindAll(this, '_jqueryRemove', '_viewHelper');
         Backbone.View.apply(this, arguments);
@@ -9,9 +14,6 @@ Minionette.View = Backbone.View.extend({
         this._listenToEvents(this.model, _.result(this, 'modelEvents'));
         this._listenToEvents(this.collection, _.result(this, 'collectionEvents'));
     },
-
-    // The Region class to create new regions from.
-    Region: Minionette.Region,
 
     // A default template that will clear this.$el.
     // Override this in a subclass to something useful.
@@ -115,6 +117,12 @@ Minionette.View = Backbone.View.extend({
             if (!_.isFunction(method)) { method = this[method]; }
             this.listenTo(entity, event, method);
         }, this);
+    },
+
+    // Sets this.Region. Prioritizes instantiated options.Region,
+    // then a subclass' prototype Region, and defaults to Minionette.Region
+    _ensureRegion: function(options) {
+        this.Region = options.Region || this.Region || Minionette.Region;
     },
 
     // Takes the #regions object and creates the regions,

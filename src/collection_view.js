@@ -1,7 +1,13 @@
 Minionette.CollectionView = Minionette.View.extend({
+    constructor: function(options) {
+        // Initialize a object for our modelViews
+        this._modelViews = {};
+        // Ensure this has a ModelView to initialize
+        // new modelViews from.
+        this._ensureModelView(options || {});
 
-    // The View class to render the collection as.
-    ModelView: Backbone.View,
+        Minionette.View.apply(this, arguments);
+    },
 
     // Listen to the default events.
     collectionEvents: {
@@ -19,18 +25,13 @@ Minionette.CollectionView = Minionette.View.extend({
         // They will be removed by the jQuery#remove
         // listener when we clear $el
         this._modelViews = {};
-        // Collect the ModelView class.
-        var ModelView = this._getModelView();
-
 
         var $el = this.$el.html(this.template(this._serialize()));
         // Use a DocumentFragment to speed up #render()
         this.$el = $(document.createDocumentFragment());
 
         // Loop through all our models, and build their view.
-        this.collection.each(function(model) {
-            this._addModelView(model, ModelView);
-        }, this);
+        this.collection.each(this._addModelView, this);
 
         // Append the DocumentFragment to the rendered template,
         // and set that as this.$el
@@ -45,8 +46,7 @@ Minionette.CollectionView = Minionette.View.extend({
         this.trigger('addOne:before');
 
         // Collect the ModelView class.
-        var ModelView = this._getModelView(),
-            view = this._addModelView(model, ModelView);
+        var view = this._addModelView(model);
 
         this.trigger('addOne');
         return view;
@@ -64,11 +64,10 @@ Minionette.CollectionView = Minionette.View.extend({
     },
 
     // Add an individual model's view to this.$el.
-    _addModelView: function(model, ModelView) {
-        var modelView = new ModelView({model: model});
+    _addModelView: function(model) {
+        var modelView = new this.ModelView({model: model});
 
         // Add the modelView, and keep track of it.
-        this._modelViews || (this._modelViews = {});
         this._modelViews[modelView.cid] = modelView;
         modelView._parent = this;
 
@@ -76,18 +75,14 @@ Minionette.CollectionView = Minionette.View.extend({
         return modelView;
     },
 
-    // Find the correct ModelView to use.
-    // Prioritizes the one passed at initialization.
-    _getModelView: function() {
-        var ModelView = this.ModelView;
-        if (this.options && this.options.ModelView) {
-            ModelView = this.options.ModelView;
-        }
-        return ModelView;
-    },
-
     // Find the view associated with a model from our modelViews.
     _findModelViewByModel: function(model) {
         return _.findWhere(this._modelViews, {model: model});
+    },
+
+    // Sets this.ModelView. Prioritizes instantiated options.ModelView,
+    // then a subclass' prototype ModelView, and defaults to Backbone.View
+    _ensureModelView: function(options) {
+        this.ModelView = options.ModelView || this.ModelView || Backbone.View;
     }
 });
