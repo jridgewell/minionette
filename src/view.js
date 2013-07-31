@@ -52,6 +52,8 @@ Minionette.View = Backbone.View.extend({
             _.invoke(this._regions, 'remove');
 
             Minionette.View.__super__.remove.apply(this, arguments);
+            delete this._jqueryRemove;
+            delete this._viewHelper;
 
             this.unbind();
         }
