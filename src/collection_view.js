@@ -54,7 +54,7 @@ Minionette.CollectionView = Minionette.View.extend({
     removeOne: function(model) {
         this.trigger('removeOne');
 
-        var view = this._findModelViewByModel(model);
+        var view = _.findWhere(this._modelViews, {model: model});
         if (view) { view.remove(); }
 
         return view;
@@ -70,11 +70,6 @@ Minionette.CollectionView = Minionette.View.extend({
 
         this.$el.append(modelView.render().$el);
         return modelView;
-    },
-
-    // Find the view associated with a model from our modelViews.
-    _findModelViewByModel: function(model) {
-        return _.findWhere(this._modelViews, {model: model});
     },
 
     // Sets this.ModelView. Prioritizes instantiated options.ModelView,
