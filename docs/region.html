@@ -93,11 +93,12 @@ Not really necessary, but it doesn&#39;t hurt.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Use the view specified at instantiation.</p>
+              <p>Make sure we have a view.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> (options &amp;&amp; options.view) { <span class="keyword">this</span>.view = options.view; }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>._ensureView(options || {});
+};</pre></div></div>
             
         </li>
         
@@ -107,22 +108,6 @@ Not really necessary, but it doesn&#39;t hurt.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <p>Make sure we have a view.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">this</span>._ensureView();
-};</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-5">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>Allow Regions to be extended.
 Backbone&#39;s extend is generic, just copy it over.</p>
@@ -136,11 +121,11 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {</pre></div></div>
         </li>
         
         
-        <li id="section-6">
+        <li id="section-5">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-6">&#182;</a>
+                <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <p>The place holder view&#39;s class</p>
 
@@ -151,11 +136,11 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {</pre></div></div>
         </li>
         
         
-        <li id="section-7">
+        <li id="section-6">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <p>Set it to a span, so when it&#39;s empty it&#39;s
 collapsed on the DOM.</p>
@@ -167,11 +152,11 @@ collapsed on the DOM.</p>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-7">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-7">&#182;</a>
               </div>
               <p>Use the data-cid attribute as a unique
 attribute. Used for reattaching a detached view.</p>
@@ -186,17 +171,32 @@ attribute. Used for reattaching a detached view.</p>
         </li>
         
         
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Ensures the region has a view.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _ensureView: <span class="keyword">function</span>(options) {</pre></div></div>
+            
+        </li>
+        
+        
         <li id="section-9">
             <div class="annotation">
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <p>Ensures the region has a view.</p>
+              <p>Instantiate our place holder view.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    _ensureView: <span class="keyword">function</span>() {</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._view = <span class="keyword">new</span> <span class="keyword">this</span>._View();</pre></div></div>
             
         </li>
         
@@ -207,11 +207,12 @@ attribute. Used for reattaching a detached view.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>Instantiate our place holder view.</p>
+              <p>Set this.view to instantiated options.view
+if supplied.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._view = <span class="keyword">new</span> <span class="keyword">this</span>._View();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        options.view &amp;&amp; (<span class="keyword">this</span>.view = options.view);</pre></div></div>
             
         </li>
         
