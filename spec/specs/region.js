@@ -78,12 +78,12 @@ define(function() {
                 expect(this.newView.$el.index()).to.equal(expectedIndex);
             });
 
-            it("doesn't call #view#remove()", function() {
+            it("calls #remove on old #view", function() {
                 var stub = this.sinon.stub(this.view, 'remove');
 
                 this.region.attach(this.newView);
 
-                expect(stub).to.not.have.been.called;
+                expect(stub).to.have.been.called;
             });
 
             it("sets #view to newView", function() {
@@ -210,12 +210,12 @@ define(function() {
                 expect(this.view.region._view.$el.index()).to.equal(expectedIndex);
             });
 
-            it("doesn't call #remove on old #view", function() {
+            it("calls #remove on old #view", function() {
                 var stub = this.sinon.stub(this.view, 'remove');
 
                 this.region.reset();
 
-                expect(stub).to.not.have.been.called;
+                expect(stub).to.have.been.called;
             });
         });
 
