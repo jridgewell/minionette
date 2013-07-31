@@ -176,6 +176,14 @@ define(function() {
         });
 
         describe("#remove()", function() {
+            it("calls #_view#remove()", function() {
+                var stub = this.sinon.stub(this.region._view, 'remove');
+
+                this.region.remove();
+
+                expect(stub).to.have.been.called;
+            });
+
             it("calls #view#remove()", function() {
                 var stub = this.sinon.stub(this.view, 'remove');
 
@@ -184,19 +192,31 @@ define(function() {
                 expect(stub).to.have.been.called;
             });
 
-            it("replaces view#el with _view#el", function() {
+            it("calls #_view#remove()", function() {
                 var v = addInnerView('region', this.view),
-                    expectedIndex = v.$el.index();
+                    stub = this.sinon.stub(this.region._view, 'remove');
+
+                this.region.remove();
+
+                expect(stub).to.have.been.called;
+            });
+
+            it("calls #_detachedView#remove(), if it exists", function() {
+                var v = addInnerView('region', this.view),
+                    stub = this.sinon.stub(v, 'remove');
+                this.view.region.detach();
 
                 this.view.region.remove();
 
-                expect(this.view.region._view.$el.index()).to.equal(expectedIndex);
+                expect(stub).to.have.been.called;
             });
 
-            it("returns removedView", function() {
-                var removedView = this.region.remove();
+            it("removes itself from it's parent", function() {
+                var v = addInnerView('region', this.view);
 
-                expect(removedView).to.equal(this.view);
+                this.view.region.remove();
+
+                expect(this.view.region).to.not.exist;
             });
         });
 
