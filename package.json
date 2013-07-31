@@ -1,6 +1,6 @@
 {
     "name": "minionette",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "description": "A Mini Marionette for Backbone.js",
     "main": "lib/minonette.js",
     "scripts": {
