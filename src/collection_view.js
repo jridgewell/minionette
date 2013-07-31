@@ -47,7 +47,6 @@ Minionette.CollectionView = Minionette.View.extend({
     addOne: function(model) {
         this.trigger('addOne');
 
-        // Collect the ModelView class.
         var view = this._addModelView(model);
 
         return view;
@@ -82,7 +81,7 @@ Minionette.CollectionView = Minionette.View.extend({
     },
 
     // A callback method bound to the 'remove:before'
-    // event.
+    // event. Removes all our modelViews.
     _removeModelViews: function() {
         _.invoke(this._modelViews, 'remove');
     },
