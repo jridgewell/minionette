@@ -46,20 +46,19 @@ Minionette.View = Backbone.View.extend({
     remove: function() {
         if (!this._isRemoving) {
             this._isRemoving = true;
-            this.trigger('remove:before');
+            this.trigger('remove');
 
             this._removeFromParent();
             _.invoke(this._regions, 'remove');
 
             Minionette.View.__super__.remove.apply(this, arguments);
 
-            this.trigger('remove');
         }
     },
 
     // A useful default render method.
     render: function() {
-        this.trigger('render:before');
+        this.trigger('render');
 
         // Detach all our regions, so they don't need to be re-rendered.
         _.invoke(this._regions, 'detach');
@@ -69,7 +68,6 @@ Minionette.View = Backbone.View.extend({
         // Reattach all our regions
         _.invoke(this._regions, 'reattach');
 
-        this.trigger('render');
         return this;
     },
 
