@@ -31,7 +31,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
         // Set this.view to instantiated options.view
         // if supplied.
-        options.view && (this.view = options.view);
+        if (options.view) { this.view = options.view; }
 
         // Make sure the view is an instance of Backbone.View
         // (or a subclass). If not, set the view to our place holder
