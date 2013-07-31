@@ -7,6 +7,9 @@ Minionette.CollectionView = Minionette.View.extend({
         this._ensureModelView(options || {});
 
         Minionette.View.apply(this, arguments);
+
+        // Make sure we remove our modelViews when this is removed.
+        this.listenTo(this, 'remove', this._removeModelViews);
     },
 
     // Listen to the default events.
@@ -19,12 +22,10 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // A default useful render function.
     render: function() {
-        this.trigger('render:before');
+        this.trigger('render');
 
         // Dump all our modelViews.
-        // They will be removed by the jQuery#remove
-        // listener when we clear $el
-        this._modelViews = {};
+        this._removeModelViews();
 
         var $el = this.$el.html(this.template(this._serialize()));
         // Use a DocumentFragment to speed up #render()
@@ -37,29 +38,25 @@ Minionette.CollectionView = Minionette.View.extend({
         // and set that as this.$el
         this.$el = $el.append(this.$el);
 
-        this.trigger('render');
         return this;
     },
 
     // Add an individual model's view to this.$el.
     addOne: function(model) {
-        this.trigger('addOne:before');
+        this.trigger('addOne');
 
-        // Collect the ModelView class.
         var view = this._addModelView(model);
 
-        this.trigger('addOne');
         return view;
     },
 
     // Remove an individual model's view from this.$el.
     removeOne: function(model) {
-        this.trigger('removeOne:before');
+        this.trigger('removeOne');
 
-        var view = this._findModelViewByModel(model);
+        var view = _.findWhere(this._modelViews, {model: model});
         if (view) { view.remove(); }
 
-        this.trigger('removeOne');
         return view;
     },
 
@@ -75,14 +72,21 @@ Minionette.CollectionView = Minionette.View.extend({
         return modelView;
     },
 
-    // Find the view associated with a model from our modelViews.
-    _findModelViewByModel: function(model) {
-        return _.findWhere(this._modelViews, {model: model});
+    // A hook method that is called during
+    // a view#remove().
+    _removeView: function(view) {
+        delete this._modelViews[view.cid];
+    },
+
+    // A callback method bound to the 'remove:before'
+    // event. Removes all our modelViews.
+    _removeModelViews: function() {
+        _.invoke(this._modelViews, 'remove');
     },
 
     // Sets this.ModelView. Prioritizes instantiated options.ModelView,
-    // then a subclass' prototype ModelView, and defaults to Backbone.View
+    // then a subclass' prototype ModelView, and defaults to Minionette.ModelView
     _ensureModelView: function(options) {
-        this.ModelView = options.ModelView || this.ModelView || Backbone.View;
+        this.ModelView = options.ModelView || this.ModelView || Minionette.ModelView;
     }
 });

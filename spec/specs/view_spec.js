@@ -4,7 +4,6 @@ define(function() {
             this.view = new Minionette.View();
         });
         afterEach(function() {
-            this.view.remove();
             delete this.view;
         });
 
@@ -28,7 +27,6 @@ define(function() {
                     this.model = new Backbone.Model();
                 });
                 after(function() {
-                    this.model.destroy();
                     delete this.spy;
                     delete this.ModelEventTest;
                     delete this.model;
@@ -80,7 +78,6 @@ define(function() {
                     });
                 });
                 after(function() {
-                    this.regionView.remove();
                     delete this.regionView;
                     delete this.RegionTest;
                 });
@@ -142,7 +139,6 @@ define(function() {
                     this.view.addRegion('region', this.innerView);
                 });
                 afterEach(function() {
-                    this.innerView.remove();
                     delete this.innerView;
                 });
 
@@ -196,15 +192,6 @@ define(function() {
             });
 
             describe("#remove()", function() {
-                it("triggers 'remove:before' event", function() {
-                    var spy = this.sinon.spy();
-                    this.view.on('remove:before', spy);
-
-                    this.view.remove();
-
-                    expect(spy).to.have.been.called;
-                });
-
                 it("triggers 'remove' event", function() {
                     var spy = this.sinon.spy();
                     this.view.on('remove', spy);
@@ -236,15 +223,6 @@ define(function() {
             });
 
             describe("#render()", function() {
-                it("triggers 'render:before' event", function() {
-                    var spy = this.sinon.spy();
-                    this.view.on('render:before', spy);
-
-                    this.view.render();
-
-                    expect(spy).to.have.been.called;
-                });
-
                 it("triggers 'render' event", function() {
                     var spy = this.sinon.spy();
                     this.view.on('render', spy);
@@ -344,7 +322,6 @@ define(function() {
                     this.region = this.view.addRegion('region', this.innerView);
                 });
                 afterEach(function() {
-                    this.innerView.remove();
                     delete this.region;
                     delete this.innerView;
                 });
@@ -355,6 +332,10 @@ define(function() {
                     this.view.addRegion('region', this.innerView);
 
                     expect(spy).to.have.been.called;
+                });
+
+                it("sets region#name to the name", function() {
+                    expect(this.view.region.name).to.equal('region');
                 });
 
                 it("sets region#parent to this", function() {

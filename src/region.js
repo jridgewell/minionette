@@ -13,7 +13,7 @@ Minionette.Region.extend = Backbone.View.extend;
 
 _.extend(Minionette.Region.prototype, Backbone.Events, {
     // The place holder view's class
-    _View: Backbone.View.extend({
+    View: Minionette.View.extend({
         // Set it to a span, so when it's empty it's
         // collapsed on the DOM.
         tagName: 'span',
@@ -27,11 +27,11 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // Ensures the region has a view.
     _ensureView: function(options) {
         // Instantiate our place holder view.
-        this._view = new this._View();
+        this._view = new this.View();
 
         // Set this.view to instantiated options.view
         // if supplied.
-        options.view && (this.view = options.view);
+        if (options.view) { this.view = options.view; }
 
         // Make sure the view is an instance of Backbone.View
         // (or a subclass). If not, set the view to our place holder
@@ -44,10 +44,11 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         this._assignParent(this.view);
     },
 
-    // A helper method to reset the region's view to the
-    // place holder view.
-    reset: function() {
-        this.attach(this._view);
+    // Resets the region's view to place holder view.
+    // Optionally takes a boolean, in which case the
+    // oldView will just be detached.
+    reset: function(detach) {
+        this.attach(this._view, detach);
     },
 
     // A proxy method to the view's render().
@@ -57,9 +58,10 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
     // Attaches newView. This sets newView#$el
     // at the same index (inside the parent element)
-    // as the old view, and detaches the old view.
-    attach: function(newView) {
+    // as the old view, and removes the old view.
+    attach: function(newView, detach) {
         this._assignParent(newView);
+        var oldView = this.view;
 
         // Places newView after the current view.
         this.view.$el.after(newView.$el);
@@ -68,18 +70,31 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
         this.view = newView;
 
+        // Remove the view
+        if (!detach) {
+            oldView.remove();
+        }
+
         return newView;
     },
 
-    // Replaces the old view with the place holder
-    // view.
+    // Removes this region, and it's view.
     remove: function() {
-        var oldView = this.view;
+        this._removeViews();
+        this._removeFromParent();
+    },
 
-        this.reset();
-        oldView.remove();
+    _removeViews: function() {
+        this.view.remove();
+        this._view.remove();
+        this._detachedView && this._detachedView.remove();
+    },
 
-        return oldView;
+    _removeFromParent: function() {
+        if (this._parent && this._parent._removeRegion) {
+            this._parent._removeRegion(this);
+        }
+        this._parent = null;
     },
 
     // Detaches the current view, replacing it with
@@ -88,7 +103,10 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     detach: function() {
         // Store the current view for later reattaching.
         this._detachedView = this.view;
-        this.reset();
+
+        if (this.view !== this._view) {
+            this.reset(true);
+        }
 
         return this;
     },
@@ -117,7 +135,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // replacing it with the place holder.
     _removeView: function(view) {
         if (this.view === view) {
-            this.reset();
+            this.reset(true);
         }
     },
 
