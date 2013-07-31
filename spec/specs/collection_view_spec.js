@@ -10,8 +10,8 @@ define(function() {
                 delete this.view;
             });
 
-            it("sets ModelView to Backbone.View", function() {
-                expect(this.view.ModelView).to.equal(Backbone.View);
+            it("sets ModelView to Minionette.ModelView", function() {
+                expect(this.view.ModelView).to.equal(Minionette.ModelView);
             });
 
             describe("Collection Events", function() {

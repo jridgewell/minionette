@@ -85,8 +85,8 @@ Minionette.CollectionView = Minionette.View.extend({
     },
 
     // Sets this.ModelView. Prioritizes instantiated options.ModelView,
-    // then a subclass' prototype ModelView, and defaults to Backbone.View
+    // then a subclass' prototype ModelView, and defaults to Minionette.ModelView
     _ensureModelView: function(options) {
-        this.ModelView = options.ModelView || this.ModelView || Backbone.View;
+        this.ModelView = options.ModelView || this.ModelView || Minionette.ModelView;
     }
 });
