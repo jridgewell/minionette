@@ -146,7 +146,7 @@ define(function() {
             });
 
             it("scopes #reattach() to _parent", function() {
-                this.view.remove(); // Make sure view isn't in the document.body
+                this.view.$el.detach(); // Make sure view isn't in the document.body
                 var v = addInnerView('region', this.view);
                 this.view.region.detach();
 
