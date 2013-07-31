@@ -101,6 +101,10 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // the place holder. Convenient for detaching
     // during rendering.
     detach: function() {
+        // Remove the old _detachedView, if it exists
+        if (this._detachedView) {
+            this._detachedView.remove();
+        }
         // Store the current view for later reattaching.
         this._detachedView = this.view;
 
