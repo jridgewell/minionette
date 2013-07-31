@@ -1,7 +1,7 @@
 Minionette.Region = function(options) {
     // Setup a unique id for this region.
     // Not really necessary, but it doesn't hurt.
-    this.cid = _.uniqueId('subview');
+    this.cid = _.uniqueId('region');
 
     // Make sure we have a view.
     this._ensureView(options || {});
