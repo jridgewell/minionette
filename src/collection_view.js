@@ -19,7 +19,7 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // A default useful render function.
     render: function() {
-        this.trigger('render:before');
+        this.trigger('render');
 
         // Dump all our modelViews.
         // They will be removed by the jQuery#remove
@@ -37,29 +37,26 @@ Minionette.CollectionView = Minionette.View.extend({
         // and set that as this.$el
         this.$el = $el.append(this.$el);
 
-        this.trigger('render');
         return this;
     },
 
     // Add an individual model's view to this.$el.
     addOne: function(model) {
-        this.trigger('addOne:before');
+        this.trigger('addOne');
 
         // Collect the ModelView class.
         var view = this._addModelView(model);
 
-        this.trigger('addOne');
         return view;
     },
 
     // Remove an individual model's view from this.$el.
     removeOne: function(model) {
-        this.trigger('removeOne:before');
+        this.trigger('removeOne');
 
         var view = this._findModelViewByModel(model);
         if (view) { view.remove(); }
 
-        this.trigger('removeOne');
         return view;
     },
 

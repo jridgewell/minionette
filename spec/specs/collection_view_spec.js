@@ -33,15 +33,6 @@ define(function() {
             });
 
             describe("#render()", function() {
-                it("triggers 'render:before' event", function() {
-                    var spy = this.sinon.spy();
-                    this.view.on('render:before', spy);
-
-                    this.view.render();
-
-                    expect(spy).to.have.been.called;
-                });
-
                 it("triggers 'render' event", function() {
                     var spy = this.sinon.spy();
                     this.view.on('render', spy);
@@ -83,15 +74,6 @@ define(function() {
                 });
                 afterEach(function() {
                     delete this.model;
-                });
-
-                it("triggers 'addOne:before' event", function() {
-                    var spy = this.sinon.spy();
-                    this.view.on('addOne:before', spy);
-
-                    this.view.addOne(this.model);
-
-                    expect(spy).to.have.been.called;
                 });
 
                 it("triggers 'addOne' event", function() {
@@ -139,15 +121,6 @@ define(function() {
                 afterEach(function() {
                     delete this.model;
                     delete this.modelView;
-                });
-
-                it("triggers 'removeOne:before' event", function() {
-                    var spy = this.sinon.spy();
-                    this.view.on('removeOne:before', spy);
-
-                    this.view.removeOne(this.model);
-
-                    expect(spy).to.have.been.called;
                 });
 
                 it("triggers 'removeOne' event", function() {

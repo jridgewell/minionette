@@ -192,15 +192,6 @@ define(function() {
             });
 
             describe("#remove()", function() {
-                it("triggers 'remove:before' event", function() {
-                    var spy = this.sinon.spy();
-                    this.view.on('remove:before', spy);
-
-                    this.view.remove();
-
-                    expect(spy).to.have.been.called;
-                });
-
                 it("triggers 'remove' event", function() {
                     var spy = this.sinon.spy();
                     this.view.on('remove', spy);
@@ -232,15 +223,6 @@ define(function() {
             });
 
             describe("#render()", function() {
-                it("triggers 'render:before' event", function() {
-                    var spy = this.sinon.spy();
-                    this.view.on('render:before', spy);
-
-                    this.view.render();
-
-                    expect(spy).to.have.been.called;
-                });
-
                 it("triggers 'render' event", function() {
                     var spy = this.sinon.spy();
                     this.view.on('render', spy);
