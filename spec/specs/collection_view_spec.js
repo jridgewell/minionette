@@ -6,7 +6,6 @@ define(function() {
                 this.view = new Minionette.CollectionView({collection: this.collection});
             });
             afterEach(function() {
-                this.view.remove();
                 delete this.collection;
                 delete this.view;
             });
@@ -83,7 +82,6 @@ define(function() {
                     this.model = new Backbone.Model();
                 });
                 afterEach(function() {
-                    this.model.destroy();
                     delete this.model;
                 });
 
@@ -139,8 +137,6 @@ define(function() {
                     this.modelView = this.view.addOne(this.model);
                 });
                 afterEach(function() {
-                    this.modelView.remove();
-                    this.model.destroy();
                     delete this.model;
                     delete this.modelView;
                 });
