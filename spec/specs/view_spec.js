@@ -146,7 +146,7 @@ define(function() {
                 });
 
                 it("has #_viewHelper as 'view' key", function() {
-                    expect(this.view._serialize().view).to.equal(this.view._viewHelper);
+                    expect(typeof this.view._serialize().view).to.equal('function');
                 });
             });
 
