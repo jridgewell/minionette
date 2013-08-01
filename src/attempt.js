@@ -5,7 +5,7 @@
 function attempt(obj, method) {
     // Return undefined unless obj
     // is not null or undefined
-    if (obj == null) return void 0;
+    if (obj == null) { return void 0; }
 
     // Grab the 3rd+ params
     var args = _.rest(arguments, 2);
@@ -14,5 +14,5 @@ function attempt(obj, method) {
         // Call the method, as obj, with the
         // additional params
         return obj[method].apply(obj, args);
-    };
+    }
 }

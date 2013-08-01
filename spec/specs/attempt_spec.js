@@ -23,7 +23,7 @@ define(['attempt'], function(attempt) {
                 obj = {method: spy};
             attempt(obj, 'method');
 
-            expect(spy).to.have.been.calledOn(obj)
+            expect(spy).to.have.been.calledOn(obj);
         });
 
         it("passes the everything but the first two params as arguments to the method", function() {

@@ -6,6 +6,7 @@
     "camelcase": false,
     "curly": true,
     "eqeqeq": true,
+    "eqnull": true,
     "expr": true,
     "immed": true,
     "indent": 4,
@@ -25,6 +26,7 @@
         "Backbone": true,
         "_": true,
         "Minionette": true,
+        "attempt": true,
         "define": true,
         "chai": true,
         "sinonChai": true,
@@ -36,5 +38,6 @@
         "afterEach": true,
         "expect": true,
         "it": true
-    }
+    },
+    "exported": ["attempt"]
 }
