@@ -60,8 +60,9 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // at the same index (inside the parent element)
     // as the old view, and removes the old view.
     attach: function(newView, detach) {
-        this._assignParent(newView);
         var oldView = this.view;
+
+        this._assignParent(newView);
 
         // Places newView after the current view.
         this.view.$el.after(newView.$el);
