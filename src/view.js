@@ -79,7 +79,8 @@ Minionette.View = Backbone.View.extend({
     // internal management.
     addRegion: function(name, view) {
         var region = new this.Region({view: view});
-        if (this._regions[name]) { this._regions[name].remove(); }
+        // Remove the region, if it exists already
+        attempt(this._regions[name], 'remove');
 
         region.name = name;
         region._parent = this;
@@ -98,9 +99,8 @@ Minionette.View = Backbone.View.extend({
 
     // A remove helper to remove this view from it's parent
     _removeFromParent: function() {
-        if (this._parent && this._parent._removeView) {
-            this._parent._removeView(this);
-        }
+        // Remove this view from _parent, if it exists
+        attempt(this._parent, '_removeView', this);
         this._parent = null;
     },
 

@@ -88,13 +88,13 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     _removeViews: function() {
         this.view.remove();
         this._view.remove();
-        this._detachedView && this._detachedView.remove();
+        // Remove the _detachedView, if it exists
+        attempt(this._detachedView, 'remove');
     },
 
     _removeFromParent: function() {
-        if (this._parent && this._parent._removeRegion) {
-            this._parent._removeRegion(this);
-        }
+        // Remove this region from its parent, if it exists
+        attempt(this._parent, '_removeRegion', this);
         this._parent = null;
     },
 
@@ -103,9 +103,8 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // during rendering.
     detach: function() {
         // Remove the old _detachedView, if it exists
-        if (this._detachedView) {
-            this._detachedView.remove();
-        }
+        attempt(this._detachedView, 'remove');
+
         // Store the current view for later reattaching.
         this._detachedView = this.view;
 
