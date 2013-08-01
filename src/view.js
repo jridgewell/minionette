@@ -33,15 +33,6 @@ Minionette.View = Backbone.View.extend({
         return _.extend({view: this._viewHelper}, this.serialize());
     },
 
-    // When delegating events, bind this view to jQuery's special remove event.
-    // Allows us to clean up the view, even if you remove this.$el with jQuery.
-    // http://blog.alexmaccaw.com/jswebapps-memory-management
-    delegateEvents: function() {
-        Minionette.View.__super__.delegateEvents.apply(this, arguments);
-
-        this.$el.on('remove.delegateEvents' + this.cid, this._jqueryRemove);
-    },
-
     // A useful remove method to that triggers events.
     remove: function() {
         if (!this._isRemoving) {

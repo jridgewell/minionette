@@ -168,35 +168,6 @@ define(function() {
                 });
             });
 
-            describe("#delegateEvents()", function() {
-                it("calls Backbone.View's #delegateEvents()", function() {
-                    var stub = this.sinon.stub(Backbone.View.prototype, 'delegateEvents');
-
-                    this.view.delegateEvents();
-
-                    expect(stub).to.have.been.called;
-                });
-
-                it("sets #_jqueryRemove() listener on $el 'remove' event", function() {
-                    var stub = this.sinon.stub(this.view, '_jqueryRemove');
-                    this.view.delegateEvents();
-
-                    this.view.$el.trigger('remove');
-
-                    expect(stub).to.have.been.called;
-                });
-
-                it("sets #_jqueryRemove() listener that is compatible with #undelegateEvents()", function() {
-                    var stub = this.sinon.stub(this.view, '_jqueryRemove');
-                    this.view.delegateEvents();
-                    this.view.undelegateEvents();
-
-                    this.view.$el.trigger('remove');
-
-                    expect(stub).to.not.have.been.called;
-                });
-            });
-
             describe("#remove()", function() {
                 it("triggers 'remove' event", function() {
                     var spy = this.sinon.spy();
