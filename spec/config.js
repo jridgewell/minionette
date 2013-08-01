@@ -1,7 +1,8 @@
 require.config({
-    // Base URL relative to the test runner
     // Paths are relative to this
     paths: {
+        'attempt'                      : '../src/attempt',
+
         // Testing libs
         'common'                       : 'common',
         'chai'                         : 'support/chai/chai',
@@ -33,6 +34,9 @@ require.config({
         'sinon/test_case'              : 'support/sinon/lib/sinon/test_case'
     },
     shim: {
+        attempt: {
+            exports: 'attempt'
+        },
         underscore: {
             exports: '_'
         },
