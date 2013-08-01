@@ -6,6 +6,7 @@ var Minionette = (function(global, _, $, Backbone) {
     Backbone.Minionette = Minionette;
 
     // @include ../jquery.cleanData.js
+    // @include ../attempt.js
 
     // @include ../view.js
     // @include ../region.js
