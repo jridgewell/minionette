@@ -14,10 +14,10 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // Listen to the default events.
     collectionEvents: {
-        'add': 'addOne',
-        'remove': 'removeOne',
-        'reset': 'render',
-        'sort': 'render'
+        add: 'addOne',
+        remove: 'removeOne',
+        reset: 'render',
+        sort: 'render'
     },
 
     // A default useful render function.
