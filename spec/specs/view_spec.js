@@ -124,6 +124,18 @@ define(function() {
                     expect(this.view._serialize()[key]).to.equal(value);
                 });
 
+                it("does not modify the #serialize()'s return value'", function() {
+                    var object = {test: 1};
+                    this.view.serialize = function() {
+                        return object;
+                    };
+
+                    var ret = this.view._serialize();
+                    ret.test = 2;
+
+                    expect(object.test).to.equal(1);
+                });
+
                 it("can have view overridden by #serialize()", function() {
                     var value = _.uniqueId();
                     this.view.serialize = function() {
