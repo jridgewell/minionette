@@ -32,7 +32,7 @@ Minionette.CollectionView = Minionette.View.extend({
         this.$el = $(document.createDocumentFragment());
 
         // Loop through all our models, and build their view.
-        this.collection.each(this._addModelView, this);
+        this.collection.each(this.addOne, this);
 
         // Append the DocumentFragment to the rendered template,
         // and set that as this.$el
@@ -43,33 +43,27 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // Add an individual model's view to this.$el.
     addOne: function(model) {
-        this.trigger('addOne');
+        var view = new this.ModelView({model: model});
 
-        var view = this._addModelView(model);
+        // Add the modelView, and keep track of it.
+        this._modelViews[view.cid] = view;
+        view._parent = this;
 
+        this.trigger('addOne', view);
+
+        this.$el.append(view.render().$el);
         return view;
     },
 
     // Remove an individual model's view from this.$el.
     removeOne: function(model) {
-        this.trigger('removeOne');
-
+        // This may or may not find a view.
         var view = _.findWhere(this._modelViews, {model: model});
-        if (view) { view.remove(); }
+
+        this.trigger('removeOne', view);
+        attempt(view, 'remove');
 
         return view;
-    },
-
-    // Add an individual model's view to this.$el.
-    _addModelView: function(model) {
-        var modelView = new this.ModelView({model: model});
-
-        // Add the modelView, and keep track of it.
-        this._modelViews[modelView.cid] = modelView;
-        modelView._parent = this;
-
-        this.$el.append(modelView.render().$el);
-        return modelView;
     },
 
     // A hook method that is called during
