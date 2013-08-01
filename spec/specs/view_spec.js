@@ -4,6 +4,7 @@ define(function() {
             this.view = new Minionette.View();
         });
         afterEach(function() {
+            this.view.remove();
             delete this.view;
         });
 
@@ -35,10 +36,11 @@ define(function() {
                 it("listens for model events", function() {
                     var view = new this.ModelEventTest({model: this.model});
 
-                    view.noop;
                     this.model.trigger('change');
 
                     expect(this.spy).to.have.been.called;
+
+                    view.remove();
                 });
             });
 
@@ -61,10 +63,11 @@ define(function() {
                 it("listens for collection events", function() {
                     var view = new this.CollectionEventTest({collection: this.collection});
 
-                    view.noop;
                     this.collection.trigger('change');
 
                     expect(this.spy).to.have.been.called;
+
+                    view.remove();
                 });
             });
 
@@ -86,6 +89,8 @@ define(function() {
                     var view = new this.RegionTest();
 
                     expect(view.region.view).to.equal(this.regionView);
+
+                    view.remove();
                 });
             });
         });
@@ -270,9 +275,9 @@ define(function() {
                 });
 
                 it("reattaches regions", function() {
-                    var subView = (new Minionette.View({tagName: 'p'})).render();
+                    var subView = new Minionette.View({tagName: 'p'});
                     this.view.template = _.template("<%= view('region') %>");
-                    this.view.addRegion('region', subView);
+                    this.view.addRegion('region', subView).render();
 
                     this.view.render();
 
@@ -345,11 +350,11 @@ define(function() {
                 });
 
                 it("sets region#name to the name", function() {
-                    expect(this.view.region.name).to.equal('region');
+                    expect(this.region.name).to.equal('region');
                 });
 
                 it("sets region#parent to this", function() {
-                    expect(this.view.region._parent).to.equal(this.view);
+                    expect(this.region._parent).to.equal(this.view);
                 });
 
                 it("sets this#[region] and this#_regions[region] to the region", function() {
@@ -358,6 +363,7 @@ define(function() {
                 });
 
                 it("returns the region", function() {
+                    // debugger;
                     var region = new Minionette.Region();
                     this.view.Region = function() {
                         return region;

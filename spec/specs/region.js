@@ -16,6 +16,7 @@ define(function() {
             this.region = new Minionette.Region({view: this.view});
         });
         afterEach(function() {
+            this.region.remove();
             delete this.view;
             delete this.region;
         });
@@ -31,12 +32,16 @@ define(function() {
                 var region = new Minionette.Region();
 
                 expect(region.view).to.equal(region._view);
+
+                region.remove();
             });
 
             it("sets #view to #_view if passed in view isn't an instanceof Backbone.View", function() {
                 var region = new Minionette.Region({view: 'view?'});
 
                 expect(region.view).to.equal(region._view);
+
+                region.remove();
             });
         });
 
@@ -133,7 +138,7 @@ define(function() {
                 expect(this.view.region._view.$el.index()).to.equal(expectedIndex);
             });
 
-            it("calls #view#$el#detach()", function() {
+            it("doesn't remove events on view", function() {
                 var spy = this.sinon.spy();
                 this.view.on('click', spy);
 
@@ -195,7 +200,7 @@ define(function() {
             });
 
             it("calls #_view#remove()", function() {
-                addInnerView('region', this.view);
+                this.region.attach(new Minionette.View());
                 var spy = this.sinon.spy(this.region._view, 'remove');
 
                 this.region.remove();
@@ -204,11 +209,10 @@ define(function() {
             });
 
             it("calls #_detachedView#remove(), if it exists", function() {
-                var v = addInnerView('region', this.view),
-                    spy = this.sinon.spy(v, 'remove');
-                this.view.region.detach();
+                var spy = this.sinon.spy(this.region.view, 'remove');
+                this.region.detach();
 
-                this.view.region.remove();
+                this.region.remove();
 
                 expect(spy).to.have.been.called;
             });
