@@ -62,7 +62,7 @@ module.exports = function(grunt) {
                 src : 'src/*.js',
                 dest : 'reports',
                 options : {
-                    jshint : grunt.file.readJSON('.jshintrc')
+                    jshint : false
                 }
             }
         },
