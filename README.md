@@ -10,8 +10,14 @@ Minionette provides three highly optimized View classes for you to use,
 Minionette.View
 ---------------
 
+
+* * * * * * * 
+
 Minionette.Region
 -----------------
+
+
+* * * * * * * 
 
 Minionette.ModelView
 --------------------
@@ -22,10 +28,10 @@ defaults programmed in, `modelEvents` and `#serialize()`.
 ### #modelEvents
 
 ```javascript
-    modelEvents = {
-        change: 'render',
-        destroy: 'remove'
-    };
+modelEvents = {
+    change: 'render',
+    destroy: 'remove'
+};
 ```
 
 By default, `ModelView` will listen to the `change` event on the model,
@@ -36,6 +42,9 @@ remove itself.
 
 `ModelView`'s `#serialize()` does nothing more than returning
 `this.model.attributes`, ready to be passed into `#template()`.
+
+
+* * * * * * * 
 
 Minionette.CollectionView
 -------------------------
@@ -48,24 +57,24 @@ which all models will have a view instantiated from. Additionally,
 `CollectionView` handles memory management for you: calling `#remove()`
 will `#remove()` all modelViews.
 
-### #collectionEvents
-
-```javascript
-    collectionEvents = {
-        add: 'addOne',
-        remove: 'removeOne',
-        reset: 'render',
-        sort: 'render'
-    };
-```
-
-`CollectionView` will listen for the default collection events,
-rendering the appropriate function to keep things speedy.
-
 ### #ModelView
 
 The `#ModelView` property should be the View class that you wish for all
 your modelViews to be rendered as.
+
+### #collectionEvents
+
+```javascript
+collectionEvents = {
+    add: 'addOne',
+    remove: 'removeOne',
+    reset: 'render',
+    sort: 'render'
+};
+```
+
+`CollectionView` will listen for the default collection events,
+rendering the appropriate function to keep things speedy.
 
 ### #render()
 
