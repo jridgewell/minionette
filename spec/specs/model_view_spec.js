@@ -6,6 +6,7 @@ define(function() {
                 this.view = new Minionette.ModelView({model: this.model});
             });
             afterEach(function() {
+                this.view.remove();
                 delete this.model;
                 delete this.view;
             });
