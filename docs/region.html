@@ -19,6 +19,11 @@
           <div id="jump_page">
             
               
+              <a class="source" href="attempt.html">
+                attempt.js
+              </a>
+            
+              
               <a class="source" href="collection_view.html">
                 collection_view.js
               </a>
@@ -301,8 +306,9 @@ as the old view, and removes the old view.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    attach: <span class="keyword">function</span>(newView, detach) {
-        <span class="keyword">this</span>._assignParent(newView);
-        <span class="keyword">var</span> oldView = <span class="keyword">this</span>.view;</pre></div></div>
+        <span class="keyword">var</span> oldView = <span class="keyword">this</span>.view;
+
+        <span class="keyword">this</span>._assignParent(newView);</pre></div></div>
             
         </li>
         
@@ -376,16 +382,7 @@ as the old view, and removes the old view.</p>
 
     _removeViews: <span class="keyword">function</span>() {
         <span class="keyword">this</span>.view.remove();
-        <span class="keyword">this</span>._view.remove();
-        <span class="keyword">this</span>._detachedView &amp;&amp; <span class="keyword">this</span>._detachedView.remove();
-    },
-
-    _removeFromParent: <span class="keyword">function</span>() {
-        <span class="keyword">if</span> (<span class="keyword">this</span>._parent &amp;&amp; <span class="keyword">this</span>._parent._removeRegion) {
-            <span class="keyword">this</span>._parent._removeRegion(<span class="keyword">this</span>);
-        }
-        <span class="keyword">this</span>._parent = <span class="literal">null</span>;
-    },</pre></div></div>
+        <span class="keyword">this</span>._view.remove();</pre></div></div>
             
         </li>
         
@@ -395,6 +392,41 @@ as the old view, and removes the old view.</p>
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Remove the _detachedView, if it exists</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        attempt(<span class="keyword">this</span>._detachedView, <span class="string">'remove'</span>);
+    },
+
+    _removeFromParent: <span class="keyword">function</span>() {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Remove this region from its parent, if it exists</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        attempt(<span class="keyword">this</span>._parent, <span class="string">'_removeRegion'</span>, <span class="keyword">this</span>);
+        <span class="keyword">this</span>._parent = <span class="literal">null</span>;
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
               <p>Detaches the current view, replacing it with
 the place holder. Convenient for detaching
@@ -407,28 +439,26 @@ during rendering.</p>
         </li>
         
         
-        <li id="section-21">
+        <li id="section-23">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-21">&#182;</a>
+                <a class="pilcrow" href="#section-23">&#182;</a>
               </div>
               <p>Remove the old _detachedView, if it exists</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> (<span class="keyword">this</span>._detachedView) {
-            <span class="keyword">this</span>._detachedView.remove();
-        }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        attempt(<span class="keyword">this</span>._detachedView, <span class="string">'remove'</span>);</pre></div></div>
             
         </li>
         
         
-        <li id="section-22">
+        <li id="section-24">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-22">&#182;</a>
+                <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
               <p>Store the current view for later reattaching.</p>
 
@@ -446,11 +476,11 @@ during rendering.</p>
         </li>
         
         
-        <li id="section-23">
+        <li id="section-25">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-23">&#182;</a>
+                <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <p>Reattaches the detached view.</p>
 
@@ -462,11 +492,11 @@ during rendering.</p>
         </li>
         
         
-        <li id="section-24">
+        <li id="section-26">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-24">&#182;</a>
+                <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
               <p>$context is a scoped context in which to search
 for the current view&#39;s element in.</p>
@@ -480,11 +510,11 @@ for the current view&#39;s element in.</p>
         </li>
         
         
-        <li id="section-25">
+        <li id="section-27">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-25">&#182;</a>
+                <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
               <p>We then replace the current view with the detached view.</p>
 
@@ -501,11 +531,11 @@ for the current view&#39;s element in.</p>
         </li>
         
         
-        <li id="section-26">
+        <li id="section-28">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-26">&#182;</a>
+                <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
               <p>A hook method that is called during
 a view#remove(). Allows a view to be removed,
@@ -522,11 +552,11 @@ replacing it with the place holder.</p>
         </li>
         
         
-        <li id="section-27">
+        <li id="section-29">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-27">&#182;</a>
+                <a class="pilcrow" href="#section-29">&#182;</a>
               </div>
               <p>Sets view#_parent to this region.
 So view#remove() can hook into our

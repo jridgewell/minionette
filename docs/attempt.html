@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>model_view.js</title>
+  <title>attempt.js</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -56,7 +56,7 @@
         
           <li id="title">
               <div class="annotation">
-                  <h1>model_view.js</h1>
+                  <h1>attempt.js</h1>
               </div>
           </li>
         
@@ -68,10 +68,14 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <p>A helper function, similar to Rails&#39; <code>try</code>,
+the will call the method on obj, unless obj
+is undefined or null. Passes the 3rd+ params
+as arguments to the method</p>
+
             </div>
             
-            <div class="content"><div class='highlight'><pre>Minionette.ModelView = Minionette.View.extend({</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="keyword">function</span> <span class="title">attempt</span><span class="params">(obj, method)</span> {</span></pre></div></div>
             
         </li>
         
@@ -82,14 +86,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Listen to the default events</p>
+              <p>Return undefined unless obj
+is not null or undefined</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    modelEvents: {
-        <span class="string">'change'</span>: <span class="string">'render'</span>,
-        <span class="string">'destroy'</span>: <span class="string">'remove'</span>
-    },</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> (obj == <span class="literal">null</span>) { <span class="keyword">return</span> <span class="keyword">void</span> <span class="number">0</span>; }</pre></div></div>
             
         </li>
         
@@ -100,15 +102,31 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>The data that is sent into the template function.
-Override this to provide custom data.</p>
+              <p>Grab the 3rd+ params</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    serialize: <span class="keyword">function</span>() {
-        <span class="keyword">return</span> <span class="keyword">this</span>.model.attributes;
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> args = _.rest(arguments, <span class="number">2</span>);
+
+    <span class="keyword">if</span> (_.isFunction(obj[method])) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Call the method, as obj, with the
+additional params</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">return</span> obj[method].apply(obj, args);
     }
-});</pre></div></div>
+}</pre></div></div>
             
         </li>
         

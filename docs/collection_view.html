@@ -19,6 +19,11 @@
           <div id="jump_page">
             
               
+              <a class="source" href="attempt.html">
+                attempt.js
+              </a>
+            
+              
               <a class="source" href="collection_view.html">
                 collection_view.js
               </a>
@@ -199,7 +204,7 @@ new modelViews from.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.collection.each(<span class="keyword">this</span>._addModelView, <span class="keyword">this</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.collection.each(<span class="keyword">this</span>.addOne, <span class="keyword">this</span>);</pre></div></div>
             
         </li>
         
@@ -234,12 +239,7 @@ and set that as this.$el</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    addOne: <span class="keyword">function</span>(model) {
-        <span class="keyword">this</span>.trigger(<span class="string">'addOne'</span>);
-
-        <span class="keyword">var</span> view = <span class="keyword">this</span>._addModelView(model);
-
-        <span class="keyword">return</span> view;
-    },</pre></div></div>
+        <span class="keyword">var</span> view = <span class="keyword">new</span> <span class="keyword">this</span>.ModelView({model: model});</pre></div></div>
             
         </li>
         
@@ -250,16 +250,16 @@ and set that as this.$el</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <p>Remove an individual model&#39;s view from this.$el.</p>
+              <p>Add the modelView, and keep track of it.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    removeOne: <span class="keyword">function</span>(model) {
-        <span class="keyword">this</span>.trigger(<span class="string">'removeOne'</span>);
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._modelViews[view.cid] = view;
+        view._parent = <span class="keyword">this</span>;
 
-        <span class="keyword">var</span> view = _.findWhere(<span class="keyword">this</span>._modelViews, {model: model});
-        <span class="keyword">if</span> (view) { view.remove(); }
+        <span class="keyword">this</span>.trigger(<span class="string">'addOne'</span>, view);
 
+        <span class="keyword">this</span>.$el.append(view.render().$el);
         <span class="keyword">return</span> view;
     },</pre></div></div>
             
@@ -272,12 +272,11 @@ and set that as this.$el</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>Add an individual model&#39;s view to this.$el.</p>
+              <p>Remove an individual model&#39;s view from this.$el.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    _addModelView: <span class="keyword">function</span>(model) {
-        <span class="keyword">var</span> modelView = <span class="keyword">new</span> <span class="keyword">this</span>.ModelView({model: model});</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    removeOne: <span class="keyword">function</span>(model) {</pre></div></div>
             
         </li>
         
@@ -288,15 +287,16 @@ and set that as this.$el</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>Add the modelView, and keep track of it.</p>
+              <p>This may or may not find a view.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>._modelViews[modelView.cid] = modelView;
-        modelView._parent = <span class="keyword">this</span>;
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> view = _.findWhere(<span class="keyword">this</span>._modelViews, {model: model});
 
-        <span class="keyword">this</span>.$el.append(modelView.render().$el);
-        <span class="keyword">return</span> modelView;
+        <span class="keyword">this</span>.trigger(<span class="string">'removeOne'</span>, view);
+        attempt(view, <span class="string">'remove'</span>);
+
+        <span class="keyword">return</span> view;
     },</pre></div></div>
             
         </li>

@@ -19,6 +19,11 @@
           <div id="jump_page">
             
               
+              <a class="source" href="attempt.html">
+                attempt.js
+              </a>
+            
+              
               <a class="source" href="collection_view.html">
                 collection_view.js
               </a>
@@ -69,11 +74,8 @@ have been removed and should be cleaned.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>(<span class="keyword">function</span>($) {
-    <span class="keyword">if</span> (!$) { <span class="keyword">return</span>; }
-    <span class="keyword">var</span> _cleanData = $.cleanData,
-        testElement = $(<span class="string">'&lt;span /&gt;'</span>),
-        shouldWrap = <span class="literal">true</span>;</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> _cleanData = $.cleanData,
+    testElement = $(<span class="string">'&lt;span /&gt;'</span>);</pre></div></div>
             
         </li>
         
@@ -90,22 +92,21 @@ then don&#39;t wrap #cleanData.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    testElement.on(<span class="string">'remove'</span>, <span class="keyword">function</span>() {
-        shouldWrap = <span class="literal">false</span>;
-    });
-    testElement.remove();
+            <div class="content"><div class='highlight'><pre>testElement.on(<span class="string">'remove'</span>, <span class="keyword">function</span>() {
+    _cleanData = <span class="literal">null</span>;
+});
+testElement.remove();
 
-    <span class="keyword">if</span> (shouldWrap) {
-        $.cleanData = <span class="keyword">function</span>(elems) {
-            _.each(elems, <span class="keyword">function</span>(elem) {
-                <span class="keyword">try</span> {
-                    $(elem).triggerHandler(<span class="string">'remove'</span>);
-                } <span class="keyword">catch</span>(e) {}
-            });
-            _cleanData(elems);
-        };
-    }
-})(jQuery);</pre></div></div>
+<span class="keyword">if</span> (_cleanData) {
+    $.cleanData = <span class="keyword">function</span>(elems) {
+        _.each(elems, <span class="keyword">function</span>(elem) {
+            <span class="keyword">try</span> {
+                $(elem).triggerHandler(<span class="string">'remove'</span>);
+            } <span class="keyword">catch</span>(e) {}
+        });
+        _cleanData(elems);
+    };
+}</pre></div></div>
             
         </li>
         
