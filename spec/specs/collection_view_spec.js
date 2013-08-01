@@ -95,10 +95,9 @@ define(function() {
                 });
 
                 it("creates a view from ModelView", function() {
-                    var spy = this.sinon.spy(Backbone, 'View'),
-                        view = new Minionette.CollectionView({collection: this.collection});
+                    var spy = this.sinon.spy(this.view, 'ModelView');
 
-                    view.addOne(this.model);
+                    this.view.addOne(this.model);
 
                     expect(spy).to.have.been.called;
                 });
