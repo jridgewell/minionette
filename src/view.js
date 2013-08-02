@@ -99,14 +99,6 @@ Minionette.View = Backbone.View.extend({
         }
     },
 
-    // A proxy method to #remove()
-    // Done so we don't _.bindall() to
-    // #remove()
-    _jqueryRemove: function() {
-        this.trigger('remove:jquery');
-        this.remove();
-    },
-
     // Loop through the events given, and listen to
     // entity's event.
     _listenToEvents: function(entity, events) {

@@ -286,25 +286,6 @@ define(function() {
 
             });
 
-            describe("#_jqueryRemove()", function() {
-                it("triggers 'remove:jquery' event", function() {
-                    var spy = this.sinon.spy();
-                    this.view.on('remove:jquery', spy);
-
-                    this.view._jqueryRemove();
-
-                    expect(spy).to.have.been.called;
-                });
-
-                it("calls #remove()", function() {
-                    var spy = this.sinon.spy(this.view, 'remove');
-
-                    this.view._jqueryRemove();
-
-                    expect(spy).to.have.been.called;
-                });
-            });
-
             describe("#addRegion()", function() {
                 beforeEach(function() {
                     this.innerView = new Minionette.View();
