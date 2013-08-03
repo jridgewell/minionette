@@ -67,13 +67,6 @@ module.exports = function(grunt) {
             }
         },
 
-        docco: {
-            src: ['src/*.js'],
-            options: {
-                output: 'docs/'
-            }
-        },
-
         mocha: {
             browser: ['spec/index.html'],
             options: {
@@ -86,12 +79,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-preprocess');
     grunt.loadNpmTasks('grunt-plato');
-    grunt.loadNpmTasks('grunt-docco2');
     grunt.loadNpmTasks('grunt-mocha');
 
     // Default task.
     grunt.registerTask('lint-test', ['jshint:test']);
     grunt.registerTask('test', ['jshint:minionette', 'preprocess', 'mocha']);
-    grunt.registerTask('default', ['test', 'uglify', 'docco']);
+    grunt.registerTask('default', ['test', 'uglify']);
 
 };
