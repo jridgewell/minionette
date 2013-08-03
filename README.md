@@ -7,24 +7,24 @@ Minionette provides three highly optimized View classes for you to use,
 `Minionette.View`, `Minionette.ModelView`, and
 `Minionette.CollectionView`.
 
-Minionette.View
+[Minionette.View](blob/master/docs/minionette.view.md)
 ---------------
 
 
 
-Minionette.Region
+[Minionette.Region](blob/master/docs/minionette.region.md)
 -----------------
 
 
 
-Minionette.ModelView
+[Minionette.ModelView](blob/master/docs/minionette.modelview.md)
 --------------------
 
 `Minionette.ModelView` is nothing more than `Minionette.View` with two
 minor tweaks to easily support rendering models.
 
 
-Minionette.CollectionView
+[Minionette.CollectionView](blob/master/docs/minionette.collectionview.md)
 -------------------------
 
 `Minionette.CollectionView` is an optimized `Minionette.View` for your
