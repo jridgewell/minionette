@@ -60,7 +60,7 @@ Minionette.CollectionView = Minionette.View.extend({
         // This may or may not find a view.
         var view = _.findWhere(this._modelViews, {model: model});
 
-        this.trigger('removeOne', view);
+        if (view) { this.trigger('removeOne', view); }
         attempt(view, 'remove');
 
         return view;

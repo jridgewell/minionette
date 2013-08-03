@@ -116,9 +116,6 @@ model, and calls `#remove()` on it.
 The "removeOne" event is fired before calling `#remove()` on the view,
 and is passed that view as it's only argument.
 
-**Note**: If a model is removed and doesn't have an associated view yet,
-the "removeOne" event will pass `undefined` as the argument.
-
 ### #remove()
 
 `CollectionView` augments `Minionette.View`'s `#remove()` method to make
