@@ -35,9 +35,7 @@ then renders all of the collection's models as `#ModelView`s inside of a
 DocumentFragment, which it appends to the freshly `#template()`ed
 `$el`.
 
-### Events:
-
-#### "render"
+### "render" Event
 
 The "render" event is fired at the beginning of the `#render()` method,
 before any DOM modelViews have been removed or any DOM changes. Listen
@@ -49,9 +47,7 @@ for this event to augment the `#render()` method without overriding it.
 then renders that modelView, and appends it's `$el` to the
 collectionView's `$el`.
 
-### Events:
-
-#### "addOne"
+### "addOne" Event
 
 The "addOne" event is fired after instantiating the modelView, and is
 passed that modelView as it's only argument.
@@ -61,9 +57,7 @@ passed that modelView as it's only argument.
 `#removeOne()` attempts to find the view associated with the removed
 model, and calls `#remove()` on it.
 
-### Events:
-
-#### "removeOne"
+### "removeOne" Event
 
 The "removeOne" event is fired before calling `#remove()` on the view,
 and is passed that view as it's only argument.
