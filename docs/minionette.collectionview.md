@@ -14,6 +14,7 @@ will `#remove()` all modelViews.
 The `#ModelView` property should be the View class that you wish for all
 your modelViews to be rendered as.
 
+
 ## #collectionEvents
 
 ```javascript
@@ -28,6 +29,7 @@ collectionEvents = {
 `CollectionView` will listen for the default collection events,
 rendering the appropriate function to keep things speedy.
 
+
 ## #render()
 
 `#render()` calls `#remove()` on all previously rendered modelViews. It
@@ -41,6 +43,13 @@ The "render" event is fired at the beginning of the `#render()` method,
 before any DOM modelViews have been removed or any DOM changes. Listen
 for this event to augment the `#render()` method without overriding it.
 
+### "rendered" Event
+
+The "rendered" event is fired at the end of the `#render()` method,
+after all DOM changes. Listen for this event to augment the `#render()`
+method without overriding it.
+
+
 ## #addOne(model)
 
 `#addOne()` instantiates a new `#ModelView` with `{model: model}`. It
@@ -52,6 +61,13 @@ collectionView's `$el`.
 The "addOne" event is fired after instantiating the modelView, and is
 passed that modelView as it's only argument.
 
+### "addedOne" Event
+
+The "addedOne" event is fired after rendering the modelView and adding
+it to the collectionView's $el, and is passed that modelView as it's
+only argument.
+
+
 ## #removeOne(model)
 
 `#removeOne()` attempts to find the view associated with the removed
@@ -61,6 +77,12 @@ model, and calls `#remove()` on it.
 
 The "removeOne" event is fired before calling `#remove()` on the view,
 and is passed that view as it's only argument.
+
+### "removeOne" Event
+
+The "removedOne" event is fired after calling `#remove()` on the view,
+and is passed that view as it's only argument.
+
 
 ## #remove()
 
