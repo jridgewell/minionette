@@ -43,6 +43,7 @@ Minionette.View = Backbone.View.extend({
 
         Minionette.View.__super__.remove.apply(this, arguments);
 
+        this.trigger('removed');
         this.unbind();
     },
 
@@ -58,6 +59,7 @@ Minionette.View = Backbone.View.extend({
         // Reattach all our regions
         _.invoke(this._regions, 'reattach');
 
+        this.trigger('rendered');
         return this;
     },
 
