@@ -190,6 +190,15 @@ define(function() {
                     expect(spy).to.have.been.called;
                 });
 
+                it("triggers 'removed' event", function() {
+                    var spy = this.sinon.spy();
+                    this.view.on('removed', spy);
+
+                    this.view.remove();
+
+                    expect(spy).to.have.been.called;
+                });
+
                 it("removes from parent view", function() {
                     var subView = new Minionette.View();
                     this.view.addRegion('region', subView);
@@ -215,6 +224,15 @@ define(function() {
                 it("triggers 'render' event", function() {
                     var spy = this.sinon.spy();
                     this.view.on('render', spy);
+
+                    this.view.render();
+
+                    expect(spy).to.have.been.called;
+                });
+
+                it("triggers 'rendered' event", function() {
+                    var spy = this.sinon.spy();
+                    this.view.on('rendered', spy);
 
                     this.view.render();
 
