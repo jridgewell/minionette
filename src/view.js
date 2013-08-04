@@ -92,10 +92,8 @@ Minionette.View = Backbone.View.extend({
     },
 
     _removeRegion: function(region) {
-        if (this._regions[region.name]) {
-            delete this[region.name];
-            delete this._regions[region.name];
-        }
+        delete this[region.name];
+        delete this._regions[region.name];
     },
 
     // Loop through the events given, and listen to
