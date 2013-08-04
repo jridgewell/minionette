@@ -38,6 +38,8 @@ Minionette.CollectionView = Minionette.View.extend({
         // and set that as this.$el
         this.$el = $el.append(this.$el);
 
+        this.trigger('rendered');
+
         return this;
     },
 
@@ -52,6 +54,9 @@ Minionette.CollectionView = Minionette.View.extend({
         this.trigger('addOne', view);
 
         this.$el.append(view.render().$el);
+
+        this.trigger('addedOne', view);
+
         return view;
     },
 
@@ -60,8 +65,11 @@ Minionette.CollectionView = Minionette.View.extend({
         // This may or may not find a view.
         var view = _.findWhere(this._modelViews, {model: model});
 
-        if (view) { this.trigger('removeOne', view); }
-        attempt(view, 'remove');
+        if (view) {
+            this.trigger('removeOne', view);
+            view.remove();
+            this.trigger('removedOne', view);
+        }
 
         return view;
     },
