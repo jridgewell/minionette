@@ -16,7 +16,7 @@
 }(this, function (_, jQuery, Backbone) {
     'use strict';
 
-    // @include minionette.js
+// @include minionette.js
     return Backbone.Minionette;
 
 }));
