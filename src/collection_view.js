@@ -83,6 +83,9 @@ Minionette.CollectionView = Minionette.View.extend({
     // A callback method bound to the 'remove:before'
     // event. Removes all our modelViews.
     _removeModelViews: function() {
+        // Empty the entire $el, that way each individual
+        // modelView removal won't trigger a DOM reflow.
+        this.$el.empty();
         _.invoke(this._modelViews, 'remove');
     },
 

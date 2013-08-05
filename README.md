@@ -39,7 +39,7 @@ minor tweaks to easily support rendering models.
 
 `Minionette.CollectionView` is an optimized `Minionette.View` for your
 Backbone collections. It quickly handles rendering using a
-DocumentFragment, ensuring at most two content reflows even with
+DocumentFragment, ensuring at most three content reflows even with
 hundreds of models to render. The most important feature of
 `CollectionView` is the `#ModelView` property, from which all models
 will have a view instantiated from. Additionally, `CollectionView`
