@@ -113,7 +113,7 @@ define(function() {
 
                     var view = this.view.addOne(this.model);
 
-                    expect(spy).to.have.been.calledWithExactly(view);
+                    expect(spy).to.have.been.calledWith(view);
                 });
 
                 it("triggers 'addedOne' event", function() {
@@ -131,7 +131,7 @@ define(function() {
 
                     var view = this.view.addOne(this.model);
 
-                    expect(spy).to.have.been.calledWithExactly(view);
+                    expect(spy).to.have.been.calledWith(view);
                 });
 
                 it("creates a view from ModelView", function() {
@@ -186,7 +186,7 @@ define(function() {
 
                     this.view.removeOne(this.model);
 
-                    expect(spy).to.have.been.calledWithExactly(this.modelView);
+                    expect(spy).to.have.been.calledWith(this.modelView);
                 });
 
                 it("triggers 'removedOne' event", function() {
@@ -204,7 +204,7 @@ define(function() {
 
                     this.view.removeOne(this.model);
 
-                    expect(spy).to.have.been.calledWithExactly(this.modelView);
+                    expect(spy).to.have.been.calledWith(this.modelView);
                 });
 
                 it("calls #remove() on the view", function() {
