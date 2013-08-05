@@ -73,14 +73,14 @@ collectionView as it's arguments.
 ## #removeOne(model)
 
 `#removeOne()` attempts to find the view associated with the removed
-model, and calls `#remove()` on it.
+`model`, and calls `#remove()` on it.
 
 ### "removeOne" Event
 
 The "removeOne" event is fired before calling `#remove()` on the view,
 and is passed that modelView and the collectionView as it's arguments.
 
-### "removeOne" Event
+### "removedOne" Event
 
 The "removedOne" event is fired after calling `#remove()` on the view,
 and is passed that modelView and the collectionView as it's arguments.
