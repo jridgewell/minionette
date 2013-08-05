@@ -32,24 +32,18 @@ rendering the appropriate function to keep things speedy.
 
 ## #render()
 
-`#render()` calls `#remove()` on all previously rendered modelViews. It
-then renders all of the collection's models as `#ModelView`s inside of a
-DocumentFragment, which it appends to the freshly `#template()`ed
-`$el`.
+The `#render()` method augments `Minionette.View`'s `#render()` with the
+collection specific rendering. It will remove all previously associated modelViews, and render the new ones inside a DocumentFragment, which will be appended to the collectionView's $el.
 
 ### "render" Event
 
-The "render" event is fired at the beginning of the `#render()` method,
-before any DOM modelViews have been removed or any DOM changes. Listen
-for this event to augment the `#render()` method without overriding it.
-The CollectionView is passed as its only argument.
+The "render" event is still called before any regions are removed and
+before any DOM changes.
 
 ### "rendered" Event
 
-The "rendered" event is fired at the end of the `#render()` method,
-after all DOM changes. Listen for this event to augment the `#render()`
-method without overriding it.  The CollectionView is passed as its only
-argument.
+The "rendered" event is still called after all DOM changes have been
+made.
 
 
 ## #addOne(model)
