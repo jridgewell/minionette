@@ -8,8 +8,10 @@ Minionette.CollectionView = Minionette.View.extend({
 
         Minionette.View.apply(this, arguments);
 
+        // Augment #render() with our collection specific items.
+        this.on('rendered', this._renderCollectionViews);
         // Make sure we remove our modelViews when this is removed.
-        this.listenTo(this, 'remove', this._removeModelViews);
+        this.on('remove', this._removeModelViews);
     },
 
     // Listen to the default events.
@@ -22,12 +24,17 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // A default useful render function.
     render: function() {
-        this.trigger('render', this);
+        // Remove all our modelViews after the 'render' event is
+        // fired. This is set on #render() so that the removing
+        // will happen after all other 'render' listeners.
+        this.once('render', this._removeModelViews());
 
-        // Dump all our modelViews.
-        this._removeModelViews();
+        return Minionette.CollectionView.__super__.render.apply(this);
+    },
 
-        var $el = this.$el.html(this.template(this._serialize()));
+    _renderCollectionViews: function() {
+        var $el = this.$el;
+
         // Use a DocumentFragment to speed up #render()
         this.$el = $(document.createDocumentFragment());
 
@@ -38,9 +45,6 @@ Minionette.CollectionView = Minionette.View.extend({
         // and set that as this.$el
         this.$el = $el.append(this.$el);
 
-        this.trigger('rendered', this);
-
-        return this;
     },
 
     // Add an individual model's view to this.$el.
