@@ -46,12 +46,12 @@ template helper function `view()`.
 `view()` is a special helper function that injects a region's subview
 directly into the template. It looks for the attached region on the view,
 and places the subviews entire $el (including the top level tag) into
-that exact spot in the template. It does _not_ render the subview,
-leaving that up to the developer, so that subviews that don't need to be
+that exact spot in the template. It does _not_ render the region,
+leaving that up to the developer, so that regions that don't need to be
 re-rendered won't be. See an example of it's usage below:
 
 Note: attaching an event listener on the view's 'render' event is any
-easy way to re-render any subviews that need it.
+easy way to re-render any regions that need it.
 
 ```javascript
 var View = Minionette.View.extend({
@@ -75,7 +75,7 @@ view.render();
 ## #remove()
 
 The `#remove()` method does exactly what you would expect it to: it
-removes the view and any associated subviews.
+removes the view and any associated regions.
 
 ### "remove" Event
 
@@ -127,4 +127,4 @@ view will be used instead.
 The `#addRegions()` method adds several regions at a time. The `regions`
 parameter must be an object, with keys specifying the region name and
 values having the view. False-y values will cause the region to use the
-default place holder view.
+default "place holder" view.
