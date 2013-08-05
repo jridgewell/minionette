@@ -22,7 +22,7 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // A default useful render function.
     render: function() {
-        this.trigger('render');
+        this.trigger('render', this);
 
         // Dump all our modelViews.
         this._removeModelViews();
@@ -38,7 +38,7 @@ Minionette.CollectionView = Minionette.View.extend({
         // and set that as this.$el
         this.$el = $el.append(this.$el);
 
-        this.trigger('rendered');
+        this.trigger('rendered', this);
 
         return this;
     },
@@ -51,11 +51,11 @@ Minionette.CollectionView = Minionette.View.extend({
         this._modelViews[view.cid] = view;
         view._parent = this;
 
-        this.trigger('addOne', view);
+        this.trigger('addOne', view, this);
 
         this.$el.append(view.render().$el);
 
-        this.trigger('addedOne', view);
+        this.trigger('addedOne', view, this);
 
         return view;
     },
@@ -66,9 +66,9 @@ Minionette.CollectionView = Minionette.View.extend({
         var view = _.findWhere(this._modelViews, {model: model});
 
         if (view) {
-            this.trigger('removeOne', view);
+            this.trigger('removeOne', view, this);
             view.remove();
-            this.trigger('removedOne', view);
+            this.trigger('removedOne', view, this);
         }
 
         return view;
