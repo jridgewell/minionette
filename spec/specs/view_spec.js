@@ -124,6 +124,18 @@ define(function() {
                     expect(this.view._serialize()[key]).to.equal(value);
                 });
 
+                it("does not modify the #serialize()'s return value'", function() {
+                    var object = {test: 1};
+                    this.view.serialize = function() {
+                        return object;
+                    };
+
+                    var ret = this.view._serialize();
+                    ret.test = 2;
+
+                    expect(object.test).to.equal(1);
+                });
+
                 it("can have view overridden by #serialize()", function() {
                     var value = _.uniqueId();
                     this.view.serialize = function() {
@@ -134,7 +146,7 @@ define(function() {
                 });
 
                 it("has #_viewHelper as 'view' key", function() {
-                    expect(this.view._serialize().view).to.equal(this.view._viewHelper);
+                    expect(typeof this.view._serialize().view).to.equal('function');
                 });
             });
 
@@ -168,39 +180,19 @@ define(function() {
                 });
             });
 
-            describe("#delegateEvents()", function() {
-                it("calls Backbone.View's #delegateEvents()", function() {
-                    var stub = this.sinon.stub(Backbone.View.prototype, 'delegateEvents');
-
-                    this.view.delegateEvents();
-
-                    expect(stub).to.have.been.called;
-                });
-
-                it("sets #_jqueryRemove() listener on $el 'remove' event", function() {
-                    var stub = this.sinon.stub(this.view, '_jqueryRemove');
-                    this.view.delegateEvents();
-
-                    this.view.$el.trigger('remove');
-
-                    expect(stub).to.have.been.called;
-                });
-
-                it("sets #_jqueryRemove() listener that is compatible with #undelegateEvents()", function() {
-                    var stub = this.sinon.stub(this.view, '_jqueryRemove');
-                    this.view.delegateEvents();
-                    this.view.undelegateEvents();
-
-                    this.view.$el.trigger('remove');
-
-                    expect(stub).to.not.have.been.called;
-                });
-            });
-
             describe("#remove()", function() {
                 it("triggers 'remove' event", function() {
                     var spy = this.sinon.spy();
                     this.view.on('remove', spy);
+
+                    this.view.remove();
+
+                    expect(spy).to.have.been.called;
+                });
+
+                it("triggers 'removed' event", function() {
+                    var spy = this.sinon.spy();
+                    this.view.on('removed', spy);
 
                     this.view.remove();
 
@@ -238,11 +230,22 @@ define(function() {
                     expect(spy).to.have.been.called;
                 });
 
+                it("triggers 'rendered' event", function() {
+                    var spy = this.sinon.spy();
+                    this.view.on('rendered', spy);
+
+                    this.view.render();
+
+                    expect(spy).to.have.been.called;
+                });
+
                 it("detaches regions before emptying $el", function() {
                     var subView = new Minionette.View(),
                         spy = this.sinon.spy();
                     subView.$el.on('click', spy);
-                    this.view.addRegion('region', subView);
+                    this.view.render();
+                    this.view.$el.append(subView.$el);
+                    this.view.addRegion('region', subView).render();
 
                     this.view.render();
 
@@ -301,25 +304,6 @@ define(function() {
                     expect(this.view.$el).to.contain('beforesubViewafter');
                 });
 
-            });
-
-            describe("#_jqueryRemove()", function() {
-                it("triggers 'remove:jquery' event", function() {
-                    var spy = this.sinon.spy();
-                    this.view.on('remove:jquery', spy);
-
-                    this.view._jqueryRemove();
-
-                    expect(spy).to.have.been.called;
-                });
-
-                it("calls #remove()", function() {
-                    var spy = this.sinon.spy(this.view, 'remove');
-
-                    this.view._jqueryRemove();
-
-                    expect(spy).to.have.been.called;
-                });
             });
 
             describe("#addRegion()", function() {

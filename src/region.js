@@ -81,8 +81,10 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
     // Removes this region, and it's view.
     remove: function() {
+        this.trigger('remove', this);
         this._removeViews();
         this._removeFromParent();
+        this.stopListening();
     },
 
     _removeViews: function() {

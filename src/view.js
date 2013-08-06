@@ -7,7 +7,6 @@ Minionette.View = Backbone.View.extend({
         this._ensureRegion(options);
         this._initializeRegions(options);
 
-        _.bindAll(this, '_jqueryRemove', '_viewHelper');
         Backbone.View.apply(this, arguments);
 
         // Have the view listenTo the model and collection.
@@ -30,38 +29,27 @@ Minionette.View = Backbone.View.extend({
     // Used so a subclass can override this.serialize and still
     // have the `view` helper.
     _serialize: function() {
-        return _.extend({view: this._viewHelper}, this.serialize());
+        return _.extend({view: _.bind(this._viewHelper, this)}, this.serialize());
     },
 
-    // When delegating events, bind this view to jQuery's special remove event.
-    // Allows us to clean up the view, even if you remove this.$el with jQuery.
-    // http://blog.alexmaccaw.com/jswebapps-memory-management
-    delegateEvents: function() {
-        Minionette.View.__super__.delegateEvents.apply(this, arguments);
-
-        this.$el.on('remove.delegateEvents' + this.cid, this._jqueryRemove);
-    },
-
-    // A useful remove method to that triggers events.
+    // A useful remove method that triggers events.
     remove: function() {
-        if (!this._isRemoving) {
-            this._isRemoving = true;
-            this.trigger('remove');
+        if (this._isRemoving) { return; }
+        this._isRemoving = true;
+        this.trigger('remove', this);
 
-            this._removeFromParent();
-            _.invoke(this._regions, 'remove');
+        this._removeFromParent();
+        _.invoke(this._regions, 'remove');
 
-            Minionette.View.__super__.remove.apply(this, arguments);
-            delete this._jqueryRemove;
-            delete this._viewHelper;
+        Minionette.View.__super__.remove.apply(this, arguments);
 
-            this.unbind();
-        }
+        this.trigger('removed', this);
+        this.unbind();
     },
 
     // A useful default render method.
     render: function() {
-        this.trigger('render');
+        this.trigger('render', this);
 
         // Detach all our regions, so they don't need to be re-rendered.
         _.invoke(this._regions, 'detach');
@@ -71,6 +59,7 @@ Minionette.View = Backbone.View.extend({
         // Reattach all our regions
         _.invoke(this._regions, 'reattach');
 
+        this.trigger('rendered', this);
         return this;
     },
 
@@ -105,18 +94,8 @@ Minionette.View = Backbone.View.extend({
     },
 
     _removeRegion: function(region) {
-        if (this._regions[region.name]) {
-            delete this[region.name];
-            delete this._regions[region.name];
-        }
-    },
-
-    // A proxy method to #remove()
-    // Done so we don't _.bindall() to
-    // #remove()
-    _jqueryRemove: function() {
-        this.trigger('remove:jquery');
-        this.remove();
+        delete this[region.name];
+        delete this._regions[region.name];
     },
 
     // Loop through the events given, and listen to

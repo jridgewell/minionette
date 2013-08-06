@@ -43,9 +43,19 @@ define(function() {
                     expect(spy).to.have.been.called;
                 });
 
+                it("triggers 'rendered' event", function() {
+                    var spy = this.sinon.spy();
+                    this.view.on('rendered', spy);
+
+                    this.view.render();
+
+                    expect(spy).to.have.been.called;
+                });
+
                 it("removes old modelViews", function() {
                     var view = this.view.addOne(new Backbone.Model()),
-                        spy = this.sinon.spy(view, 'remove');
+                        spy = this.sinon.spy();
+                    view.on('remove', spy);
 
                     this.view.render();
 
@@ -97,6 +107,33 @@ define(function() {
                     expect(spy).to.have.been.called;
                 });
 
+                it("passes the view to the 'addOne' event", function() {
+                    var spy = this.sinon.spy();
+                    this.view.on('addOne', spy);
+
+                    var view = this.view.addOne(this.model);
+
+                    expect(spy).to.have.been.calledWith(view);
+                });
+
+                it("triggers 'addedOne' event", function() {
+                    var spy = this.sinon.spy();
+                    this.view.on('addedOne', spy);
+
+                    this.view.addOne(this.model);
+
+                    expect(spy).to.have.been.called;
+                });
+
+                it("passes the view to the 'addedOne' event", function() {
+                    var spy = this.sinon.spy();
+                    this.view.on('addedOne', spy);
+
+                    var view = this.view.addOne(this.model);
+
+                    expect(spy).to.have.been.calledWith(view);
+                });
+
                 it("creates a view from ModelView", function() {
                     var spy = this.sinon.spy(this.view, 'ModelView');
 
@@ -143,14 +180,36 @@ define(function() {
                     expect(spy).to.have.been.called;
                 });
 
-                it("returns the removed view", function() {
-                    var ret = this.view.removeOne(this.model);
+                it("passes the view to the 'removeOne' event", function() {
+                    var spy = this.sinon.spy();
+                    this.view.on('removeOne', spy);
 
-                    expect(ret).to.equal(this.modelView);
+                    this.view.removeOne(this.model);
+
+                    expect(spy).to.have.been.calledWith(this.modelView);
+                });
+
+                it("triggers 'removedOne' event", function() {
+                    var spy = this.sinon.spy();
+                    this.view.on('removedOne', spy);
+
+                    this.view.removeOne(this.model);
+
+                    expect(spy).to.have.been.called;
+                });
+
+                it("passes the view to the 'removedOne' event", function() {
+                    var spy = this.sinon.spy();
+                    this.view.on('removedOne', spy);
+
+                    this.view.removeOne(this.model);
+
+                    expect(spy).to.have.been.calledWith(this.modelView);
                 });
 
                 it("calls #remove() on the view", function() {
-                    var spy = this.sinon.spy(this.modelView, 'remove');
+                    var spy = this.sinon.spy();
+                    this.modelView.on('remove', spy)
 
                     this.view.removeOne(this.model);
 
@@ -161,7 +220,8 @@ define(function() {
             describe("#remove()", function() {
                 it("calls #remove() on the modelViews", function() {
                     var view = this.view.addOne(new Backbone.Model()),
-                        spy = this.sinon.spy(view, 'remove');
+                        spy = this.sinon.spy();
+                    view.on('remove', spy);
 
                     this.view.remove();
 

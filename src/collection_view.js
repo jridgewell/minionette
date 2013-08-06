@@ -8,26 +8,33 @@ Minionette.CollectionView = Minionette.View.extend({
 
         Minionette.View.apply(this, arguments);
 
+        // Augment #render() with our collection specific items.
+        this.on('rendered', this._renderCollectionViews);
         // Make sure we remove our modelViews when this is removed.
-        this.listenTo(this, 'remove', this._removeModelViews);
+        this.on('remove', this._removeModelViews);
     },
 
     // Listen to the default events.
     collectionEvents: {
-        'add': 'addOne',
-        'remove': 'removeOne',
-        'reset': 'render',
-        'sort': 'render'
+        add: 'addOne',
+        remove: 'removeOne',
+        reset: 'render',
+        sort: 'render'
     },
 
     // A default useful render function.
     render: function() {
-        this.trigger('render');
+        // Remove all our modelViews after the 'render' event is
+        // fired. This is set on #render() so that the removing
+        // will happen after all other 'render' listeners.
+        this.once('render', this._removeModelViews());
 
-        // Dump all our modelViews.
-        this._removeModelViews();
+        return Minionette.CollectionView.__super__.render.apply(this);
+    },
 
-        var $el = this.$el.html(this.template(this._serialize()));
+    _renderCollectionViews: function() {
+        var $el = this.$el;
+
         // Use a DocumentFragment to speed up #render()
         this.$el = $(document.createDocumentFragment());
 
@@ -38,7 +45,6 @@ Minionette.CollectionView = Minionette.View.extend({
         // and set that as this.$el
         this.$el = $el.append(this.$el);
 
-        return this;
     },
 
     // Add an individual model's view to this.$el.
@@ -49,9 +55,12 @@ Minionette.CollectionView = Minionette.View.extend({
         this._modelViews[view.cid] = view;
         view._parent = this;
 
-        this.trigger('addOne', view);
+        this.trigger('addOne', view, this);
 
         this.$el.append(view.render().$el);
+
+        this.trigger('addedOne', view, this);
+
         return view;
     },
 
@@ -60,8 +69,11 @@ Minionette.CollectionView = Minionette.View.extend({
         // This may or may not find a view.
         var view = _.findWhere(this._modelViews, {model: model});
 
-        this.trigger('removeOne', view);
-        attempt(view, 'remove');
+        if (view) {
+            this.trigger('removeOne', view, this);
+            view.remove();
+            this.trigger('removedOne', view, this);
+        }
 
         return view;
     },
@@ -75,6 +87,9 @@ Minionette.CollectionView = Minionette.View.extend({
     // A callback method bound to the 'remove:before'
     // event. Removes all our modelViews.
     _removeModelViews: function() {
+        // Empty the entire $el, that way each individual
+        // modelView removal won't trigger a DOM reflow.
+        this.$el.empty();
         _.invoke(this._modelViews, 'remove');
     },
 
