@@ -193,7 +193,7 @@ define(function() {
         describe("#remove()", function() {
             it("triggers the 'remove' event", function() {
                 var spy = this.sinon.spy();
-                this.region.on('remove', spy)
+                this.region.on('remove', spy);
 
                 this.region.remove();
 

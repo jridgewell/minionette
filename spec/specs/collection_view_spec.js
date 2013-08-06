@@ -209,7 +209,7 @@ define(function() {
 
                 it("calls #remove() on the view", function() {
                     var spy = this.sinon.spy();
-                    this.modelView.on('remove', spy)
+                    this.modelView.on('remove', spy);
 
                     this.view.removeOne(this.model);
 
