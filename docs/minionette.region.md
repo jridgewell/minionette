@@ -53,5 +53,5 @@ The `#reattach()` method takes the internally stored detached view (see
 
 ## #remove()
 
-The `#remove()` method removes the current region (and the subview and
+The `#remove()` method removes the region (and the subview and
 current view) from the parent view.
