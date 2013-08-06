@@ -26,7 +26,7 @@ define(['attempt'], function(attempt) {
             expect(spy).to.have.been.calledOn(obj);
         });
 
-        it("passes the everything but the first two params as arguments to the method", function() {
+        it("returns the output of the method", function() {
             var unique = _.uniqueId();
             var obj = {method: function() { return unique; }};
             var ret = attempt(obj, 'method');
