@@ -42,6 +42,4 @@ Backbone collections. It quickly handles rendering using a
 DocumentFragment, ensuring at most three content reflows even with
 hundreds of models to render. The most important feature of
 `CollectionView` is the `#ModelView` property, from which all models
-will have a view instantiated from. Additionally, `CollectionView`
-handles memory management for you: calling `#remove()` will `#remove()`
-all modelViews.
+will have a view instantiated from.
