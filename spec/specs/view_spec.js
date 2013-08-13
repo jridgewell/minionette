@@ -10,7 +10,7 @@ define(function() {
 
         describe("constructor", function() {
             it("calls Backbone.View's constructor", function() {
-                var spy = this.sinon.spy(Backbone, 'View');
+                var spy = sinon.spy(Backbone, 'View');
 
                 new Minionette.View();
 
@@ -18,77 +18,57 @@ define(function() {
             });
 
             describe("Model Events", function() {
-                before(function() {
-                    this.spy = this.sinon.spy();
-                    this.ModelEventTest = Minionette.View.extend({
-                        modelEvents: {
-                            'change': this.spy
-                        }
-                    });
-                    this.model = new Backbone.Model();
+                var spy = sinon.spy();
+                var ModelEventTest = Minionette.View.extend({
+                    modelEvents: {
+                        'change': spy
+                    }
                 });
-                after(function() {
-                    delete this.spy;
-                    delete this.ModelEventTest;
-                    delete this.model;
-                });
+                var model = new Backbone.Model();
 
                 it("listens for model events", function() {
-                    var view = new this.ModelEventTest({model: this.model});
+                    var view = new ModelEventTest({model: model});
 
-                    this.model.trigger('change');
+                    model.trigger('change');
 
-                    expect(this.spy).to.have.been.called;
+                    expect(spy).to.have.been.called;
 
                     view.remove();
                 });
             });
 
             describe("Collection Events", function() {
-                before(function() {
-                    this.spy = this.sinon.spy();
-                    this.CollectionEventTest = Minionette.View.extend({
-                        collectionEvents: {
-                            'change': this.spy
-                        }
-                    });
-                    this.collection = new Backbone.Collection();
+                var spy = sinon.spy();
+                var CollectionEventTest = Minionette.View.extend({
+                    collectionEvents: {
+                        'change': spy
+                    }
                 });
-                after(function() {
-                    delete this.spy;
-                    delete this.CollectionEventTest;
-                    delete this.collection;
-                });
+                var collection = new Backbone.Collection();
 
                 it("listens for collection events", function() {
-                    var view = new this.CollectionEventTest({collection: this.collection});
+                    var view = new CollectionEventTest({collection: collection});
 
-                    this.collection.trigger('change');
+                    collection.trigger('change');
 
-                    expect(this.spy).to.have.been.called;
+                    expect(spy).to.have.been.called;
 
                     view.remove();
                 });
             });
 
             describe("Regions", function() {
-                before(function() {
-                    this.regionView = new Minionette.View();
-                    this.RegionTest = Minionette.View.extend({
-                        regions: {
-                            region: this.regionView
-                        }
-                    });
-                });
-                after(function() {
-                    delete this.regionView;
-                    delete this.RegionTest;
+                var regionView = new Minionette.View();
+                var RegionTest = Minionette.View.extend({
+                    regions: {
+                        region: regionView
+                    }
                 });
 
                 it("attaches regions to the view", function() {
-                    var view = new this.RegionTest();
+                    var view = new RegionTest();
 
-                    expect(view.region.view).to.equal(this.regionView);
+                    expect(view.region.view).to.equal(regionView);
 
                     view.remove();
                 });
