@@ -30,8 +30,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         this._view = new this.View();
 
         // Set this.view to instantiated options.view
-        // if supplied.
-        if (options.view) { this.view = options.view; }
+        this.view = options.view;
 
         // Make sure the view is an instance of Backbone.View
         // (or a subclass). If not, set the view to our place holder
@@ -65,13 +64,13 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         this._assignParent(newView);
 
         // Places newView after the current view.
-        this.view.$el.after(newView.$el);
+        oldView.$el.after(newView.$el);
         // And detaches the view.
-        this.view.$el.detach();
+        oldView.$el.detach();
 
         this.view = newView;
 
-        // Remove the view
+        // Remove the view, unless we are only detaching.
         if (!detach) {
             oldView.remove();
         }
