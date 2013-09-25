@@ -223,8 +223,6 @@ define(function() {
                     var subView = new Minionette.View(),
                         spy = this.sinon.spy();
                     subView.$el.on('click', spy);
-                    this.view.render();
-                    this.view.$el.append(subView.$el);
                     this.view.addRegion('region', subView).render();
 
                     this.view.render();
