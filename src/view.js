@@ -123,8 +123,7 @@ Minionette.View = Backbone.View.extend({
         this._regions = {};
 
         // Pull regions from instantiated options.
-        var regions = _.result(this, 'regions');
-        if (options.regions) { regions = options.regions; }
+        var regions = _.result(options, 'regions') || _.result(this, 'regions');
 
         // Add the regions
         this.addRegions(regions);
