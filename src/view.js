@@ -12,6 +12,12 @@ Minionette.View = Backbone.View.extend({
         // Have the view listenTo the model and collection.
         this._listenToEvents(this.model, _.result(this, 'modelEvents'));
         this._listenToEvents(this.collection, _.result(this, 'collectionEvents'));
+
+        // Always bind this._viewHelper to this.
+        // This._viewHelper will be passed into
+        // the template as a helper method for
+        // rendering regions.
+        _.bindAll(this, '_viewHelper');
     },
 
     // A default template that will clear this.$el.
@@ -29,7 +35,7 @@ Minionette.View = Backbone.View.extend({
     // Used so a subclass can override this.serialize and still
     // have the `view` helper.
     _serialize: function() {
-        return _.extend({view: _.bind(this._viewHelper, this)}, this.serialize());
+        return _.extend({view: this._viewHelper}, this.serialize());
     },
 
     // A useful remove method that triggers events.
