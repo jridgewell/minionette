@@ -12,32 +12,24 @@ Minionette.Region = function(options) {
 Minionette.Region.extend = Backbone.View.extend;
 
 _.extend(Minionette.Region.prototype, Backbone.Events, {
-    // The place holder view's class
-    View: Minionette.View.extend({
-        // Set it to a span, so when it's empty it's
-        // collapsed on the DOM.
-        tagName: 'span',
-        // Use the data-cid attribute as a unique
-        // attribute. Used for reattaching a detached view.
-        attributes: function() {
-            return {'data-cid': this.cid};
-        }
-    }),
-
     // Ensures the region has a view.
     _ensureView: function(options) {
-        // Instantiate our place holder view.
-        this._view = new this.View();
+        var viewOpts = {
+            // If not, set it to a span so when it's
+            // empty it's collapsed on the DOM.
+            tagName: 'span',
+            // Use the data-cid attribute as a unique
+            // attribute. Used for reattaching a detached view.
+            attributes: function() {
+                return {'data-cid': this.cid};
+            }
+        };
 
-        // Set this.view to instantiated options.view
-        this.view = options.view;
+        this._view = new Backbone.View(viewOpts);
+        this._view.$el.selector = this._view.$el.selector ||
+            '[data-cid=' + this._view.cid + ']';
 
-        // Make sure the view is an instance of Backbone.View
-        // (or a subclass). If not, set the view to our place holder
-        // view.
-        if (!(this.view instanceof Backbone.View)) {
-            this.view = this._view;
-        }
+        this.view = options.view || this._view;
 
         // And set our view's _parent to this region.
         this._assignParent(this.view);
@@ -75,9 +67,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         this.view = newView;
 
         // Remove the view, unless we are only detaching.
-        if (!detach) {
-            oldView.remove();
-        }
+        if (!detach) { oldView.remove(); }
 
         return newView;
     },
@@ -122,9 +112,9 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     reattach: function() {
         // $context is a scoped context in which to search
         // for the current view's element in.
-        var $context = (this._parent && this._parent.$el) || Backbone.$(document.body),
-            viewSelector = '[data-cid=' + this.view.cid + ']',
-            newView = this._detachedView;
+        var $context = _.result(this._parent, '$el') || Backbone.$(),
+            viewSelector = this.view.$el.selector,
+            newView = this._detachedView || this._view;
 
         // We then replace the current view with the detached view.
         $context.find(viewSelector).replaceWith(newView.$el);
