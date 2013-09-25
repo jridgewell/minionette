@@ -8,18 +8,18 @@ part of the overall view.
 
 ## #View
 
-`#View` is the class of the "place holder" view. When a Backbone.View is
-not attached to the region, the place holder will take its place (so
+`#View` is the class of the "placeholder" view. When a Backbone.View is
+not attached to the region, the placeholder will take its place (so
 that a new view can be attached in the correct place in the parent
-view). The place holder will only ever be instantiated once, and will be
+view). The placeholder will only ever be instantiated once, and will be
 internally kept. When the attached subview is detached/removed, the
-place holder will take it's place. By default, the view is a empty span
-element, with a "data-cid" attribute set to the place holder's cid.
+placeholder will take it's place. By default, the view is a empty span
+element, with a "data-cid" attribute set to the placeholder's cid.
 
 
 ## #reset(detach = false)
 
-The `#reset()` method resets the region to using the place holder view.
+The `#reset()` method resets the region to using the placeholder view.
 It optionally takes a `detach` parameter that, when true, will not call
 `view.remove()` on the region's current view.
 
@@ -39,7 +39,7 @@ the region in the exact same spot as the region's current view. It optionally ta
 ## #detach()
 
 The `#detach()` method detaches the region's current view (storing a
-reference to it internally) and replaces it with the place holder. That
+reference to it internally) and replaces it with the placeholder. That
 current view is stored internally so that you can call `#reattach()`.
 This is exceptionally useful during rendering, since detaching the
 region will preserve the current view's DOM event listeners.

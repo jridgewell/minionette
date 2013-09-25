@@ -43,7 +43,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         this._assignParent(this.view);
     },
 
-    // Resets the region's view to place holder view.
+    // Resets the region's view to placeholder view.
     // Optionally takes a boolean, in which case the
     // oldView will just be detached.
     reset: function(detach) {
@@ -104,7 +104,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     },
 
     // Detaches the current view, replacing it with
-    // the place holder. Convenient for detaching
+    // the placeholder. Convenient for detaching
     // during rendering.
     detach: function() {
         var view = this.view;
@@ -137,7 +137,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
     // A hook method that is called during
     // a view#remove(). Allows a view to be removed,
-    // replacing it with the place holder.
+    // replacing it with the placeholder.
     _removeView: function(view) {
         if (this.view === view) {
             this.reset(true);
