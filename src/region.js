@@ -7,6 +7,10 @@ Minionette.Region = function(options) {
     this._ensureView(options || {});
 };
 
+function getParentViewContext(view) {
+    return _.result(view._parent, '$el') || Backbone.$();
+}
+
 // Allow Regions to be extended.
 // Backbone's extend is generic, just copy it over.
 Minionette.Region.extend = Backbone.View.extend;
@@ -15,6 +19,9 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // Ensures the region has a view.
     _ensureView: function(options) {
         var viewOpts = {
+            // Grab the el from options.
+            // This will override the following if it exists.
+            el: options.el,
             // If not, set it to a span so when it's
             // empty it's collapsed on the DOM.
             tagName: 'span',
@@ -33,6 +40,12 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
         // And set our view's _parent to this region.
         this._assignParent(this.view);
+    },
+
+    _ensureElement: function(view) {
+        var $context = getParentViewContext(this),
+            viewSelector = view.$el.selector;
+        view.setElement($context.find(viewSelector));
     },
 
     // Resets the region's view to placeholder view.
@@ -110,9 +123,10 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
     // Reattaches the detached view.
     reattach: function() {
+        if (!this._view.el) { this._ensureElement(this._view); }
         // $context is a scoped context in which to search
         // for the current view's element in.
-        var $context = _.result(this._parent, '$el') || Backbone.$(),
+        var $context = getParentViewContext(this),
             viewSelector = this.view.$el.selector,
             newView = this._detachedView || this._view;
 

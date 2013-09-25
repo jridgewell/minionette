@@ -5,7 +5,7 @@ define(function() {
         });
         function addInnerView(name, parentView) {
             var v = new Minionette.View({tagName: 'p'});
-            v.template = _.template("test");
+            v.template = _.template("inner");
             v.render();
             parentView.addRegion(name, v);
             parentView.render();
@@ -42,6 +42,13 @@ define(function() {
                 expect(region.view).to.equal(region._view);
 
                 region.remove();
+            });
+
+            it("sets #_view to the matched element if passed in view is a selector", function() {
+                var selector = ':first-child'
+                this.view.addRegion('region', selector);
+
+                expect(this.view.region._view.el).to.equal(this.view.$(selector)[0])
             });
         });
 
@@ -111,6 +118,17 @@ define(function() {
                 var ret = this.region.attach(this.newView);
 
                 expect(ret).to.equal(this.newView);
+            });
+
+            it("will correctly render even when not rendered and initialized with selector", function() {
+                var selector = ':first-child';
+                this.view.addRegion('region', selector);
+                this.view.region.attach(this.newView);
+
+                this.view.render();
+
+                var expectedIndex = this.view.$(selector).index();
+                expect(this.newView.$el.index()).to.equal(expectedIndex);
             });
         });
 
@@ -187,6 +205,18 @@ define(function() {
                 this.region.reattach();
 
                 expect(this.region._detachedView).to.not.exist;
+            });
+
+            it("will reattach even when initialized with selector and never bound #_view to element", function() {
+                var selector = ':first-child';
+                this.view.addRegion('region', selector);
+                this.view.render();
+
+                var expectedIndex = this.view.$(selector).index();
+
+                this.view.region.reattach();
+
+                expect(this.view.region.view.$el.index()).to.equal(expectedIndex);
             });
         });
 

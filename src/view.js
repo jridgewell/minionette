@@ -73,9 +73,19 @@ Minionette.View = Backbone.View.extend({
     // Also attaches it to this._regions[name], for
     // internal management.
     addRegion: function(name, view) {
-        var region = new this.Region({view: view});
-        // Remove the region, if it exists already
+        // Remove the old region, if it exists already
         attempt(this._regions[name], 'remove');
+
+        var options = {};
+        // If view is a selector, find the DOM element
+        // that matches it.
+        if (_.isString(view)) {
+            options.el = this.$(view);
+        } else {
+            options.view = view;
+        }
+
+        var region = new this.Region(options);
 
         region.name = name;
         region._parent = this;
@@ -138,8 +148,8 @@ Minionette.View = Backbone.View.extend({
     // render regions inline.
     _viewHelper: function(view) {
         var region = this._regions[view];
-        if (region) {
-            return region.render().el.outerHTML;
+        if (region && region.render().el) {
+            return region.view.el.outerHTML;
         }
         return '';
     }

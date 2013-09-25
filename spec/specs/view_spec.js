@@ -325,7 +325,6 @@ define(function() {
                 });
 
                 it("returns the region", function() {
-                    // debugger;
                     var region = new Minionette.Region();
                     this.view.Region = function() {
                         return region;
