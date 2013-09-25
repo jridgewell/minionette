@@ -74,6 +74,16 @@ define(function() {
                 delete this.newView;
             });
 
+            it("removes old #_detachedView if it exists", function() {
+                var v = addInnerView('region', this.view),
+                    spy = this.sinon.spy(v, 'remove');
+                this.region.detach();
+
+                this.view.region.attach(this.newView);
+
+                expect(spy).to.have.been.called;
+            });
+
             it("replaces current view#el with newView#el (the same index in parent)", function() {
                 var v = addInnerView('region', this.view),
                     expectedIndex = v.$el.index();
@@ -105,16 +115,6 @@ define(function() {
         });
 
         describe("#detach()", function() {
-            it("remove old #_detachedView if it exists", function() {
-                var oldView = this.region.view;
-                this.region.detach();
-                var spy = this.sinon.spy(oldView, 'remove');
-
-                this.region.detach();
-
-                expect(spy).to.have.been.called;
-            });
-
             it("sets #_detachedView to the old #view", function() {
                 var oldView = this.region.view;
 

@@ -61,6 +61,10 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     attach: function(newView, detach) {
         var oldView = this.view;
 
+        // Remove the old _detachedView, if it exists
+        attempt(this._detachedView, 'remove');
+        delete this._detachedView;
+
         this._assignParent(newView);
 
         // Places newView after the current view.
@@ -103,14 +107,12 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // the place holder. Convenient for detaching
     // during rendering.
     detach: function() {
-        // Remove the old _detachedView, if it exists
-        attempt(this._detachedView, 'remove');
-
-        // Store the current view for later reattaching.
-        this._detachedView = this.view;
-
-        if (this.view !== this._view) {
+        var view = this.view;
+        if (view !== this._view) {
             this.reset(true);
+
+            // Store the current view for later reattaching.
+            this._detachedView = view;
         }
 
         return this;
@@ -118,8 +120,6 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
     // Reattaches the detached view.
     reattach: function() {
-        if (!this._detachedView) { return; }
-
         // $context is a scoped context in which to search
         // for the current view's element in.
         var $context = (this._parent && this._parent.$el) || Backbone.$(document.body),
