@@ -1,6 +1,6 @@
 Minionette.View = Backbone.View.extend({
     constructor: function(options) {
-        options || (options = {});
+        options = options || {};
 
         // Ensure we have a Region to initialize
         // new regions from.
