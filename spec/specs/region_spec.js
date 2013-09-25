@@ -36,8 +36,8 @@ define(function() {
                 region.remove();
             });
 
-            it("sets #view to #_view if passed in view isn't an instanceof Backbone.View", function() {
-                var region = new Minionette.Region({view: 'view?'});
+            it("sets #view to #_view if passed in view is falsey", function() {
+                var region = new Minionette.Region({view: null});
 
                 expect(region.view).to.equal(region._view);
 
