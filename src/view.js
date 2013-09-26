@@ -81,6 +81,7 @@ Minionette.View = Backbone.View.extend({
         // that matches it.
         if (_.isString(view)) {
             options.el = this.$(view);
+            options.el.selector = view;
         } else {
             options.view = view;
         }
