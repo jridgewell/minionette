@@ -16,7 +16,6 @@ define(function() {
             this.region = new Minionette.Region({view: this.view});
         });
         afterEach(function() {
-            this.region.remove();
             delete this.view;
             delete this.region;
         });

@@ -6,7 +6,6 @@ define(function() {
                 this.view = new Minionette.CollectionView({collection: this.collection});
             });
             afterEach(function() {
-                this.view.remove();
                 delete this.collection;
                 delete this.view;
             });
@@ -85,8 +84,6 @@ define(function() {
                     view.render();
 
                     expect(view.$el.text()).to.equal(_.pluck(models, 'id').join(''));
-
-                    view.remove();
                 });
             });
 

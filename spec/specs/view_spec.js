@@ -4,7 +4,6 @@ define(function() {
             this.view = new Minionette.View();
         });
         afterEach(function() {
-            this.view.remove();
             delete this.view;
         });
 
@@ -32,8 +31,6 @@ define(function() {
                     model.trigger('change');
 
                     expect(spy).to.have.been.called;
-
-                    view.remove();
                 });
             });
 
@@ -52,8 +49,6 @@ define(function() {
                     collection.trigger('change');
 
                     expect(spy).to.have.been.called;
-
-                    view.remove();
                 });
             });
 
@@ -69,8 +64,6 @@ define(function() {
                     var view = new RegionTest();
 
                     expect(view.region.view).to.equal(regionView);
-
-                    view.remove();
                 });
             });
         });
