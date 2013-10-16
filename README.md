@@ -10,6 +10,53 @@ from using several performance boosting techniques during rendering to
 placing subviews directly in templates and allowing the subviews to be
 easily removed.
 
+Why?
+----
+
+Because Backbone doesn't get much better than this: [JS Bin](http://jsbin.com/oKEruPE/1/edit?js,output)
+
+```javascript
+var NavItem = Minionette.ModelView.extend({
+    tagName: 'li',
+    template: _.template('<a href="<%= href %>"><%= text %></a>')
+});
+var Nav = Minionette.CollectionView.extend({
+    ModelView: NavItem,
+    tagName: 'ul',
+    template: _.template('<li>before</li><li class="last">last</li>'),
+    appendHtml: function(element) {
+        this.$('.last').before(element);
+    }
+});
+
+var Main = Minionette.View.extend({
+    template: _.template('<p>Some content</p>')
+});
+
+var navColleciton = new Backbone.Collection([
+    { text: 'home', href: '/' },
+    { text: 'google', href: 'http://google.com/' }
+]);
+
+var App = Minionette.View.extend({
+    el: $('body'),
+    template: _.template(
+        '<nav><%= view("nav") %></nav>' +
+        '<%= view("contents") %>'
+    ),
+    regions: {
+        nav: false,
+        contents: new Main()
+    }
+});
+
+var app = (new App()).render();
+app.contents.render();
+
+var anotherNav = new Nav({collection: navColleciton});
+app.nav.attach(anotherNav.render());
+```
+
 [Minionette.View](/docs/minionette.view.md)
 ---------------
 
