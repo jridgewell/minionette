@@ -10,7 +10,7 @@ from using several performance boosting techniques during rendering to
 placing subviews directly in templates and allowing the subviews to be
 easily removed.
 
-[Minionette.View](/blob/master/docs/minionette.view.md)
+[Minionette.View](/docs/minionette.view.md)
 ---------------
 
 `Minionette.View` is the base View class, providing an easy way to
@@ -18,7 +18,7 @@ listen for events on an associated model or collection, an actually
 useful generic rendering function, easy subviews (AKA Regions).
 
 
-[Minionette.Region](/blob/master/docs/minionette.region.md)
+[Minionette.Region](/docs/minionette.region.md)
 -----------------
 
 `Minionette.Region`s help manage subviews of a `Minionette.View`,
@@ -27,14 +27,14 @@ attached. A view can have any number of regions, each managing their own
 part of the overall view.
 
 
-[Minionette.ModelView](/blob/master/docs/minionette.modelview.md)
+[Minionette.ModelView](/docs/minionette.modelview.md)
 --------------------
 
 `Minionette.ModelView` is nothing more than `Minionette.View` with two
 minor tweaks to easily support rendering models.
 
 
-[Minionette.CollectionView](/blob/master/docs/minionette.collectionview.md)
+[Minionette.CollectionView](/docs/minionette.collectionview.md)
 -------------------------
 
 `Minionette.CollectionView` is an optimized `Minionette.View` for your
