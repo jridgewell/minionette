@@ -49,8 +49,7 @@ made.
 ## #addOne(model)
 
 `#addOne()` instantiates a new `#ModelView` with `{model: model}`. It
-then renders that modelView, and appends it's `$el` to the
-collectionView's `$el`.
+then renders that modelView, and passes it's `$el` to `#appendHtml()`.
 
 ### "addOne" Event
 
@@ -63,6 +62,11 @@ The "addedOne" event is fired after rendering the modelView and adding
 it to the collectionView's $el, and is passed that modelView and the
 collectionView as it's arguments.
 
+## #appendHtml(element)
+
+`#appendHtml()`, by default, takes the passed in element and appends it
+to the collectionView's $el. Override this method to append elements to
+to specific spots in the collectionView's $el.
 
 ## #removeOne(model)
 
