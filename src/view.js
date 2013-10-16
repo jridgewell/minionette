@@ -76,7 +76,7 @@ Minionette.View = Backbone.View.extend({
         // Remove the old region, if it exists already
         attempt(this._regions[name], 'remove');
 
-        var options = {};
+        var options = { name: name };
         // If view is a selector, find the DOM element
         // that matches it.
         if (_.isString(view)) {
@@ -88,7 +88,6 @@ Minionette.View = Backbone.View.extend({
 
         var region = new this.Region(options);
 
-        region.name = name;
         region._parent = this;
         this[name] = this._regions[name] = region;
 
@@ -110,8 +109,8 @@ Minionette.View = Backbone.View.extend({
     },
 
     _removeRegion: function(region) {
-        delete this[region.name];
-        delete this._regions[region.name];
+        delete this[region.cid];
+        delete this._regions[region.cid];
     },
 
     // Loop through the events given, and listen to

@@ -311,10 +311,6 @@ define(function() {
                     expect(spy).to.have.been.called;
                 });
 
-                it("sets region#name to the name", function() {
-                    expect(this.region.name).to.equal('region');
-                });
-
                 it("sets region#parent to this", function() {
                     expect(this.region._parent).to.equal(this.view);
                 });

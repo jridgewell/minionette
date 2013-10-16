@@ -1,10 +1,11 @@
 Minionette.Region = function(options) {
+	options = options || {};
     // Setup a unique id for this region.
     // Not really necessary, but it doesn't hurt.
-    this.cid = _.uniqueId('region');
+    this.cid = options.name || _.uniqueId('region');
 
     // Make sure we have a view.
-    this._ensureView(options || {});
+    this._ensureView(options);
 };
 
 function getParentViewContext(view) {

@@ -21,27 +21,34 @@ define(function() {
             delete this.region;
         });
 
-        describe("#_configure()", function() {
-            it("picks view out of initialization options", function() {
-                expect(this.region.view).to.equal(this.view);
+        describe('constructor', function() {
+            var name = 'name';
+            it("sets #cid to name if passed in", function() {
+                var region = new Minionette.Region({name: name});
+                expect(region.cid).to.equal(name);
+            });
+
+            it("sets #cid to unique name if not", function() {
+                var region = new Minionette.Region();
+                expect(region.cid).to.not.equal(name);
             });
         });
 
         describe("#_ensureView()", function() {
+            it("sets #view to a passed in view", function() {
+                expect(this.region.view).to.equal(this.view);
+            });
+
             it("sets #view to a #_view if one is not passed in", function() {
                 var region = new Minionette.Region();
 
                 expect(region.view).to.equal(region._view);
-
-                region.remove();
             });
 
             it("sets #view to #_view if passed in view is falsey", function() {
                 var region = new Minionette.Region({view: null});
 
                 expect(region.view).to.equal(region._view);
-
-                region.remove();
             });
 
             it("sets #_view to the matched element if passed in view is a selector", function() {
