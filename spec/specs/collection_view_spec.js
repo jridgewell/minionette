@@ -90,6 +90,26 @@ define(function() {
                 });
             });
 
+            describe("#appendHtml()", function() {
+                beforeEach(function() {
+                    this.collection.add(new Backbone.Model());
+                    this.view.template = _.template('<p></p>');
+                });
+
+                it("just appends by default", function() {
+                    this.view.render();
+
+                    expect(this.view.$el).to.have.html('<p></p><div></div>');
+                });
+
+                it("can be overridden to put elements anywhere", function() {
+                    this.view.appendHtml = function(element) { this.$('p').append(element); };
+                    this.view.render();
+
+                    expect(this.view.$el).to.have.html('<p><div></div></p>');
+                });
+            });
+
             describe("#addOne()", function() {
                 beforeEach(function() {
                     this.model = new Backbone.Model();
