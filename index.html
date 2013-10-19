@@ -46,7 +46,7 @@ easily removed.</p>
 <h2>
 <a name="why" class="anchor" href="#why"><span class="octicon octicon-link"></span></a>Why?</h2>
 
-<p>Because Backbone doesn't get much better than this: <a href="http://jsbin.com/oKEruPE/1/edit?js,output">JS Bin</a></p>
+<p>Because Backbone doesn't get much better than this: <a href="http://jsbin.com/oKEruPE/9/edit?js,output">JS Bin</a></p>
 
 <div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">NavItem</span> <span class="o">=</span> <span class="nx">Minionette</span><span class="p">.</span><span class="nx">ModelView</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
     <span class="nx">tagName</span><span class="o">:</span> <span class="s1">'li'</span><span class="p">,</span>
@@ -65,7 +65,7 @@ easily removed.</p>
     <span class="nx">template</span><span class="o">:</span> <span class="nx">_</span><span class="p">.</span><span class="nx">template</span><span class="p">(</span><span class="s1">'&lt;p&gt;Some content&lt;/p&gt;'</span><span class="p">)</span>
 <span class="p">});</span>
 
-<span class="kd">var</span> <span class="nx">navColleciton</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span><span class="p">([</span>
+<span class="kd">var</span> <span class="nx">navCollection</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span><span class="p">([</span>
     <span class="p">{</span> <span class="nx">text</span><span class="o">:</span> <span class="s1">'home'</span><span class="p">,</span> <span class="nx">href</span><span class="o">:</span> <span class="s1">'/'</span> <span class="p">},</span>
     <span class="p">{</span> <span class="nx">text</span><span class="o">:</span> <span class="s1">'google'</span><span class="p">,</span> <span class="nx">href</span><span class="o">:</span> <span class="s1">'http://google.com/'</span> <span class="p">}</span>
 <span class="p">]);</span>
@@ -85,8 +85,8 @@ easily removed.</p>
 <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="p">(</span><span class="k">new</span> <span class="nx">App</span><span class="p">()).</span><span class="nx">render</span><span class="p">();</span>
 <span class="nx">app</span><span class="p">.</span><span class="nx">contents</span><span class="p">.</span><span class="nx">render</span><span class="p">();</span>
 
-<span class="kd">var</span> <span class="nx">anotherNav</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Nav</span><span class="p">({</span><span class="nx">collection</span><span class="o">:</span> <span class="nx">navColleciton</span><span class="p">});</span>
-<span class="nx">app</span><span class="p">.</span><span class="nx">nav</span><span class="p">.</span><span class="nx">attach</span><span class="p">(</span><span class="nx">anotherNav</span><span class="p">.</span><span class="nx">render</span><span class="p">());</span>
+<span class="kd">var</span> <span class="nx">nav</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Nav</span><span class="p">({</span><span class="nx">collection</span><span class="o">:</span> <span class="nx">navCollection</span><span class="p">});</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">nav</span><span class="p">.</span><span class="nx">attach</span><span class="p">(</span><span class="nx">nav</span><span class="p">.</span><span class="nx">render</span><span class="p">());</span>
 </pre></div>
 
 <h2>
@@ -123,6 +123,47 @@ DocumentFragment, ensuring at most three content reflows even with
 hundreds of models to render. The most important feature of
 <code>CollectionView</code> is the <code>#ModelView</code> property, from which all models
 will have a view instantiated from.</p>
+
+<h2>
+<a name="other-templating-languages" class="anchor" href="#other-templating-languages"><span class="octicon octicon-link"></span></a>Other Templating Languages</h2>
+
+<h3>
+<a name="handlebarsjs" class="anchor" href="#handlebarsjs"><span class="octicon octicon-link"></span></a>Handlebars.js</h3>
+
+<p>Full support for Handlebars.js templating is trivial. Just use the
+following:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">Handlebars</span><span class="p">.</span><span class="nx">registerHelper</span><span class="p">(</span><span class="s1">'view'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">Handlebars</span><span class="p">.</span><span class="nx">SafeString</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">view</span><span class="p">(</span><span class="nx">name</span><span class="p">));</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>This will allow for subview insertion using the special <code>{{view
+'regionName'}}</code> syntax. See <a href="http://jsbin.com/oKEruPE/5/edit?js,output">JS Bin</a>
+for an example.</p>
+
+<h3>
+<a name="mustachejs" class="anchor" href="#mustachejs"><span class="octicon octicon-link"></span></a>Mustache.js</h3>
+
+<p>Full support for Mustache.js templating takes just a bit more effort.
+You must override the internal-use <code>_serialize()</code> method in your view
+with the following:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">View</span> <span class="o">=</span> <span class="nx">Minionette</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+    <span class="c1">//...</span>
+    <span class="nx">_serialize</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">_viewHelper</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_viewHelper</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span><span class="nx">view</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">_viewHelper</span><span class="p">;</span> <span class="p">}},</span> <span class="k">this</span><span class="p">.</span><span class="nx">serialize</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="c1">//...</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>This will allow for subview insertion using the special
+<code>{{#view}}regionName{{/view}}</code> syntax.  For ease of use, have all of
+your new View classes extend from this, and they will all be compatible
+with Mustache. See <a href="http://jsbin.com/oKEruPE/6/edit?js,output">JS Bin</a> for an
+example.</p>
         </section>
 
         <footer>
