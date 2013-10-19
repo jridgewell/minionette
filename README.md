@@ -58,7 +58,7 @@ app.nav.attach(anotherNav.render());
 ```
 
 [Minionette.View](/docs/minionette.view.md)
----------------
+-----------------
 
 `Minionette.View` is the base View class, providing an easy way to
 listen for events on an associated model or collection, an actually
@@ -66,7 +66,7 @@ useful generic rendering function, easy subviews (AKA Regions).
 
 
 [Minionette.Region](/docs/minionette.region.md)
------------------
+-------------------
 
 `Minionette.Region`s help manage subviews of a `Minionette.View`,
 allowing you to specify directly in a template where a subview should be
@@ -75,14 +75,14 @@ part of the overall view.
 
 
 [Minionette.ModelView](/docs/minionette.modelview.md)
---------------------
+----------------------
 
 `Minionette.ModelView` is nothing more than `Minionette.View` with two
 minor tweaks to easily support rendering models.
 
 
 [Minionette.CollectionView](/docs/minionette.collectionview.md)
--------------------------
+---------------------------
 
 `Minionette.CollectionView` is an optimized `Minionette.View` for your
 Backbone collections. It quickly handles rendering using a
@@ -90,3 +90,45 @@ DocumentFragment, ensuring at most three content reflows even with
 hundreds of models to render. The most important feature of
 `CollectionView` is the `#ModelView` property, from which all models
 will have a view instantiated from.
+
+
+Other Templating Languages
+--------------------------
+
+### Handlebars.js
+
+Full support for Handlebars.js templating is trivial. Just use the
+following:
+
+```javascript
+Handlebars.registerHelper('view', function(name) {
+    return new Handlebars.SafeString(this.view(name));
+});
+```
+
+This will allow for subview insertion using the special `{{view
+'regionName'}}` syntax. See [JS Bin](http://jsbin.com/oKEruPE/5/edit)
+for an example.
+
+### Mustache.js
+
+Full support for Mustache.js templating takes just a bit more effort,
+you must override the internal-use `_serialize()` method in your view
+with the following:
+
+```javascript
+var View = Minionette.extend({
+    //...
+    _serialize: function() {
+        var _viewHelper = this._viewHelper;
+        return _.extend({view: function() { return _viewHelper; }}, this.serialize());
+    }
+    //...
+});
+```
+
+This will allow for subview insertion using the special
+`{{#view}}regionName{{/view}}` syntax.  For ease of use, have all of
+your new View classes extend from this, and they will all be compatible
+with Mustache. See [JS Bin](http://jsbin.com/oKEruPE/6/edit) for an
+example.
