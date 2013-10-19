@@ -44,7 +44,7 @@ describe('Minionette.Region', function() {
         });
 
         it("sets #view to #_view if passed in view is falsey", function() {
-            var region = new Minionette.Region({view: null});
+            var region = this.view.addRegion('region', null);
 
             expect(region.view).to.equal(region._view);
         });

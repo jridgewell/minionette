@@ -79,7 +79,7 @@ Minionette.View = Backbone.View.extend({
         var options = { name: name };
         // If this is a Backbone.View, pass that as the
         // view to the region.
-        if (view.$el) {
+        if (!view || view.$el) {
             options.view = view;
         } else {
             // If view is a selector, find the DOM element
