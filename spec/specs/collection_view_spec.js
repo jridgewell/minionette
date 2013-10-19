@@ -1,249 +1,247 @@
-define(function() {
-    describe('Minionette.CollectionView', function() {
-        describe("instances", function() {
+describe('Minionette.CollectionView', function() {
+    describe("instances", function() {
+        beforeEach(function() {
+            this.collection = new Backbone.Collection();
+            this.view = new Minionette.CollectionView({collection: this.collection});
+        });
+        afterEach(function() {
+            delete this.collection;
+            delete this.view;
+        });
+
+        it("sets ModelView to Minionette.ModelView", function() {
+            expect(this.view.ModelView).to.equal(Minionette.ModelView);
+        });
+
+        describe("Collection Events", function() {
+            it("#render() on collection's 'reset' event", function() {
+                expect(this.view.collectionEvents.reset).to.equal('render');
+            });
+
+            it("#render() on collection's 'sort' event", function() {
+                expect(this.view.collectionEvents.sort).to.equal('render');
+            });
+
+            it("#removeOne() on collection's 'remove' event", function() {
+                expect(this.view.collectionEvents.remove).to.equal('removeOne');
+            });
+
+            it("#addOne() on collection's 'add' event", function() {
+                expect(this.view.collectionEvents.add).to.equal('addOne');
+            });
+        });
+
+        describe("#render()", function() {
+            it("triggers 'render' event", function() {
+                var spy = this.sinon.spy();
+                this.view.on('render', spy);
+
+                this.view.render();
+
+                expect(spy).to.have.been.called;
+            });
+
+            it("triggers 'rendered' event", function() {
+                var spy = this.sinon.spy();
+                this.view.on('rendered', spy);
+
+                this.view.render();
+
+                expect(spy).to.have.been.called;
+            });
+
+            it("removes old modelViews", function() {
+                var view = this.view.addOne(new Backbone.Model()),
+                spy = this.sinon.spy();
+                view.on('remove', spy);
+
+                this.view.render();
+
+                expect(spy).to.have.been.called;
+            });
+
+            it("returns the view", function() {
+                var ret = this.view.render();
+
+                expect(ret).to.equal(this.view);
+            });
+
+            it("appends a modelView for each model in the collection", function() {
+                var models = [
+                    new Backbone.Model({id: _.uniqueId()}),
+                    new Backbone.Model({id: _.uniqueId()}),
+                    new Backbone.Model({id: _.uniqueId()})
+                ];
+                this.collection.add(models);
+                var view = new (Minionette.CollectionView.extend({
+                    tagName: 'p',
+                    ModelView: Minionette.ModelView.extend({
+                        template: _.template('<%= id %>')
+                    })
+                }))({collection: this.collection});
+
+                view.render();
+
+                expect(view.$el.text()).to.equal(_.pluck(models, 'id').join(''));
+            });
+        });
+
+        describe("#appendHtml()", function() {
             beforeEach(function() {
-                this.collection = new Backbone.Collection();
-                this.view = new Minionette.CollectionView({collection: this.collection});
+                this.collection.add(new Backbone.Model());
+                this.view.template = _.template('<p></p>');
+            });
+
+            it("just appends by default", function() {
+                this.view.render();
+
+                expect(this.view.$el).to.have.html('<p></p><div></div>');
+            });
+
+            it("can be overridden to put elements anywhere", function() {
+                this.view.appendHtml = function(element) { this.$('p').append(element); };
+                this.view.render();
+
+                expect(this.view.$el).to.have.html('<p><div></div></p>');
+            });
+        });
+
+        describe("#addOne()", function() {
+            beforeEach(function() {
+                this.model = new Backbone.Model();
             });
             afterEach(function() {
-                delete this.collection;
-                delete this.view;
+                delete this.model;
             });
 
-            it("sets ModelView to Minionette.ModelView", function() {
-                expect(this.view.ModelView).to.equal(Minionette.ModelView);
+            it("triggers 'addOne' event", function() {
+                var spy = this.sinon.spy();
+                this.view.on('addOne', spy);
+
+                this.view.addOne(this.model);
+
+                expect(spy).to.have.been.called;
             });
 
-            describe("Collection Events", function() {
-                it("#render() on collection's 'reset' event", function() {
-                    expect(this.view.collectionEvents.reset).to.equal('render');
-                });
+            it("passes the view to the 'addOne' event", function() {
+                var spy = this.sinon.spy();
+                this.view.on('addOne', spy);
 
-                it("#render() on collection's 'sort' event", function() {
-                    expect(this.view.collectionEvents.sort).to.equal('render');
-                });
+                var view = this.view.addOne(this.model);
 
-                it("#removeOne() on collection's 'remove' event", function() {
-                    expect(this.view.collectionEvents.remove).to.equal('removeOne');
-                });
-
-                it("#addOne() on collection's 'add' event", function() {
-                    expect(this.view.collectionEvents.add).to.equal('addOne');
-                });
+                expect(spy).to.have.been.calledWith(view);
             });
 
-            describe("#render()", function() {
-                it("triggers 'render' event", function() {
-                    var spy = this.sinon.spy();
-                    this.view.on('render', spy);
+            it("triggers 'addedOne' event", function() {
+                var spy = this.sinon.spy();
+                this.view.on('addedOne', spy);
 
-                    this.view.render();
+                this.view.addOne(this.model);
 
-                    expect(spy).to.have.been.called;
-                });
-
-                it("triggers 'rendered' event", function() {
-                    var spy = this.sinon.spy();
-                    this.view.on('rendered', spy);
-
-                    this.view.render();
-
-                    expect(spy).to.have.been.called;
-                });
-
-                it("removes old modelViews", function() {
-                    var view = this.view.addOne(new Backbone.Model()),
-                        spy = this.sinon.spy();
-                    view.on('remove', spy);
-
-                    this.view.render();
-
-                    expect(spy).to.have.been.called;
-                });
-
-                it("returns the view", function() {
-                    var ret = this.view.render();
-
-                    expect(ret).to.equal(this.view);
-                });
-
-                it("appends a modelView for each model in the collection", function() {
-                    var models = [
-                        new Backbone.Model({id: _.uniqueId()}),
-                        new Backbone.Model({id: _.uniqueId()}),
-                        new Backbone.Model({id: _.uniqueId()})
-                    ];
-                    this.collection.add(models);
-                    var view = new (Minionette.CollectionView.extend({
-                        tagName: 'p',
-                        ModelView: Minionette.ModelView.extend({
-                            template: _.template('<%= id %>')
-                        })
-                    }))({collection: this.collection});
-
-                    view.render();
-
-                    expect(view.$el.text()).to.equal(_.pluck(models, 'id').join(''));
-                });
+                expect(spy).to.have.been.called;
             });
 
-            describe("#appendHtml()", function() {
-                beforeEach(function() {
-                    this.collection.add(new Backbone.Model());
-                    this.view.template = _.template('<p></p>');
-                });
+            it("passes the view to the 'addedOne' event", function() {
+                var spy = this.sinon.spy();
+                this.view.on('addedOne', spy);
 
-                it("just appends by default", function() {
-                    this.view.render();
+                var view = this.view.addOne(this.model);
 
-                    expect(this.view.$el).to.have.html('<p></p><div></div>');
-                });
-
-                it("can be overridden to put elements anywhere", function() {
-                    this.view.appendHtml = function(element) { this.$('p').append(element); };
-                    this.view.render();
-
-                    expect(this.view.$el).to.have.html('<p><div></div></p>');
-                });
+                expect(spy).to.have.been.calledWith(view);
             });
 
-            describe("#addOne()", function() {
-                beforeEach(function() {
-                    this.model = new Backbone.Model();
-                });
-                afterEach(function() {
-                    delete this.model;
-                });
+            it("creates a view from ModelView", function() {
+                var spy = this.sinon.spy(this.view, 'ModelView');
 
-                it("triggers 'addOne' event", function() {
-                    var spy = this.sinon.spy();
-                    this.view.on('addOne', spy);
+                this.view.addOne(this.model);
 
-                    this.view.addOne(this.model);
-
-                    expect(spy).to.have.been.called;
-                });
-
-                it("passes the view to the 'addOne' event", function() {
-                    var spy = this.sinon.spy();
-                    this.view.on('addOne', spy);
-
-                    var view = this.view.addOne(this.model);
-
-                    expect(spy).to.have.been.calledWith(view);
-                });
-
-                it("triggers 'addedOne' event", function() {
-                    var spy = this.sinon.spy();
-                    this.view.on('addedOne', spy);
-
-                    this.view.addOne(this.model);
-
-                    expect(spy).to.have.been.called;
-                });
-
-                it("passes the view to the 'addedOne' event", function() {
-                    var spy = this.sinon.spy();
-                    this.view.on('addedOne', spy);
-
-                    var view = this.view.addOne(this.model);
-
-                    expect(spy).to.have.been.calledWith(view);
-                });
-
-                it("creates a view from ModelView", function() {
-                    var spy = this.sinon.spy(this.view, 'ModelView');
-
-                    this.view.addOne(this.model);
-
-                    expect(spy).to.have.been.called;
-                });
-
-                it("returns the new modelView", function() {
-                    var view = this.view.addOne(this.model);
-
-                    expect(view).to.be.instanceOf(Backbone.View);
-                });
-
-                it("sets the new modelView's _parent to this", function() {
-                    var view = this.view.addOne(this.model);
-
-                    expect(view._parent).to.equal(this.view);
-                });
-
-                it("appends the new modelView's el to this.$el", function() {
-                    var view = this.view.addOne(this.model);
-
-                    expect(this.view.$el).to.have(view.$el);
-                });
+                expect(spy).to.have.been.called;
             });
 
-            describe("#removeOne()", function() {
-                beforeEach(function() {
-                    this.model = new Backbone.Model();
-                    this.modelView = this.view.addOne(this.model);
-                });
-                afterEach(function() {
-                    delete this.model;
-                    delete this.modelView;
-                });
+            it("returns the new modelView", function() {
+                var view = this.view.addOne(this.model);
 
-                it("triggers 'removeOne' event", function() {
-                    var spy = this.sinon.spy();
-                    this.view.on('removeOne', spy);
-
-                    this.view.removeOne(this.model);
-
-                    expect(spy).to.have.been.called;
-                });
-
-                it("passes the view to the 'removeOne' event", function() {
-                    var spy = this.sinon.spy();
-                    this.view.on('removeOne', spy);
-
-                    this.view.removeOne(this.model);
-
-                    expect(spy).to.have.been.calledWith(this.modelView);
-                });
-
-                it("triggers 'removedOne' event", function() {
-                    var spy = this.sinon.spy();
-                    this.view.on('removedOne', spy);
-
-                    this.view.removeOne(this.model);
-
-                    expect(spy).to.have.been.called;
-                });
-
-                it("passes the view to the 'removedOne' event", function() {
-                    var spy = this.sinon.spy();
-                    this.view.on('removedOne', spy);
-
-                    this.view.removeOne(this.model);
-
-                    expect(spy).to.have.been.calledWith(this.modelView);
-                });
-
-                it("calls #remove() on the view", function() {
-                    var spy = this.sinon.spy();
-                    this.modelView.on('remove', spy);
-
-                    this.view.removeOne(this.model);
-
-                    expect(spy).to.have.been.called;
-                });
+                expect(view).to.be.instanceOf(Backbone.View);
             });
 
-            describe("#remove()", function() {
-                it("calls #remove() on the modelViews", function() {
-                    var view = this.view.addOne(new Backbone.Model()),
-                        spy = this.sinon.spy();
-                    view.on('remove', spy);
+            it("sets the new modelView's _parent to this", function() {
+                var view = this.view.addOne(this.model);
 
-                    this.view.remove();
+                expect(view._parent).to.equal(this.view);
+            });
 
-                    expect(spy).to.have.been.called;
-                });
+            it("appends the new modelView's el to this.$el", function() {
+                var view = this.view.addOne(this.model);
+
+                expect(this.view.$el).to.have(view.$el);
+            });
+        });
+
+        describe("#removeOne()", function() {
+            beforeEach(function() {
+                this.model = new Backbone.Model();
+                this.modelView = this.view.addOne(this.model);
+            });
+            afterEach(function() {
+                delete this.model;
+                delete this.modelView;
+            });
+
+            it("triggers 'removeOne' event", function() {
+                var spy = this.sinon.spy();
+                this.view.on('removeOne', spy);
+
+                this.view.removeOne(this.model);
+
+                expect(spy).to.have.been.called;
+            });
+
+            it("passes the view to the 'removeOne' event", function() {
+                var spy = this.sinon.spy();
+                this.view.on('removeOne', spy);
+
+                this.view.removeOne(this.model);
+
+                expect(spy).to.have.been.calledWith(this.modelView);
+            });
+
+            it("triggers 'removedOne' event", function() {
+                var spy = this.sinon.spy();
+                this.view.on('removedOne', spy);
+
+                this.view.removeOne(this.model);
+
+                expect(spy).to.have.been.called;
+            });
+
+            it("passes the view to the 'removedOne' event", function() {
+                var spy = this.sinon.spy();
+                this.view.on('removedOne', spy);
+
+                this.view.removeOne(this.model);
+
+                expect(spy).to.have.been.calledWith(this.modelView);
+            });
+
+            it("calls #remove() on the view", function() {
+                var spy = this.sinon.spy();
+                this.modelView.on('remove', spy);
+
+                this.view.removeOne(this.model);
+
+                expect(spy).to.have.been.called;
+            });
+        });
+
+        describe("#remove()", function() {
+            it("calls #remove() on the modelViews", function() {
+                var view = this.view.addOne(new Backbone.Model()),
+                spy = this.sinon.spy();
+                view.on('remove', spy);
+
+                this.view.remove();
+
+                expect(spy).to.have.been.called;
             });
         });
     });
