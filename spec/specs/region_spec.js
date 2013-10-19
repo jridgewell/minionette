@@ -56,6 +56,14 @@ describe('Minionette.Region', function() {
 
             expect(this.view.region._view.el).to.equal(this.view.$(selector)[0])
         });
+
+        it("sets #_view to the matched element if passed in view is a jQuery object", function() {
+            var $selector = this.view.$(':first-child');
+            this.view.render();
+            this.view.addRegion('region', $selector);
+
+            expect(this.view.region._view.el).to.equal($selector[0])
+        });
     });
 
     describe("#render()", function() {
@@ -130,6 +138,19 @@ describe('Minionette.Region', function() {
             var selector = ':first-child';
             this.view.addRegion('region', selector);
             this.view.region.attach(this.newView);
+
+            this.view.render();
+
+            var expectedIndex = this.view.$(selector).index();
+            expect(this.newView.$el.index()).to.equal(expectedIndex);
+        });
+
+        it("will correctly render even when not rendered and initialized with jQuery object", function() {
+            var selector = ':first-child',
+                $selector = this.view.$(selector);
+            this.view.addRegion('region', $selector);
+            this.view.region.attach(this.newView);
+
 
             this.view.render();
 
