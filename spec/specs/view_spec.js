@@ -32,6 +32,11 @@ define(function() {
 
                     expect(spy).to.have.been.called;
                 });
+
+                it("doesn't throw error when no model", function() {
+                    var view = new ModelEventTest({model: null});
+                    // Noop. Error will be thrown by constructor
+                });
             });
 
             describe("Collection Events", function() {
@@ -49,6 +54,11 @@ define(function() {
                     collection.trigger('change');
 
                     expect(spy).to.have.been.called;
+                });
+
+                it("doesn't throw error when no model", function() {
+                    var view = new CollectionEventTest({collection: null});
+                    // Noop. Error will be thrown by constructor
                 });
             });
 
