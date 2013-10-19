@@ -42,10 +42,6 @@ module.exports = function(grunt) {
             core : {
                 src : 'lib/minionette.js',
                 dest : 'lib/minionette.min.js',
-                options : {
-                    sourceMap : 'lib/minionette.map',
-                    sourceMapPrefix : 1,
-                }
             }
         },
 
