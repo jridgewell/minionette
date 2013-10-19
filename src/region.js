@@ -124,7 +124,12 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
     // Reattaches the detached view.
     reattach: function() {
+        // Make sure our `_view` has it's el.
+        // It may not depending on whether the region was
+        // created with a selector and the parent view hadn't
+        // rendered yet.
         if (!this._view.el) { this._ensureElement(this._view); }
+
         // $context is a scoped context in which to search
         // for the current view's element in.
         var $context = getParentViewContext(this),

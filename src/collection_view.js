@@ -36,6 +36,9 @@ Minionette.CollectionView = Minionette.View.extend({
         // Use a DocumentFragment to speed up #render()
         var frag = $(document.createDocumentFragment());
 
+        // Override `appendHtml()` for the time being.
+        // This is so we can append directly to the DocumentFragment,
+        // and then append it all at once later.
         var appendHtml = this.appendHtml;
         this.appendHtml = function(element) { frag.append(element); };
 
@@ -43,13 +46,13 @@ Minionette.CollectionView = Minionette.View.extend({
         this.collection.each(this.addOne, this);
 
         // Append the DocumentFragment to the rendered template,
-        // and set that as this.$el
+        // and set `appendHtml()` back to normal.
         this.appendHtml = appendHtml;
         this.appendHtml(frag);
     },
 
-    appendHtml: function(elements) {
-        this.$el.append(elements);
+    appendHtml: function(element) {
+        this.$el.append(element);
     },
 
     // Add an individual model's view to this.$el.

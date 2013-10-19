@@ -112,8 +112,8 @@ for an example.
 
 ### Mustache.js
 
-Full support for Mustache.js templating takes just a bit more effort,
-you must override the internal-use `_serialize()` method in your view
+Full support for Mustache.js templating takes just a bit more effort.
+You must override the internal-use `_serialize()` method in your view
 with the following:
 
 ```javascript
