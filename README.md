@@ -13,7 +13,7 @@ easily removed.
 Why?
 ----
 
-Because Backbone doesn't get much better than this: [JS Bin](http://jsbin.com/oKEruPE/1/edit?js,output)
+Because Backbone doesn't get much better than this: [JS Bin](http://jsbin.com/oKEruPE/9/edit?js,output)
 
 ```javascript
 var NavItem = Minionette.ModelView.extend({
@@ -33,7 +33,7 @@ var Main = Minionette.View.extend({
     template: _.template('<p>Some content</p>')
 });
 
-var navColleciton = new Backbone.Collection([
+var navCollection = new Backbone.Collection([
     { text: 'home', href: '/' },
     { text: 'google', href: 'http://google.com/' }
 ]);
@@ -53,8 +53,8 @@ var App = Minionette.View.extend({
 var app = (new App()).render();
 app.contents.render();
 
-var anotherNav = new Nav({collection: navColleciton});
-app.nav.attach(anotherNav.render());
+var nav = new Nav({collection: navCollection});
+app.nav.attach(nav.render());
 ```
 
 [Minionette.View](/docs/minionette.view.md)
@@ -107,7 +107,7 @@ Handlebars.registerHelper('view', function(name) {
 ```
 
 This will allow for subview insertion using the special `{{view
-'regionName'}}` syntax. See [JS Bin](http://jsbin.com/oKEruPE/5/edit)
+'regionName'}}` syntax. See [JS Bin](http://jsbin.com/oKEruPE/5/edit?js,output)
 for an example.
 
 ### Mustache.js
@@ -130,5 +130,5 @@ var View = Minionette.extend({
 This will allow for subview insertion using the special
 `{{#view}}regionName{{/view}}` syntax.  For ease of use, have all of
 your new View classes extend from this, and they will all be compatible
-with Mustache. See [JS Bin](http://jsbin.com/oKEruPE/6/edit) for an
+with Mustache. See [JS Bin](http://jsbin.com/oKEruPE/6/edit?js,output) for an
 example.
