@@ -40,7 +40,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         this.view = options.view || this._view;
 
         // And set our view's _parent to this region.
-        this._assignParent(this.view);
+        this.view._parent = this;
     },
 
     _ensureElement: function(view) {
@@ -73,8 +73,6 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         attempt(this._detachedView, 'remove');
         delete this._detachedView;
 
-        this._assignParent(newView);
-
         if (oldView.$el.parent().length) {
             // Places newView after the current view.
             oldView.$el.after(newView.$el);
@@ -83,6 +81,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         }
 
         this.view = newView;
+        newView._parent = this;
 
         // Remove the view, unless we are only detaching.
         if (!detach) { oldView.remove(); }
@@ -158,11 +157,4 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
             this.reset(true);
         }
     },
-
-    // Sets view#_parent to this region.
-    // So view#remove() can hook into our
-    // _removeView().
-    _assignParent: function(view) {
-        view._parent = this;
-    }
 });
