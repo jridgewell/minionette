@@ -2,20 +2,14 @@ describe('Minionette.Region', function() {
     var RegionView = Minionette.View.extend({
         template: _.template('<p>test</p><%= view("region") %><p>test</p>')
     });
-    function addInnerView(name, parentView) {
-        var v = new Minionette.View({tagName: 'p'});
-        v.template = _.template("inner");
-        v.render();
-        parentView.addRegion(name, v);
-        parentView.render();
-        return v;
-    }
     beforeEach(function() {
         this.view = new RegionView();
-        this.region = new Minionette.Region({view: this.view});
+        this.parentView = new RegionView();
+        this.region = this.parentView.addRegion('region', this.view);
     });
     afterEach(function() {
         delete this.view;
+        delete this.parentView;
         delete this.region;
     });
 
@@ -96,22 +90,27 @@ describe('Minionette.Region', function() {
         });
 
         it("removes old #_detachedView if it exists", function() {
-            var v = addInnerView('region', this.view),
-            spy = this.sinon.spy(v, 'remove');
+            var spy = this.sinon.spy(this.view, 'remove');
             this.region.detach();
 
-            this.view.region.attach(this.newView);
+            this.region.attach(this.newView);
 
             expect(spy).to.have.been.called;
         });
 
         it("replaces current view#el with newView#el (the same index in parent)", function() {
-            var v = addInnerView('region', this.view),
-            expectedIndex = v.$el.index();
+            // debugger;
+            // window.debug = true;
+            window.test = this.view.$el;
+            this.parentView.render();
+            this.view.render();
+            var expectedIndex = this.view.$el.index();
 
-            this.view.region.attach(this.newView);
+            this.region.attach(this.newView);
 
             expect(this.newView.$el.index()).to.equal(expectedIndex);
+            expect(expectedIndex).to.not.equal(-1);
+            window.debug = false;
         });
 
         it("calls #remove on old #view", function() {
@@ -143,6 +142,7 @@ describe('Minionette.Region', function() {
 
             var expectedIndex = this.view.$(selector).index();
             expect(this.newView.$el.index()).to.equal(expectedIndex);
+            expect(expectedIndex).to.not.equal(-1);
         });
 
         it("will correctly render even when not rendered and initialized with jQuery object", function() {
@@ -156,6 +156,7 @@ describe('Minionette.Region', function() {
 
             var expectedIndex = this.view.$(selector).index();
             expect(this.newView.$el.index()).to.equal(expectedIndex);
+            expect(expectedIndex).to.not.equal(-1);
         });
     });
 
@@ -168,19 +169,37 @@ describe('Minionette.Region', function() {
             expect(this.region._detachedView).to.equal(oldView);
         });
 
+        it("doesn't leak a previous #_detachedView", function() {
+            var oldView = this.region.view;
+
+            this.region.detach();
+            this.region.detach();
+
+            expect(this.region._detachedView).to.equal(oldView);
+        });
+
         it("sets #view to #_view", function() {
             this.region.detach();
 
             expect(this.region.view).to.equal(this.region._view);
         });
 
+        it("doesn't detach #_view", function() {
+            this.region.detach();
+            this.region.detach();
+
+            expect(this.region._detachedView).to.not.equal(this.region._view);
+        });
+
         it("replaces current view#el with _view#el (the same index in parent)", function() {
-            var v = addInnerView('region', this.view),
-            expectedIndex = v.$el.index();
+            this.view.render();
+            this.parentView.render();
+            var expectedIndex = this.view.$el.index();
 
-            this.view.region.detach();
+            this.region.detach();
 
-            expect(this.view.region._view.$el.index()).to.equal(expectedIndex);
+            expect(this.region._view.$el.index()).to.equal(expectedIndex);
+            expect(expectedIndex).to.not.equal(-1);
         });
 
         it("doesn't remove events on view", function() {
@@ -202,36 +221,40 @@ describe('Minionette.Region', function() {
 
     describe("#reattach()", function() {
         beforeEach(function() {
+            this.parentView.render();
             this.region.detach();
         });
 
         it("scopes #reattach() to _parent", function() {
-            this.view.$el.detach(); // Make sure view isn't in the document.body
-            var v = addInnerView('region', this.view);
-            this.view.region.detach();
+            this.parentView.$el.detach(); // Make sure parentView isn't in the document.body
+            var expectedIndex = this.region.view.$el.index();
 
-            var expectedIndex = this.view.region.view.$el.index();
+            this.region.reattach();
 
-            this.view.region.reattach();
-
-            expect(v.$el.index()).to.equal(expectedIndex);
+            expect(this.view.$el.index()).to.equal(expectedIndex);
+            expect(expectedIndex).to.not.equal(-1);
         });
 
         it("replaces view#el with _detachedView#el", function() {
-            var v = addInnerView('region', this.view);
-            this.view.region.detach();
+            var expectedIndex = this.region.view.$el.index();
 
-            var expectedIndex = this.view.region.view.$el.index();
+            this.region.reattach();
 
-            this.view.region.reattach();
-
-            expect(v.$el.index()).to.equal(expectedIndex);
+            expect(this.view.$el.index()).to.equal(expectedIndex);
+            expect(expectedIndex).to.not.equal(-1);
         });
 
         it("deletes #_detachedView so it can't be re#attach()ed", function() {
             this.region.reattach();
 
             expect(this.region._detachedView).to.not.exist;
+        });
+
+        it("will not cause #_view to become detached", function() {
+            this.region.reattach();
+            this.region.reattach();
+
+            expect(this.region.view.$el.parent()).to.exist;
         });
 
         it("will reattach even when initialized with selector and never bound #_view to element", function() {
@@ -244,6 +267,7 @@ describe('Minionette.Region', function() {
             this.view.region.reattach();
 
             expect(this.view.region.view.$el.index()).to.equal(expectedIndex);
+            expect(expectedIndex).to.not.equal(-1);
         });
     });
 
@@ -292,22 +316,21 @@ describe('Minionette.Region', function() {
         });
 
         it("removes itself from it's parent", function() {
-            addInnerView('region', this.view);
+            this.region.remove();
 
-            this.view.region.remove();
-
-            expect(this.view.region).to.not.exist;
+            expect(this.parentView.region).to.not.exist;
         });
     });
 
     describe("#reset()", function() {
         it("replaces view#el with _view#el", function() {
-            var v = addInnerView('region', this.view),
-            expectedIndex = v.$el.index();
+            this.parentView.render();
+            expectedIndex = this.view.$el.index();
 
-            this.view.region.reset();
+            this.region.reset();
 
-            expect(this.view.region._view.$el.index()).to.equal(expectedIndex);
+            expect(this.region._view.$el.index()).to.equal(expectedIndex);
+            expect(expectedIndex).to.not.equal(-1);
         });
 
         it("calls #remove on old #view", function() {
@@ -327,12 +350,13 @@ describe('Minionette.Region', function() {
         });
 
         it("replaces view#el with _view#el", function() {
-            var v = addInnerView('region', this.view),
-            expectedIndex = v.$el.index();
+            this.parentView.render();
+            var expectedIndex = this.view.$el.index();
 
-            this.view.region.reset();
+            this.region.reset();
 
-            expect(this.view.region._view.$el.index()).to.equal(expectedIndex);
+            expect(this.region._view.$el.index()).to.equal(expectedIndex);
+            expect(expectedIndex).to.not.equal(-1);
         });
 
         it("only resets if #view equals passed in view", function() {
