@@ -37,11 +37,11 @@ module.exports = function(grunt) {
             },
             amd : {
                 src : 'lib/amd/minionette.js',
-                dest : 'lib/amd/minionette.min.js',
+                dest : 'lib/amd/minionette-min.js',
             },
             core : {
                 src : 'lib/minionette.js',
-                dest : 'lib/minionette.min.js',
+                dest : 'lib/minionette-min.js',
             }
         },
 
