@@ -40,8 +40,6 @@ Minionette.View = Backbone.View.extend({
 
     // A useful remove method that triggers events.
     remove: function() {
-        if (this._isRemoving) { return; }
-        this._isRemoving = true;
         this.trigger('remove', this);
 
         this._removeFromParent();
