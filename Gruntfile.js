@@ -78,8 +78,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mocha');
 
     // Default task.
-    grunt.registerTask('lint-test', ['jshint:test']);
-    grunt.registerTask('test', ['jshint:minionette', 'preprocess', 'mocha']);
-    grunt.registerTask('default', ['test', 'uglify']);
+    grunt.registerTask('lint-test', 'jshint:test');
+    grunt.registerTask('test', 'mocha');
+    grunt.registerTask('travis', ['jshint:minionette', 'mocha']);
+    grunt.registerTask('default', ['jshint:minionette', 'test', 'preprocess', 'uglify']);
 
 };

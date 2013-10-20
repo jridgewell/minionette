@@ -4,7 +4,7 @@
     "description": "A Mini Marionette for Backbone.js",
     "main": "lib/minonette.js",
     "scripts": {
-        "test": "grunt test"
+        "test": "grunt travis"
     },
     "repository": {
         "type": "git",
