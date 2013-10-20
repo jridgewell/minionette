@@ -67,6 +67,8 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     attach: function(newView, detach) {
         var oldView = this.view;
 
+        if (newView === oldView) { return; }
+
         // Remove the old _detachedView, if it exists
         attempt(this._detachedView, 'remove');
         delete this._detachedView;
@@ -131,12 +133,13 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         // created with a selector and the parent view hadn't
         // rendered yet.
         if (!this._view.el) { this._ensureElement(this._view); }
+        if (!this._detachedView) { return; }
 
         // $context is a scoped context in which to search
         // for the current view's element in.
         var $context = getParentViewContext(this),
             viewSelector = this.view.$el.selector,
-            newView = this._detachedView || this._view;
+            newView = this._detachedView;
 
         // We then replace the current view with the detached view.
         $context.find(viewSelector).replaceWith(newView.$el);
