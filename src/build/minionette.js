@@ -1,9 +1,8 @@
-var Minionette = (function(global, _, $, Backbone) {
+var Minionette = (function(_, $, Backbone) {
     'use strict';
 
     // Define and export the Minionette namespace
-    var Minionette = {};
-    Backbone.Minionette = Minionette;
+    var Minionette = Backbone.Minionette = {};
 
 // @include ../attempt.js
 
@@ -13,4 +12,4 @@ var Minionette = (function(global, _, $, Backbone) {
 // @include ../collection_view.js
 
     return Minionette;
-})(this, _, jQuery, Backbone);
+})(_, $, Backbone);
