@@ -13,7 +13,7 @@ describe('Minionette.Region', function() {
         delete this.region;
     });
 
-    describe('constructor', function() {
+    describe("constructor", function() {
         var name = 'name';
         it("sets #cid to name if passed in", function() {
             var region = new Minionette.Region({name: name});
@@ -23,6 +23,59 @@ describe('Minionette.Region', function() {
         it("sets #cid to unique name if not", function() {
             var region = new Minionette.Region();
             expect(region.cid).to.not.equal(name);
+        });
+    });
+
+    describe("instantiated with options", function() {
+        beforeEach(function() {
+            this.newView = new Minionette.View();
+        });
+        afterEach(function() {
+            delete this.newView;
+        });
+
+        it("falsey view", function() {
+            this.view.addRegion('region', false);
+            this.view.render();
+            var expectedIndex = this.view.region.view.$el.index();
+
+            this.view.region.attach(this.newView);
+
+            expect(this.newView.$el.index()).to.equal(expectedIndex);
+            expect(expectedIndex).to.not.equal(-1);
+        });
+
+        it("real view", function() {
+            this.view.addRegion('region', new Minionette.View());
+            this.view.render();
+            var expectedIndex = this.view.region.view.$el.index();
+
+            this.view.region.attach(this.newView);
+
+            expect(this.newView.$el.index()).to.equal(expectedIndex);
+            expect(expectedIndex).to.not.equal(-1);
+        });
+
+        it("selector", function() {
+            this.view.addRegion('test', ':first-child');
+            this.view.render();
+            var expectedIndex = this.view.test.view.$el.index();
+
+            this.view.test.attach(this.newView);
+
+            expect(this.newView.$el.index()).to.equal(expectedIndex);
+            expect(expectedIndex).to.not.equal(-1);
+        });
+
+        it("jQuery object", function() {
+            this.view.addRegion('test', this.view.$(':first-child'));
+            this.view.render();
+            var expectedIndex = this.view.test.view.$el.index();
+
+            this.view.test.attach(this.newView);
+
+            expect(this.newView.$el.index()).to.equal(expectedIndex);
+            expect(expectedIndex).to.not.equal(-1);
         });
     });
 
@@ -99,8 +152,6 @@ describe('Minionette.Region', function() {
         });
 
         it("replaces current view#el with newView#el (the same index in parent)", function() {
-            // debugger;
-            // window.debug = true;
             window.test = this.view.$el;
             this.parentView.render();
             this.view.render();
@@ -110,7 +161,6 @@ describe('Minionette.Region', function() {
 
             expect(this.newView.$el.index()).to.equal(expectedIndex);
             expect(expectedIndex).to.not.equal(-1);
-            window.debug = false;
         });
 
         it("calls #remove on old #view", function() {
@@ -252,7 +302,13 @@ describe('Minionette.Region', function() {
 
         it("will not cause #_view to become detached", function() {
             this.region.reattach();
+            expect(this.region.view).to.equal(this.view);
             this.region.reattach();
+            expect(this.region.view).to.equal(this.view);
+            this.region.reattach();
+            expect(this.region.view).to.equal(this.view);
+            this.region.reattach();
+            expect(this.region.view).to.equal(this.view);
 
             expect(this.region.view.$el.parent()).to.exist;
         });
