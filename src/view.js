@@ -27,9 +27,7 @@ Minionette.View = Backbone.View.extend({
     // A default function that will have it's return passed
     // to this.template
     // Override this in a subclass to something useful.
-    serialize: function() {
-        return {};
-    },
+    serialize: function() { return {}; },
 
     // The actual "serialize" that is fed into the this.template.
     // Used so a subclass can override this.serialize and still
@@ -89,7 +87,7 @@ Minionette.View = Backbone.View.extend({
         var region = new this.Region(options);
 
         region._parent = this;
-        this[name] = this._regions[name] = region;
+        this[region.cid] = this._regions[region.cid] = region;
 
         return region;
     },
