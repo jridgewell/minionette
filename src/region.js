@@ -66,11 +66,14 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // as the old view, and removes the old view.
     attach: function(newView, detach) {
         var oldView = this.view;
-        if (newView.el === oldView.el) { return; }
 
         // Remove the old _detachedView, if it exists
         attempt(this._detachedView, 'remove');
         delete this._detachedView;
+
+        // Let's not do any DOM manipulations if
+        // the elements are the same.
+        if (newView.el === oldView.el) { return; }
 
         // jQuery before 1.9 will do weird things
         // if oldView doesn't have a parent.
@@ -134,8 +137,8 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         // rendered yet.
         if (!this._view.el) { this._ensureElement(this._view); }
 
-        // If this region has a non-placeholder view, but it wasn't
-        // detached, then stop!
+        // If this region has a non-placeholder view but it wasn't
+        // detached, stop!
         if (!this._detachedView && this.view !== this._view) { return; }
 
         // $context is a scoped context in which to search
@@ -162,8 +165,6 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // a view#remove(). Allows a view to be removed,
     // replacing it with the placeholder.
     _removeView: function(view) {
-        if (this.view === view) {
-            this.reset(true);
-        }
+        if (this.view === view) { this.reset(true); }
     },
 });
