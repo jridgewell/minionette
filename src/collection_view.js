@@ -1,7 +1,9 @@
 Minionette.CollectionView = Minionette.View.extend({
     constructor: function(options) {
-        // Initialize a object for our modelViews
+        // Initialize a storage object for our modelViews
         this._modelViews = {};
+        this._modelViewModels = {};
+
         // Ensure this has a ModelView to initialize
         // new modelViews from.
         this._ensureModelView(options || {});
@@ -27,7 +29,7 @@ Minionette.CollectionView = Minionette.View.extend({
         // Remove all our modelViews after the 'render' event is
         // fired. This is set on #render() so that the removing
         // will happen after all other 'render' listeners.
-        this.once('render', this._removeModelViews());
+        this.once('render', this._removeModelViews);
 
         return Minionette.CollectionView.__super__.render.apply(this);
     },
@@ -61,6 +63,7 @@ Minionette.CollectionView = Minionette.View.extend({
 
         // Add the modelView, and keep track of it.
         this._modelViews[view.cid] = view;
+        this._modelViewModels[model.cid] = view;
         view._parent = this;
 
         this.trigger('addOne', view, this);
@@ -74,8 +77,7 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // Remove an individual model's view from this.$el.
     removeOne: function(model) {
-        // This may or may not find a view.
-        var view = _.findWhere(this._modelViews, {model: model});
+        var view = this._modelViewModels[model.cid];
 
         if (view) {
             this.trigger('removeOne', view, this);
@@ -90,6 +92,7 @@ Minionette.CollectionView = Minionette.View.extend({
     // a view#remove().
     _removeView: function(view) {
         delete this._modelViews[view.cid];
+        delete this._modelViewModels[view.model.cid];
     },
 
     // A callback method bound to the 'remove:before'
