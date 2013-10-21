@@ -66,7 +66,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // as the old view, and removes the old view.
     attach: function(newView, detach) {
         var oldView = this.view;
-        if (newView === oldView) { return; }
+        if (newView.el === oldView.el) { return; }
 
         // Remove the old _detachedView, if it exists
         attempt(this._detachedView, 'remove');
@@ -147,7 +147,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
         // Don't try to replace an element with itself.
         // It breaks jQuery...
-        if (replace[0] === newView.$el[0]) { return; }
+        if (replace[0] === newView.el) { return; }
 
         // We then replace the current view with the detached view.
         replace.replaceWith(newView.$el);
