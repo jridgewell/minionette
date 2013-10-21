@@ -66,13 +66,14 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // as the old view, and removes the old view.
     attach: function(newView, detach) {
         var oldView = this.view;
-
         if (newView === oldView) { return; }
 
         // Remove the old _detachedView, if it exists
         attempt(this._detachedView, 'remove');
         delete this._detachedView;
 
+        // jQuery before 1.9 will do weird things
+        // if oldView doesn't have a parent.
         if (oldView.$el.parent().length) {
             // Places newView after the current view.
             oldView.$el.after(newView.$el);
@@ -132,16 +133,24 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         // created with a selector and the parent view hadn't
         // rendered yet.
         if (!this._view.el) { this._ensureElement(this._view); }
-        if (!this._detachedView) { return; }
+
+        // If this region has a non-placeholder view, but it wasn't
+        // detached, then stop!
+        if (!this._detachedView && this.view !== this._view) { return; }
 
         // $context is a scoped context in which to search
         // for the current view's element in.
         var $context = getParentViewContext(this),
             viewSelector = this.view.$el.selector,
-            newView = this._detachedView;
+            replace = $context.find(viewSelector),
+            newView = this._detachedView || this._view;
+
+        // Don't try to replace an element with itself.
+        // It breaks jQuery...
+        if (replace[0] === newView.$el[0]) { return; }
 
         // We then replace the current view with the detached view.
-        $context.find(viewSelector).replaceWith(newView.$el);
+        replace.replaceWith(newView.$el);
 
         delete this._detachedView;
         this.view = newView;
