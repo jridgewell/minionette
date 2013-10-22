@@ -23,21 +23,12 @@ module.exports = function(grunt) {
                 files: {
                     'lib/minionette.js' : 'src/build/minionette.js'
                 }
-            },
-            amd: {
-                files: {
-                    'lib/amd/minionette.js' : 'src/build/amd.js'
-                }
-            },
+            }
         },
 
         uglify : {
             options: {
                 banner: "<%= meta.banner %>"
-            },
-            amd : {
-                src : 'lib/amd/minionette.js',
-                dest : 'lib/amd/minionette-min.js',
             },
             core : {
                 src : 'lib/minionette.js',
