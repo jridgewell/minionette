@@ -11,7 +11,7 @@ Minionette.CollectionView = Minionette.View.extend({
         Minionette.View.apply(this, arguments);
 
         // Augment #render() with our collection specific items.
-        this.on('rendered', this._renderCollectionViews);
+        this.on('rendered', this._renderModelViews);
         // Make sure we remove our modelViews when this is removed.
         this.on('remove', this._removeModelViews);
     },
@@ -34,7 +34,7 @@ Minionette.CollectionView = Minionette.View.extend({
         return Minionette.CollectionView.__super__.render.apply(this);
     },
 
-    _renderCollectionViews: function() {
+    _renderModelViews: function() {
         // Use a DocumentFragment to speed up #render()
         var frag = document.createDocumentFragment();
 
