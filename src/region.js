@@ -111,7 +111,6 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     _removeFromParent: function() {
         // Remove this region from its parent, if it exists
         attempt(this._parent, '_removeRegion', this);
-        this._parent = null;
     },
 
     // Detaches the current view, replacing it with
