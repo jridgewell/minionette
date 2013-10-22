@@ -71,24 +71,23 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         attempt(this._detachedView, 'remove');
         delete this._detachedView;
 
-        // Let's not do any DOM manipulations if
-        // the elements are the same.
-        if (newView.el === oldView.el) { return; }
-
-        // jQuery before 1.9 will do weird things
-        // if oldView doesn't have a parent.
-        if (oldView.$el.parent().length) {
-            // Places newView after the current view.
-            oldView.$el.after(newView.$el);
-            // And detaches the view.
-            oldView.$el.detach();
-        }
-
         this.view = newView;
         newView._parent = this;
 
-        // Remove the view, unless we are only detaching.
-        if (!detach) { oldView.remove(); }
+        // Let's not do any DOM manipulations if
+        // the elements are the same.
+        if (newView.el !== oldView.el) {
+            // jQuery before 1.9 will do weird things
+            // if oldView doesn't have a parent.
+            if (oldView.$el.parent().length) {
+                // Places newView after the current view.
+                oldView.$el.after(newView.$el);
+                // And detaches the view.
+                oldView.$el.detach();
+            }
+            // Remove the view, unless we are only detaching.
+            if (!detach) { oldView.remove(); }
+        }
 
         return newView;
     },
