@@ -9,8 +9,16 @@ describe('Minionette.CollectionView', function() {
             delete this.view;
         });
 
-        it("sets ModelView to Minionette.ModelView", function() {
-            expect(this.view.ModelView).to.equal(Minionette.ModelView);
+        it("sets ModelView to an extended Minionette.ModelView", function() {
+            expect(new this.view.ModelView()).to.be.instanceof(Minionette.ModelView);
+        });
+
+        it("Allows you to specify tagName and template for ModelView", function() {
+            var opts = {template: function() { return 'hello!'; }, tagName: 'li'};
+            var view = new Minionette.CollectionView({ModelView: opts});
+            _.each(opts, function(val, key) {
+                expect(view.ModelView.prototype[key]).to.equal(val);
+            });
         });
 
         describe("Collection Events", function() {
