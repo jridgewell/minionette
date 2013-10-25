@@ -68,7 +68,6 @@ describe('Minionette.CollectionView', function() {
             });
 
             it("passes the modelView as the last param", function(done) {
-                var spy = this.sinon.spy();
                 var view = this.view.addOne(new Backbone.Model());
                 this.view.on('modelView:event', function(data, v) {
                     expect(data).to.equal(true);

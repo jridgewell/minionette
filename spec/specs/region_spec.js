@@ -208,6 +208,24 @@ describe('Minionette.Region', function() {
             expect(this.newView.$el.index()).to.equal(expectedIndex);
             expect(expectedIndex).to.not.equal(-1);
         });
+
+        it("triggers 'attach' event", function() {
+            var spy = this.sinon.spy();
+            this.region.on('attach', spy);
+
+            this.region.attach(this.newView);
+
+            expect(spy).to.have.been.calledWith(this.newView, this.region);
+        });
+
+        it("triggers 'attached' event", function() {
+            var spy = this.sinon.spy();
+            this.region.on('attached', spy);
+
+            this.region.attach(this.newView);
+
+            expect(spy).to.have.been.calledWith(this.newView, this.region);
+        });
     });
 
     describe("#detach()", function() {
@@ -267,6 +285,23 @@ describe('Minionette.Region', function() {
 
             expect(ret).to.equal(this.region);
         });
+        it("triggers 'detach' event", function() {
+            var spy = this.sinon.spy();
+            this.region.on('detach', spy);
+
+            this.region.detach();
+
+            expect(spy).to.have.been.calledWith(this.view, this.region);
+        });
+
+        it("triggers 'detached' event", function() {
+            var spy = this.sinon.spy();
+            this.region.on('detached', spy);
+
+            this.region.detach();
+
+            expect(spy).to.have.been.calledWith(this.view, this.region);
+        });
     });
 
     describe("#reattach()", function() {
@@ -325,16 +360,43 @@ describe('Minionette.Region', function() {
             expect(this.view.region.view.$el.index()).to.equal(expectedIndex);
             expect(expectedIndex).to.not.equal(-1);
         });
+
+        it("triggers 'reattach' event", function() {
+            var spy = this.sinon.spy();
+            this.region.on('reattach', spy);
+
+            this.region.reattach();
+
+            expect(spy).to.have.been.calledWith(this.view, this.region);
+        });
+
+        it("triggers 'reattached' event", function() {
+            var spy = this.sinon.spy();
+            this.region.on('reattached', spy);
+
+            this.region.reattach();
+
+            expect(spy).to.have.been.calledWith(this.view, this.region);
+        });
     });
 
     describe("#remove()", function() {
-        it("triggers the 'remove' event", function() {
+        it("triggers 'remove' event", function() {
             var spy = this.sinon.spy();
             this.region.on('remove', spy);
 
             this.region.remove();
 
-            expect(spy).to.have.been.called;
+            expect(spy).to.have.been.calledWith(this.region);
+        });
+
+        it("triggers 'removed' event", function() {
+            var spy = this.sinon.spy();
+            this.region.on('removed', spy);
+
+            this.region.remove();
+
+            expect(spy).to.have.been.calledWith(this.region);
         });
 
         it("calls #view#remove()", function() {
