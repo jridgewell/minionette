@@ -86,7 +86,7 @@ describe('Minionette.CollectionView', function() {
 
                 this.view.render();
 
-                expect(spy).to.have.been.called;
+                expect(spy).to.have.been.calledWith(this.view);
             });
 
             it("triggers 'rendered' event", function() {
@@ -95,7 +95,7 @@ describe('Minionette.CollectionView', function() {
 
                 this.view.render();
 
-                expect(spy).to.have.been.called;
+                expect(spy).to.have.been.calledWith(this.view);
             });
 
             it("removes old modelViews", function() {
@@ -166,30 +166,12 @@ describe('Minionette.CollectionView', function() {
                 var spy = this.sinon.spy();
                 this.view.on('addOne', spy);
 
-                this.view.addOne(this.model);
-
-                expect(spy).to.have.been.called;
-            });
-
-            it("passes the view to the 'addOne' event", function() {
-                var spy = this.sinon.spy();
-                this.view.on('addOne', spy);
-
                 var view = this.view.addOne(this.model);
 
                 expect(spy).to.have.been.calledWith(view);
             });
 
             it("triggers 'addedOne' event", function() {
-                var spy = this.sinon.spy();
-                this.view.on('addedOne', spy);
-
-                this.view.addOne(this.model);
-
-                expect(spy).to.have.been.called;
-            });
-
-            it("passes the view to the 'addedOne' event", function() {
                 var spy = this.sinon.spy();
                 this.view.on('addedOne', spy);
 
@@ -263,28 +245,10 @@ describe('Minionette.CollectionView', function() {
 
                 this.view.removeOne(this.model);
 
-                expect(spy).to.have.been.called;
-            });
-
-            it("passes the view to the 'removeOne' event", function() {
-                var spy = this.sinon.spy();
-                this.view.on('removeOne', spy);
-
-                this.view.removeOne(this.model);
-
                 expect(spy).to.have.been.calledWith(this.modelView);
             });
 
             it("triggers 'removedOne' event", function() {
-                var spy = this.sinon.spy();
-                this.view.on('removedOne', spy);
-
-                this.view.removeOne(this.model);
-
-                expect(spy).to.have.been.called;
-            });
-
-            it("passes the view to the 'removedOne' event", function() {
                 var spy = this.sinon.spy();
                 this.view.on('removedOne', spy);
 
