@@ -15,6 +15,30 @@ describe('Minionette.View', function() {
             expect(spy).to.have.been.called;
         });
 
+        describe("picks options from instantiation", function() {
+            afterEach(function() {
+                _.each(this.opts, function(val, key) {
+                    expect(this.view[key]).to.equal(val);
+                }, this);
+                delete this.view;
+                delete this.opts;
+            });
+            it("picks 'regions'", function() {
+                this.opts = {regions: {test: false}};
+                this.view = new Minionette.View(this.opts);
+            });
+
+            it("picks 'Region'", function() {
+                this.opts = {Region: function() {}};
+                this.view = new Minionette.View(this.opts);
+            });
+
+            it("picks 'regions'", function() {
+                this.opts = {template: function() {}};
+                this.view = new Minionette.View(this.opts);
+            });
+        });
+
         describe("Model Events", function() {
             var spy = sinon.spy();
             var ModelEventTest = Minionette.View.extend({
@@ -55,7 +79,7 @@ describe('Minionette.View', function() {
                 expect(spy).to.have.been.called;
             });
 
-            it("doesn't throw error when no model", function() {
+            it("doesn't throw error when no collection", function() {
                 var view = new CollectionEventTest({collection: null});
                 // Noop. Error will be thrown by constructor
             });
