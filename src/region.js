@@ -1,5 +1,5 @@
 Minionette.Region = function(options) {
-	options = options || {};
+    options = options || {};
     // Setup a unique id for this region.
     // Not really necessary, but it doesn't hurt.
     this.cid = options.name || _.uniqueId('region');
@@ -65,25 +65,26 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // at the same index (inside the parent element)
     // as the old view, and removes the old view.
     attach: function(newView, detach) {
-        var oldView = this.view;
+        var oldView = this.view,
+            replace = oldView.$el;
+
+        this.view = newView;
+        newView._parent = this;
 
         // Remove the old _detachedView, if it exists
         attempt(this._detachedView, 'remove');
         delete this._detachedView;
 
-        this.view = newView;
-        newView._parent = this;
-
         // Let's not do any DOM manipulations if
         // the elements are the same.
-        if (newView.el !== oldView.el) {
+        if (oldView.el !== newView.el) {
             // jQuery before 1.9 will do weird things
             // if oldView doesn't have a parent.
-            if (oldView.$el.parent().length) {
+            if (replace.parent().length) {
                 // Places newView after the current view.
-                oldView.$el.after(newView.$el);
+                replace.after(newView.$el);
                 // And detaches the view.
-                oldView.$el.detach();
+                replace.detach();
             }
             // Remove the view, unless we are only detaching.
             if (!detach) { oldView.remove(); }
@@ -129,34 +130,24 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
     // Reattaches the detached view.
     reattach: function() {
-        // Make sure our `_view` has it's el.
-        // It may not depending on whether the region was
-        // created with a selector and the parent view hadn't
-        // rendered yet.
-        if (!this._view.el) { this._ensureElement(this._view); }
-
         // If this region has a non-placeholder view but it wasn't
         // detached, stop!
         if (!this._detachedView && this.view !== this._view) { return; }
 
-        // $context is a scoped context in which to search
-        // for the current view's element in.
-        var $context = getParentViewContext(this),
-            viewSelector = this.view.$el.selector,
-            replace = $context.find(viewSelector),
-            newView = this._detachedView || this._view;
+        // After a render, #_view references an element that is
+        // not really in the parent. Reattach #_view to it.
+        this._ensureElement(this._view);
 
-        // Don't try to replace an element with itself.
-        // It breaks jQuery...
-        if (replace[0] === newView.el) { return; }
+        // Grab the #_detachedView, or the #_view if we haven't
+        // attached a non-placeholder view yet.
+        var newView = this._detachedView || this._view;
 
-        // We then replace the current view with the detached view.
-        replace.replaceWith(newView.$el);
-
+        // And make sure we don't remove the detached view while
+        // attaching.
         delete this._detachedView;
-        this.view = newView;
 
-        return newView;
+        // Attach our old view!
+        return this.attach(newView, true);
     },
 
     // A hook method that is called during
