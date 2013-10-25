@@ -46,6 +46,10 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     _ensureElement: function(view) {
         var $context = getParentViewContext(this),
             viewSelector = view.$el.selector;
+
+        // Don't reset the view's $el if the parent
+        // context is the same.
+        if (view.$el.parent().is($context)) { return; }
         view.setElement($context.find(viewSelector));
     },
 
@@ -67,6 +71,8 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     attach: function(newView, detach) {
         var oldView = this.view,
             replace = oldView.$el;
+
+        this.trigger('attach', newView, this);
 
         this.view = newView;
         newView._parent = this;
@@ -90,15 +96,21 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
             if (!detach) { oldView.remove(); }
         }
 
+        this.trigger('attached', newView, this);
+
         return newView;
     },
 
     // Removes this region, and it's view.
     remove: function() {
         this.trigger('remove', this);
+
         this._removeViews();
         this._removeFromParent();
         this.stopListening();
+
+        this.trigger('removed', this);
+        this.unbind();
     },
 
     _removeViews: function() {
@@ -119,10 +131,12 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     detach: function() {
         var view = this.view;
         if (view !== this._view) {
+            this.trigger('detach', view, this);
             this.reset(true);
 
             // Store the current view for later reattaching.
             this._detachedView = view;
+            this.trigger('detached', view, this);
         }
 
         return this;
@@ -130,24 +144,26 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
     // Reattaches the detached view.
     reattach: function() {
-        // If this region has a non-placeholder view but it wasn't
-        // detached, stop!
-        if (!this._detachedView && this.view !== this._view) { return; }
-
         // After a render, #_view references an element that is
         // not really in the parent. Reattach #_view to it.
         this._ensureElement(this._view);
 
-        // Grab the #_detachedView, or the #_view if we haven't
-        // attached a non-placeholder view yet.
-        var newView = this._detachedView || this._view;
+        // If there's not a detached view, stop!
+        if (!this._detachedView) { return; }
 
+        // Grab the #_detachedView
+        var newView = this._detachedView;
         // And make sure we don't remove the detached view while
         // attaching.
         delete this._detachedView;
 
+        this.trigger('reattach', newView, this);
+
         // Attach our old view!
-        return this.attach(newView, true);
+        var ret = this.attach(newView, true);
+        this.trigger('reattached', ret, this);
+
+        return ret;
     },
 
     // A hook method that is called during
@@ -155,5 +171,5 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // replacing it with the placeholder.
     _removeView: function(view) {
         if (this.view === view) { this.reset(true); }
-    },
+    }
 });
