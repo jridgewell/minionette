@@ -199,12 +199,14 @@ describe('Minionette.CollectionView', function() {
                 expect(spy).to.have.been.calledWith(view);
             });
 
-            it("creates a view from ModelView", function() {
-                var spy = this.sinon.spy(this.view, 'ModelView');
+            it("uses view constructed from #buildModelView()", function() {
+                var v = new Minionette.View();
+                this.view.buildModelView = function() {
+                    return v;
+                };
+                var view = this.view.addOne(this.model);
 
-                this.view.addOne(this.model);
-
-                expect(spy).to.have.been.called;
+                expect(view).to.equal(v);
             });
 
             it("returns the new modelView", function() {
@@ -231,6 +233,16 @@ describe('Minionette.CollectionView', function() {
                 var view = this.view.addOne(this.model);
 
                 view.trigger('event');
+
+                expect(spy).to.have.been.called;
+            });
+        });
+
+        describe("#buildModelView()", function() {
+            it("creates a view from ModelView", function() {
+                var spy = this.sinon.spy(this.view, 'ModelView');
+
+                this.view.addOne(new Backbone.Model());
 
                 expect(spy).to.have.been.called;
             });

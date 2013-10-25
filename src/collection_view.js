@@ -67,7 +67,7 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // Add an individual model's view to this.$el.
     addOne: function(model) {
-        var view = new this.ModelView({model: model});
+        var view = this.buildModelView(model);
 
         // Setup event forwarding
         this._forwardEvents(view);
@@ -84,6 +84,12 @@ Minionette.CollectionView = Minionette.View.extend({
         this.trigger('addedOne', view, this);
 
         return view;
+    },
+
+    // An override-able method to construct a new
+    // modelView.
+    buildModelView: function(model) {
+        return new this.ModelView({model: model});
     },
 
     // Remove an individual model's view from this.$el.
