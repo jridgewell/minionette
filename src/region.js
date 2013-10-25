@@ -16,7 +16,7 @@ function getParentViewContext(view) {
 // Backbone's extend is generic, just copy it over.
 Minionette.Region.extend = Backbone.View.extend;
 
-_.extend(Minionette.Region.prototype, Backbone.Events, {
+_.extend(Minionette.Region.prototype, {
     // Ensures the region has a view.
     _ensureView: function(options) {
         var viewOpts = {
@@ -95,10 +95,8 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
     // Removes this region, and it's view.
     remove: function() {
-        this.trigger('remove', this);
         this._removeViews();
         this._removeFromParent();
-        this.stopListening();
     },
 
     _removeViews: function() {
