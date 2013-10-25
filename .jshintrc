@@ -28,6 +28,7 @@
         "Minionette": true,
         "attempt": true,
         "define": true,
+        "sinon": true,
         "chai": true,
         "sinonChai": true,
         "jqueryChai": true,

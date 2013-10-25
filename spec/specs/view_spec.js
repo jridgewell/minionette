@@ -8,7 +8,7 @@ describe('Minionette.View', function() {
 
     describe("constructor", function() {
         it("calls Backbone.View's constructor", function() {
-            var spy = sinon.spy(Backbone, 'View');
+            var spy = this.sinon.spy(Backbone, 'View');
 
             new Minionette.View();
 
@@ -49,7 +49,7 @@ describe('Minionette.View', function() {
             var model = new Backbone.Model();
 
             it("listens for model events", function() {
-                var view = new ModelEventTest({model: model});
+                new ModelEventTest({model: model});
 
                 model.trigger('change');
 
@@ -57,7 +57,7 @@ describe('Minionette.View', function() {
             });
 
             it("doesn't throw error when no model", function() {
-                var view = new ModelEventTest({model: null});
+                new ModelEventTest({model: null});
                 // Noop. Error will be thrown by constructor
             });
         });
@@ -72,7 +72,7 @@ describe('Minionette.View', function() {
             var collection = new Backbone.Collection();
 
             it("listens for collection events", function() {
-                var view = new CollectionEventTest({collection: collection});
+                new CollectionEventTest({collection: collection});
 
                 collection.trigger('change');
 
@@ -80,7 +80,7 @@ describe('Minionette.View', function() {
             });
 
             it("doesn't throw error when no collection", function() {
-                var view = new CollectionEventTest({collection: null});
+                new CollectionEventTest({collection: null});
                 // Noop. Error will be thrown by constructor
             });
         });
