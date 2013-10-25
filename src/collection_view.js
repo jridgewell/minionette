@@ -24,6 +24,14 @@ Minionette.CollectionView = Minionette.View.extend({
         sort: 'render'
     },
 
+    // The prefix that will be put on every event triggered
+    // by one of the modelViews. So, if a modelView triggers
+    // "event", collectionView will trigger "modelView:event"
+    // ("event" -> "modelView:event").
+    // A falsey value will cause no prefix (or colon) to be
+    // used ("event" -> "event").
+    modelViewEventPrefix: 'modelView',
+
     // A default useful render function.
     render: function() {
         // Remove all our modelViews after the 'render' event is
@@ -61,6 +69,9 @@ Minionette.CollectionView = Minionette.View.extend({
     addOne: function(model) {
         var view = new this.ModelView({model: model});
 
+        // Setup event forwarding
+        this._forwardEvents(view);
+
         // Add the modelView, and keep track of it.
         this._modelViews[view.cid] = view;
         this._modelViewModels[model.cid] = view;
@@ -83,6 +94,7 @@ Minionette.CollectionView = Minionette.View.extend({
             this.trigger('removeOne', view, this);
             view.remove();
             this.trigger('removedOne', view, this);
+            this.stopListening(view);
         }
 
         return view;
@@ -108,5 +120,22 @@ Minionette.CollectionView = Minionette.View.extend({
     // then a subclass' prototype ModelView, and defaults to Minionette.ModelView
     _ensureModelView: function(options) {
         this.ModelView = options.ModelView || this.ModelView || Minionette.ModelView;
+    },
+
+    // Since CollectionView is meant to be largely automated,
+    // setup event forwarding from modelViews. That way,
+    // you only need to listen to events that happen on
+    // this collectionView, not on all the modelViews.
+    _forwardEvents: function(view) {
+        this.listenTo(view, 'all', function() {
+            var args = _.toArray(arguments);
+            var prefix = _.result(this, 'modelViewEventPrefix');
+            prefix = (prefix) ? prefix + ':' : '';
+
+            args[0] = prefix + args[0];
+            args.push(view);
+
+            this.trigger.apply(this, args);
+        });
     }
 });

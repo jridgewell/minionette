@@ -31,6 +31,47 @@ describe('Minionette.CollectionView', function() {
             });
         });
 
+        describe("#modelViewEventPrefix", function() {
+            it("uses 'modelView:' as prefix by default", function() {
+                this.view.modelViewEventPrefix = 'modelView';
+            });
+
+            it("is changeable at any time", function() {
+                var spy = this.sinon.spy();
+                var view = this.view.addOne(new Backbone.Model());
+                // Change modelViewEventPrefix AFTER adding the new model.
+                this.view.modelViewEventPrefix = 'tester';
+                this.view.on('tester:event', spy);
+
+                view.trigger('event');
+
+                expect(spy).to.have.been.called;
+            });
+
+            it("can be set to false, and event will have same name", function() {
+                this.view.modelViewEventPrefix = false;
+                var spy = this.sinon.spy();
+                var view = this.view.addOne(new Backbone.Model());
+                this.view.on('event', spy);
+
+                view.trigger('event');
+
+                expect(spy).to.have.been.called;
+            });
+
+            it("passes the modelView as the last param", function(done) {
+                var spy = this.sinon.spy();
+                var view = this.view.addOne(new Backbone.Model());
+                this.view.on('modelView:event', function(data, v) {
+                    expect(data).to.equal(true);
+                    expect(v).to.equal(v);
+                    done();
+                });
+
+                view.trigger('event', true);
+            });
+        });
+
         describe("#render()", function() {
             it("triggers 'render' event", function() {
                 var spy = this.sinon.spy();
@@ -175,6 +216,16 @@ describe('Minionette.CollectionView', function() {
 
                 expect(this.view.$el).to.have(view.$el);
             });
+
+            it("sets up event forwarding", function() {
+                var spy = this.sinon.spy();
+                this.view.on('modelView:event', spy);
+                var view = this.view.addOne(this.model);
+
+                view.trigger('event');
+
+                expect(spy).to.have.been.called;
+            });
         });
 
         describe("#removeOne()", function() {
@@ -230,6 +281,16 @@ describe('Minionette.CollectionView', function() {
                 this.view.removeOne(this.model);
 
                 expect(spy).to.have.been.called;
+            });
+
+            it("removes event forwarding", function() {
+                var spy = this.sinon.spy();
+                this.view.on('modelView:event', spy);
+
+                this.view.removeOne(this.model);
+                this.modelView.trigger('event');
+
+                expect(spy).to.not.have.been.called;
             });
         });
 
