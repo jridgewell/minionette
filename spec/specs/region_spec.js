@@ -328,6 +328,15 @@ describe('Minionette.Region', function() {
     });
 
     describe("#remove()", function() {
+        it("triggers the 'remove' event", function() {
+            var spy = this.sinon.spy();
+            this.region.on('remove', spy);
+
+            this.region.remove();
+
+            expect(spy).to.have.been.called;
+        });
+
         it("calls #view#remove()", function() {
             var spy = this.sinon.spy(this.view, 'remove');
 
@@ -348,6 +357,14 @@ describe('Minionette.Region', function() {
         it("calls #_detachedView#remove(), if it exists", function() {
             var spy = this.sinon.spy(this.region.view, 'remove');
             this.region.detach();
+
+            this.region.remove();
+
+            expect(spy).to.have.been.called;
+        });
+
+        it("calls #stopListening", function() {
+            var spy = this.sinon.spy(this.region, 'stopListening');
 
             this.region.remove();
 
