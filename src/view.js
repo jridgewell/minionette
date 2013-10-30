@@ -71,7 +71,7 @@ Minionette.View = Backbone.View.extend({
         // Remove the old region, if it exists already
         attempt(this._regions[name], 'remove');
 
-        var options = { name: name };
+        var options = { cid: name };
         // If this is a Backbone.View, pass that as the
         // view to the region.
         if (!view || view.$el) {

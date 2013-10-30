@@ -14,15 +14,15 @@ describe('Minionette.Region', function() {
     });
 
     describe("constructor", function() {
-        var name = 'name';
-        it("sets #cid to name if passed in", function() {
-            var region = new Minionette.Region({name: name});
-            expect(region.cid).to.equal(name);
+        var cid = 'cid';
+        it("sets #cid to cid if passed in", function() {
+            var region = new Minionette.Region({cid: cid});
+            expect(region.cid).to.equal(cid);
         });
 
-        it("sets #cid to unique name if not", function() {
+        it("sets #cid to unique cid if not", function() {
             var region = new Minionette.Region();
-            expect(region.cid).to.not.equal(name);
+            expect(region.cid).to.not.equal(cid);
         });
     });
 
