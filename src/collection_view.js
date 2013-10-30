@@ -13,7 +13,7 @@ Minionette.CollectionView = Minionette.View.extend({
         // Augment #render() with our collection specific items.
         this.on('rendered', this._renderModelViews);
         // Make sure we remove our modelViews when this is removed.
-        this.on('remove', this._removeModelViews);
+        this.on('removed', this._removeModelViews);
     },
 
     // Listen to the default events.
