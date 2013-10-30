@@ -279,13 +279,18 @@ describe('Minionette.CollectionView', function() {
 
         describe("#remove()", function() {
             it("calls #remove() on the modelViews", function() {
-                var view = this.view.addOne(new Backbone.Model()),
-                spy = this.sinon.spy();
-                view.on('remove', spy);
+                var spys = [];
+                for (var i = 0; i < 5; ++i) {
+                    var v = this.view.addOne(new Backbone.Model());
+                    spys.push(this.sinon.spy(v, 'remove'));
+                }
 
                 this.view.remove();
 
-                expect(spy).to.have.been.called;
+                _.each(spys, function(spy) {
+                    expect(spy).to.have.been.called;
+                }, this);
+                expect(this.view._modelViews).to.be.empty;
             });
         });
     });

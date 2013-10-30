@@ -216,13 +216,20 @@ describe('Minionette.View', function() {
             });
 
             it("removes regions", function() {
-                var subView = new Minionette.View(),
-                spy = this.sinon.spy(subView, 'remove');
-                this.view.addRegion('region', subView);
+                var spys = [];
+
+                for (var i = 0; i < 5; ++i) {
+                    var v = new Minionette.View();
+                    spys.push(this.sinon.spy(v, 'remove'));
+                    this.view.addRegion('region' + i, v);
+                }
 
                 this.view.remove();
 
-                expect(spy).to.have.been.called;
+                _.each(spys, function(spy) {
+                    expect(spy).to.have.been.called;
+                }, this);
+                expect(this.view._regions).to.be.empty;
             });
         });
 
