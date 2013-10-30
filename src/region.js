@@ -45,12 +45,16 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
     _ensureElement: function(view) {
         var $context = getParentViewContext(this),
-            viewSelector = view.$el.selector;
+            viewSelector = view.$el.selector,
+            $el;
 
         // Don't reset the view's $el if the parent
         // context is the same.
-        if (view.$el.parent().is($context)) { return; }
-        view.setElement($context.find(viewSelector));
+        if (!view.$el.parent().is($context)) {
+            $el = $context.find(viewSelector);
+            $el.selector = viewSelector;
+            view.setElement($el);
+        }
     },
 
     // Resets the region's view to placeholder view.
