@@ -5,14 +5,33 @@ Minionette.CollectionView
 Backbone collections. It quickly handles rendering using a
 DocumentFragment, ensuring at most three content reflows. The most
 important feature of `CollectionView` is the `#ModelView` property, from
-which all models will have a view instantiated from. Additionally,
-`CollectionView` handles memory management for you: calling `#remove()`
-will `#remove()` all modelViews.
+which all models will have a view instantiated from. Additionally, will
+forward a modelView's events, prefixed by `#modelViewEventPrefix`, for
+easy event listening directly on the collectionView.
+
 
 ## #ModelView
 
 The `#ModelView` property should be the View class that you wish for all
 your modelViews to be rendered as.
+
+Alternatively, you may specify a properties object, which will be passed
+into the `#extend()` method of `Minionette.ModelView`. This allows you
+to easily define a #ModelView without declaring a class.
+
+```javascript
+var CV = Minionette.CollectionView.extend({
+    template: function() { /* the collectionView template */ },
+    tagName: 'ul', // The collectionView tagName,
+
+    // ...
+
+    ModelView: { // Specify a properties object to extend ModelView with
+        template: function() { /* the modelView template */ },
+        tagName: 'li', // The modelView tagName,
+    }
+});
+```
 
 
 ## #collectionEvents
@@ -30,26 +49,44 @@ collectionEvents = {
 rendering the appropriate function to keep things speedy.
 
 
+## #modelViewEventPrefix
+
+`CollectionView` listens to all events triggered by instantiated
+modelView's and will forward them. By default, `#modelViewEventPrefix`
+is the string "modelView", meaning an event "test" triggered by a
+modelView will be forwarded as "modelView:test" by the collectionView.
+Setting `#modelViewEventPrefix` to a false-y value will cause events to
+be forwarded without a prefix, so that "test" will be forwarded as
+"test" by the collectionView.
+
+Additionally, the collectionView will append itself as the final
+argument passed to the event listeners.
+
+
 ## #render()
 
 The `#render()` method augments `Minionette.View`'s `#render()` with the
-collection specific rendering. It will remove all previously associated modelViews, and render the new ones inside a DocumentFragment, which will be appended to the collectionView's $el.
-
-### "render" Event
-
-The "render" event is still called before any regions are removed and
-before any DOM changes.
-
-### "rendered" Event
-
-The "rendered" event is still called after all DOM changes have been
-made.
+collection specific rendering. It will remove all previously associated
+modelViews, and render the new ones inside a DocumentFragment, which
+will be appended to the collectionView's $el.
 
 
 ## #addOne(model)
 
-`#addOne()` instantiates a new `#ModelView` with `{model: model}`. It
+`#addOne()` creates a new modelView by calling `#buildModelView()`. It
 then renders that modelView, and passes it's `$el` to `#appendHtml()`.
+
+### #buildModelView(model)
+
+`#buildModelView()` creates a new instance of #ModelView, and returns
+it. It's helpful to override this method if you need to pass custom data
+during the construction of the instance.
+
+### #appendHtml(element)
+
+`#appendHtml()`, by default, takes the passed in element and appends it
+to the collectionView's $el. Override this method to append elements to
+to specific spots in the collectionView's $el.
 
 ### "addOne" Event
 
@@ -62,11 +99,6 @@ The "addedOne" event is fired after rendering the modelView and adding
 it to the collectionView's $el, and is passed that modelView and the
 collectionView as it's arguments.
 
-## #appendHtml(element)
-
-`#appendHtml()`, by default, takes the passed in element and appends it
-to the collectionView's $el. Override this method to append elements to
-to specific spots in the collectionView's $el.
 
 ## #removeOne(model)
 

@@ -5,7 +5,15 @@ Minionette.View
 listen for events on an associated model or collection, an actually
 useful generic rendering function, and easy subviews (AKA Regions).
 
-## #modelEvents
+## Constructor
+
+### Initialization Options
+
+In addition to the default options that Backbone pulls from the
+initialization options, Minionette will also pull a `#template`
+function, a `Region` class, and a `regions` object.
+
+### #modelEvents
 
 `#modelEvents` is an object, in the same form as Backbone's `#events`,
 that specifies an event to listen for on the associated model and the
@@ -14,8 +22,7 @@ be directly assigned, or specified with a string of the function name on
 the view. This property must be specified before an object is
 instantiated, because the event listening happens in the constructor.
 
-
-## #collectionEvents
+### #collectionEvents
 
 `#collectionEvents` is an object, in the same form as Backbone's
 `#events`, that specifies an event to listen for on the associated
@@ -67,8 +74,8 @@ var subView = new SubView();
 
 view.addRegion('text', subView);
 
-subView.render();
 view.render();
+subView.render();
 ```
 
 
@@ -121,10 +128,35 @@ uses `subView` as it's view.  This region is accessible as `view[name]`.
 If a false-y value is provided as `subView`, a default "place holder"
 view will be used instead.
 
+Alternatively, a selector can be passed as the subView argument. In
+this form, the region will take over the element matched by the
+selector, and attaching a view to the region will cause the matched
+element to be replaced with the view.
+
+In any case, never worry about whether this view (the parent view) has
+been rendered. Region's will always be where they should be.
+
+```javascript
+var View = Minionette.View.extend({
+    template: _.template('<div id="subView">This is a place holder view</div>' + 
+    '<%= view("subView2") %>'),
+    regions: {
+        subView: '#subView',
+        subView2: new Minionette.View()
+    }
+});
+
+var v = new View();
+// This does exactly what you'd want it to do.
+v.subView.attach(new Minionette.View().render());
+v.render();
+v.subView2.attach(new Minionette.View()).render();
+```
+
 
 ## #addRegions(regions)
 
 The `#addRegions()` method adds several regions at a time. The `regions`
 parameter must be an object, with keys specifying the region name and
-values having the view. False-y values will cause the region to use the
-default "place holder" view.
+values having the view (or selector string). Refer to
+[#addRegion()](#addregionname-subview) for more information.
