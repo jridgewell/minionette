@@ -3,9 +3,7 @@ Minionette.View = Backbone.View.extend({
         // Pick out a few initializing options
         _.extend(this, _.pick(options || {}, 'regions', 'Region', 'template'));
 
-        // Ensure we have a Region to initialize
-        // new regions from.
-        this._ensureRegion();
+        // Setup our regions.
         this._initializeRegions();
 
         Backbone.View.apply(this, arguments);
@@ -122,12 +120,6 @@ Minionette.View = Backbone.View.extend({
         }, this);
     },
 
-    // Sets this.Region. Prioritizes instantiated options.Region,
-    // then a subclass' prototype Region, and defaults to Minionette.Region
-    _ensureRegion: function() {
-        this.Region = this.Region || Minionette.Region;
-    },
-
     // Takes the #regions object and creates the regions,
     // using the keys as the name and the values as the original
     // view. Keys are all that is required, passing in a false-y
@@ -135,6 +127,9 @@ Minionette.View = Backbone.View.extend({
     _initializeRegions: function() {
         // Initialize our regions object
         this._regions = {};
+        // If Region is not passed in options or set in the
+        // prototype chain, set it to Minionette.Region
+        this.Region = this.Region || Minionette.Region;
 
         // Add the regions
         this.addRegions(_.result(this, 'regions'));
