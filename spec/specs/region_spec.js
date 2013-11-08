@@ -2,459 +2,450 @@ describe('Minionette.Region', function() {
     var RegionView = Minionette.View.extend({
         template: _.template('<p>test</p><%= view("region") %><p>test</p>')
     });
+    var view, parentView, region;
     beforeEach(function() {
-        this.view = new RegionView();
-        this.parentView = new RegionView();
-        this.region = this.parentView.addRegion('region', this.view);
-    });
-    afterEach(function() {
-        delete this.view;
-        delete this.parentView;
-        delete this.region;
+        view = new RegionView();
+        parentView = new RegionView();
+        region = parentView.addRegion('region', view);
     });
 
     describe("constructor", function() {
         var cid = 'cid';
         it("sets #cid to cid if passed in", function() {
-            var region = new Minionette.Region({cid: cid});
+            region = new Minionette.Region({cid: cid});
             expect(region.cid).to.equal(cid);
         });
 
         it("sets #cid to unique cid if not", function() {
-            var region = new Minionette.Region();
+            region = new Minionette.Region();
             expect(region.cid).to.not.equal(cid);
         });
     });
 
     describe("instantiated with options", function() {
+        var newView;
         beforeEach(function() {
-            this.newView = new Minionette.View();
-        });
-        afterEach(function() {
-            delete this.newView;
+            newView = new Minionette.View();
         });
 
         it("falsey view", function() {
-            this.view.addRegion('region', false);
-            this.view.render();
-            var expectedIndex = this.view.region.view.$el.index();
+            view.addRegion('region', false);
+            view.render();
+            var expectedIndex = view.region.view.$el.index();
 
-            this.view.region.attach(this.newView);
+            view.region.attach(newView);
 
-            expect(this.newView.$el.index()).to.equal(expectedIndex);
+            expect(newView.$el.index()).to.equal(expectedIndex);
             expect(expectedIndex).to.not.equal(-1);
         });
 
         it("real view", function() {
-            this.view.addRegion('region', new Minionette.View());
-            this.view.render();
-            var expectedIndex = this.view.region.view.$el.index();
+            view.addRegion('region', new Minionette.View());
+            view.render();
+            var expectedIndex = view.region.view.$el.index();
 
-            this.view.region.attach(this.newView);
+            view.region.attach(newView);
 
-            expect(this.newView.$el.index()).to.equal(expectedIndex);
+            expect(newView.$el.index()).to.equal(expectedIndex);
             expect(expectedIndex).to.not.equal(-1);
         });
 
         it("selector", function() {
-            this.view.addRegion('test', ':first-child');
-            this.view.render();
-            var expectedIndex = this.view.test.view.$el.index();
+            view.addRegion('test', ':first-child');
+            view.render();
+            var expectedIndex = view.test.view.$el.index();
 
-            this.view.test.attach(this.newView);
+            view.test.attach(newView);
 
-            expect(this.newView.$el.index()).to.equal(expectedIndex);
+            expect(newView.$el.index()).to.equal(expectedIndex);
             expect(expectedIndex).to.not.equal(-1);
         });
 
         it("jQuery object", function() {
-            this.view.addRegion('test', this.view.$(':first-child'));
-            this.view.render();
-            var expectedIndex = this.view.test.view.$el.index();
+            view.addRegion('test', view.$(':first-child'));
+            view.render();
+            var expectedIndex = view.test.view.$el.index();
 
-            this.view.test.attach(this.newView);
+            view.test.attach(newView);
 
-            expect(this.newView.$el.index()).to.equal(expectedIndex);
+            expect(newView.$el.index()).to.equal(expectedIndex);
             expect(expectedIndex).to.not.equal(-1);
         });
     });
 
     describe("#_ensureView()", function() {
         it("sets #view to a passed in view", function() {
-            expect(this.region.view).to.equal(this.view);
+            expect(region.view).to.equal(view);
         });
 
         it("sets #view to a #_view if one is not passed in", function() {
-            var region = new Minionette.Region();
+            region = new Minionette.Region();
 
             expect(region.view).to.equal(region._view);
         });
 
         it("sets #view to #_view if passed in view is falsey", function() {
-            var region = this.view.addRegion('region', null);
+            region = view.addRegion('region', null);
 
             expect(region.view).to.equal(region._view);
         });
 
         it("sets #_view to the matched element if passed in view is a selector", function() {
             var selector = ':first-child';
-            this.view.render();
-            this.view.addRegion('region', selector);
+            view.render();
+            view.addRegion('region', selector);
 
-            expect(this.view.region._view.el).to.equal(this.view.$(selector)[0]);
+            expect(view.region._view.el).to.equal(view.$(selector)[0]);
         });
 
         it("sets #_view to the matched element if passed in view is a jQuery object", function() {
-            var $selector = this.view.$(':first-child');
-            this.view.render();
-            this.view.addRegion('region', $selector);
+            var $selector = view.$(':first-child');
+            view.render();
+            view.addRegion('region', $selector);
 
-            expect(this.view.region._view.el).to.equal($selector[0]);
+            expect(view.region._view.el).to.equal($selector[0]);
         });
     });
 
     describe("#render()", function() {
         it("calls #view#render()", function() {
-            var stub = this.sinon.stub(this.view, 'render');
+            var stub = sinon.stub(view, 'render');
 
-            this.region.render();
+            region.render();
 
             expect(stub).to.have.been.called;
         });
 
         it("returns #view#render()", function() {
             var expected = _.uniqueId();
-            this.view.render = function() {
+            view.render = function() {
                 return expected;
             };
 
-            var ret = this.region.render();
+            var ret = region.render();
 
             expect(ret).to.equal(expected);
         });
     });
 
     describe("#attach()", function() {
+        var newView;
         beforeEach(function() {
-            this.newView = new Minionette.View();
-        });
-        afterEach(function() {
-            delete this.newView;
+            newView = new Minionette.View();
         });
 
         it("removes old #_detachedView if it exists", function() {
-            var spy = this.sinon.spy(this.view, 'remove');
-            this.region.detach();
+            var spy = sinon.spy(view, 'remove');
+            region.detach();
 
-            this.region.attach(this.newView);
+            region.attach(newView);
 
             expect(spy).to.have.been.called;
         });
 
         it("replaces current view#el with newView#el (the same index in parent)", function() {
-            window.test = this.view.$el;
-            this.parentView.render();
-            this.view.render();
-            var expectedIndex = this.view.$el.index();
+            parentView.render();
+            view.render();
+            var expectedIndex = view.$el.index();
 
-            this.region.attach(this.newView);
+            region.attach(newView);
 
-            expect(this.newView.$el.index()).to.equal(expectedIndex);
+            expect(newView.$el.index()).to.equal(expectedIndex);
             expect(expectedIndex).to.not.equal(-1);
         });
 
         it("calls #remove on old #view", function() {
-            var spy = this.sinon.spy(this.view, 'remove');
+            var spy = sinon.spy(view, 'remove');
 
-            this.region.attach(this.newView);
+            region.attach(newView);
 
             expect(spy).to.have.been.called;
         });
 
         it("sets #view to newView", function() {
-            this.region.attach(this.newView);
+            region.attach(newView);
 
-            expect(this.region.view).to.equal(this.newView);
+            expect(region.view).to.equal(newView);
         });
 
         it("returns newView", function() {
-            var ret = this.region.attach(this.newView);
+            var ret = region.attach(newView);
 
-            expect(ret).to.equal(this.newView);
+            expect(ret).to.equal(newView);
         });
 
         it("will correctly render even when not rendered and initialized with selector", function() {
             var selector = ':first-child';
-            this.view.addRegion('region', selector);
-            this.view.region.attach(this.newView);
+            view.addRegion('region', selector);
+            view.region.attach(newView);
 
-            this.view.render();
+            view.render();
 
-            var expectedIndex = this.view.$(selector).index();
-            expect(this.newView.$el.index()).to.equal(expectedIndex);
+            var expectedIndex = view.$(selector).index();
+            expect(newView.$el.index()).to.equal(expectedIndex);
             expect(expectedIndex).to.not.equal(-1);
         });
 
         it("will correctly render even when not rendered and initialized with jQuery object", function() {
             var selector = ':first-child',
-                $selector = this.view.$(selector);
-            this.view.addRegion('region', $selector);
-            this.view.region.attach(this.newView);
+                $selector = view.$(selector);
+            view.addRegion('region', $selector);
+            view.region.attach(newView);
 
 
-            this.view.render();
+            view.render();
 
-            var expectedIndex = this.view.$(selector).index();
-            expect(this.newView.$el.index()).to.equal(expectedIndex);
+            var expectedIndex = view.$(selector).index();
+            expect(newView.$el.index()).to.equal(expectedIndex);
             expect(expectedIndex).to.not.equal(-1);
         });
 
         it("triggers 'attach' event", function() {
-            var spy = this.sinon.spy();
-            this.region.on('attach', spy);
+            var spy = sinon.spy();
+            region.on('attach', spy);
 
-            this.region.attach(this.newView);
+            region.attach(newView);
 
-            expect(spy).to.have.been.calledWith(this.newView, this.region);
+            expect(spy).to.have.been.calledWith(newView, region);
         });
 
         it("triggers 'attached' event", function() {
-            var spy = this.sinon.spy();
-            this.region.on('attached', spy);
+            var spy = sinon.spy();
+            region.on('attached', spy);
 
-            this.region.attach(this.newView);
+            region.attach(newView);
 
-            expect(spy).to.have.been.calledWith(this.newView, this.region);
+            expect(spy).to.have.been.calledWith(newView, region);
         });
     });
 
     describe("#detach()", function() {
         it("sets #_detachedView to the old #view", function() {
-            var oldView = this.region.view;
+            var oldView = region.view;
 
-            this.region.detach();
+            region.detach();
 
-            expect(this.region._detachedView).to.equal(oldView);
+            expect(region._detachedView).to.equal(oldView);
         });
 
         it("doesn't leak a previous #_detachedView", function() {
-            var oldView = this.region.view;
+            var oldView = region.view;
 
-            this.region.detach();
-            this.region.detach();
+            region.detach();
+            region.detach();
 
-            expect(this.region._detachedView).to.equal(oldView);
+            expect(region._detachedView).to.equal(oldView);
         });
 
         it("sets #view to #_view", function() {
-            this.region.detach();
+            region.detach();
 
-            expect(this.region.view).to.equal(this.region._view);
+            expect(region.view).to.equal(region._view);
         });
 
         it("doesn't detach #_view", function() {
-            this.region.detach();
-            this.region.detach();
+            region.detach();
+            region.detach();
 
-            expect(this.region._detachedView).to.not.equal(this.region._view);
+            expect(region._detachedView).to.not.equal(region._view);
         });
 
         it("replaces current view#el with _view#el (the same index in parent)", function() {
-            this.view.render();
-            this.parentView.render();
-            var expectedIndex = this.view.$el.index();
+            view.render();
+            parentView.render();
+            var expectedIndex = view.$el.index();
 
-            this.region.detach();
+            region.detach();
 
-            expect(this.region._view.$el.index()).to.equal(expectedIndex);
+            expect(region._view.$el.index()).to.equal(expectedIndex);
             expect(expectedIndex).to.not.equal(-1);
         });
 
         it("doesn't remove events on view", function() {
-            var spy = this.sinon.spy();
-            this.view.on('click', spy);
+            var spy = sinon.spy();
+            view.on('click', spy);
 
-            this.region.detach();
-            this.view.trigger('click');
+            region.detach();
+            view.trigger('click');
 
             expect(spy).to.have.been.called;
         });
 
         it("returns this for chaining", function() {
-            var ret = this.region.detach();
+            var ret = region.detach();
 
-            expect(ret).to.equal(this.region);
+            expect(ret).to.equal(region);
         });
         it("triggers 'detach' event", function() {
-            var spy = this.sinon.spy();
-            this.region.on('detach', spy);
+            var spy = sinon.spy();
+            region.on('detach', spy);
 
-            this.region.detach();
+            region.detach();
 
-            expect(spy).to.have.been.calledWith(this.view, this.region);
+            expect(spy).to.have.been.calledWith(view, region);
         });
 
         it("triggers 'detached' event", function() {
-            var spy = this.sinon.spy();
-            this.region.on('detached', spy);
+            var spy = sinon.spy();
+            region.on('detached', spy);
 
-            this.region.detach();
+            region.detach();
 
-            expect(spy).to.have.been.calledWith(this.view, this.region);
+            expect(spy).to.have.been.calledWith(view, region);
         });
     });
 
     describe("#reattach()", function() {
         beforeEach(function() {
-            this.parentView.render();
-            this.region.detach();
+            parentView.render();
+            region.detach();
         });
 
         it("scopes #reattach() to _parent", function() {
-            this.parentView.$el.detach(); // Make sure parentView isn't in the document.body
-            var expectedIndex = this.region.view.$el.index();
+            parentView.$el.detach(); // Make sure parentView isn't in the document.body
+            var expectedIndex = region.view.$el.index();
 
-            this.region.reattach();
+            region.reattach();
 
-            expect(this.view.$el.index()).to.equal(expectedIndex);
+            expect(view.$el.index()).to.equal(expectedIndex);
             expect(expectedIndex).to.not.equal(-1);
         });
 
         it("replaces view#el with _detachedView#el", function() {
-            var expectedIndex = this.region.view.$el.index();
+            var expectedIndex = region.view.$el.index();
 
-            this.region.reattach();
+            region.reattach();
 
-            expect(this.view.$el.index()).to.equal(expectedIndex);
+            expect(view.$el.index()).to.equal(expectedIndex);
             expect(expectedIndex).to.not.equal(-1);
         });
 
         it("deletes #_detachedView so it can't be re#attach()ed", function() {
-            this.region.reattach();
+            region.reattach();
 
-            expect(this.region._detachedView).to.not.exist;
+            expect(region._detachedView).to.not.exist;
         });
 
         it("will not cause #_view to become detached", function() {
-            this.region.reattach();
-            expect(this.region.view).to.equal(this.view);
-            this.region.reattach();
-            expect(this.region.view).to.equal(this.view);
-            this.region.reattach();
-            expect(this.region.view).to.equal(this.view);
-            this.region.reattach();
-            expect(this.region.view).to.equal(this.view);
+            region.reattach();
+            expect(region.view).to.equal(view);
+            region.reattach();
+            expect(region.view).to.equal(view);
+            region.reattach();
+            expect(region.view).to.equal(view);
+            region.reattach();
+            expect(region.view).to.equal(view);
 
-            expect(this.region.view.$el.parent()).to.exist;
+            expect(region.view.$el.parent()).to.exist;
         });
 
         it("will reattach even when initialized with selector and never bound #_view to element", function() {
             var selector = ':first-child';
-            this.view.addRegion('region', selector);
-            this.view.$el.html(this.view.template(this.view._serialize()));
+            view.addRegion('region', selector);
+            view.$el.html(view.template(view._serialize()));
 
-            var expectedIndex = this.view.$(selector).index();
+            var expectedIndex = view.$(selector).index();
 
-            this.view.region.reattach();
+            view.region.reattach();
 
-            expect(this.view.region.view.$el.index()).to.equal(expectedIndex);
+            expect(view.region.view.$el.index()).to.equal(expectedIndex);
             expect(expectedIndex).to.not.equal(-1);
         });
 
         it("triggers 'reattach' event", function() {
-            var spy = this.sinon.spy();
-            this.region.on('reattach', spy);
+            var spy = sinon.spy();
+            region.on('reattach', spy);
 
-            this.region.reattach();
+            region.reattach();
 
-            expect(spy).to.have.been.calledWith(this.view, this.region);
+            expect(spy).to.have.been.calledWith(view, region);
         });
 
         it("triggers 'reattached' event", function() {
-            var spy = this.sinon.spy();
-            this.region.on('reattached', spy);
+            var spy = sinon.spy();
+            region.on('reattached', spy);
 
-            this.region.reattach();
+            region.reattach();
 
-            expect(spy).to.have.been.calledWith(this.view, this.region);
+            expect(spy).to.have.been.calledWith(view, region);
         });
     });
 
     describe("#remove()", function() {
         it("triggers 'remove' event", function() {
-            var spy = this.sinon.spy();
-            this.region.on('remove', spy);
+            var spy = sinon.spy();
+            region.on('remove', spy);
 
-            this.region.remove();
+            region.remove();
 
-            expect(spy).to.have.been.calledWith(this.region);
+            expect(spy).to.have.been.calledWith(region);
         });
 
         it("triggers 'removed' event", function() {
-            var spy = this.sinon.spy();
-            this.region.on('removed', spy);
+            var spy = sinon.spy();
+            region.on('removed', spy);
 
-            this.region.remove();
+            region.remove();
 
-            expect(spy).to.have.been.calledWith(this.region);
+            expect(spy).to.have.been.calledWith(region);
         });
 
         it("calls #view#remove()", function() {
-            var spy = this.sinon.spy(this.view, 'remove');
+            var spy = sinon.spy(view, 'remove');
 
-            this.region.remove();
+            region.remove();
 
             expect(spy).to.have.been.called;
         });
 
         it("calls #_view#remove()", function() {
-            this.region.attach(new Minionette.View());
-            var spy = this.sinon.spy(this.region._view, 'remove');
+            region.attach(new Minionette.View());
+            var spy = sinon.spy(region._view, 'remove');
 
-            this.region.remove();
+            region.remove();
 
             expect(spy).to.have.been.called;
         });
 
         it("calls #_detachedView#remove(), if it exists", function() {
-            var spy = this.sinon.spy(this.region.view, 'remove');
-            this.region.detach();
+            var spy = sinon.spy(region.view, 'remove');
+            region.detach();
 
-            this.region.remove();
+            region.remove();
 
             expect(spy).to.have.been.called;
         });
 
         it("calls #stopListening", function() {
-            var spy = this.sinon.spy(this.region, 'stopListening');
+            var spy = sinon.spy(region, 'stopListening');
 
-            this.region.remove();
+            region.remove();
 
             expect(spy).to.have.been.called;
         });
 
         it("removes itself from it's parent", function() {
-            this.region.remove();
+            region.remove();
 
-            expect(this.parentView.region).to.not.exist;
+            expect(parentView.region).to.not.exist;
         });
     });
 
     describe("#reset()", function() {
         it("replaces view#el with _view#el", function() {
-            this.parentView.render();
-            var expectedIndex = this.view.$el.index();
+            parentView.render();
+            var expectedIndex = view.$el.index();
 
-            this.region.reset();
+            region.reset();
 
-            expect(this.region._view.$el.index()).to.equal(expectedIndex);
+            expect(region._view.$el.index()).to.equal(expectedIndex);
             expect(expectedIndex).to.not.equal(-1);
         });
 
         it("calls #remove on old #view", function() {
-            var spy = this.sinon.spy(this.view, 'remove');
+            var spy = sinon.spy(view, 'remove');
 
-            this.region.reset();
+            region.reset();
 
             expect(spy).to.have.been.called;
         });
@@ -462,27 +453,27 @@ describe('Minionette.Region', function() {
 
     describe("#_removeView()", function() {
         it("sets #view to #_view", function() {
-            this.region._removeView(this.view);
+            region._removeView(view);
 
-            expect(this.region.view).to.equal(this.region._view);
+            expect(region.view).to.equal(region._view);
         });
 
         it("replaces view#el with _view#el", function() {
-            this.parentView.render();
-            var expectedIndex = this.view.$el.index();
+            parentView.render();
+            var expectedIndex = view.$el.index();
 
-            this.region.reset();
+            region.reset();
 
-            expect(this.region._view.$el.index()).to.equal(expectedIndex);
+            expect(region._view.$el.index()).to.equal(expectedIndex);
             expect(expectedIndex).to.not.equal(-1);
         });
 
         it("only resets if #view equals passed in view", function() {
             var v = new Minionette.View();
 
-            this.region._removeView(v);
+            region._removeView(v);
 
-            expect(this.region.view).to.equal(this.view);
+            expect(region.view).to.equal(view);
         });
     });
 });

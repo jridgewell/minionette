@@ -18,7 +18,7 @@ describe("#attempt()", function() {
     });
 
     it("sets the context of the functio to the object", function() {
-        var spy = this.sinon.spy(),
+        var spy = sinon.spy(),
         obj = {method: spy};
         attempt(obj, 'method');
 
@@ -34,7 +34,7 @@ describe("#attempt()", function() {
     });
 
     it("passes the everything but the first two params as arguments to the method", function() {
-        var spy = this.sinon.spy(),
+        var spy = sinon.spy(),
         obj = {method: spy};
         attempt(obj, 'method', 1, 2, 3);
 

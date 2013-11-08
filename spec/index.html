@@ -43,14 +43,18 @@
             console = window.console || function() {};
             mocha.setup('bdd');
 
+            var sandbox;
+            var _sinon = sinon;
             window.expect = chai.expect;
 
             // Make sinon clean itself
             beforeEach(function() {
-                this.sinon = sinon.sandbox.create();
+                sandbox = sinon.sandbox.create();
+                window.sinon = sandbox;
             });
             afterEach(function(){
-                this.sinon.restore();
+                sinon.restore();
+                window.sinon = _sinon;
             });
         </script>
 
