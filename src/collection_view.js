@@ -61,8 +61,8 @@ Minionette.CollectionView = Minionette.View.extend({
         this.appendHtml(frag);
     },
 
-    appendHtml: function(element) {
-        this.$el.append(element);
+    appendHtml: function($element) {
+        this.$el.append($element);
     },
 
     // Add an individual model's view to this.$el.
