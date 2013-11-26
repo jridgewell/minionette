@@ -114,7 +114,6 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         this.stopListening();
 
         this.trigger('removed', this);
-        this.unbind();
     },
 
     _removeViews: function() {

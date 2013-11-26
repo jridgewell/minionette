@@ -45,7 +45,6 @@ Minionette.View = Backbone.View.extend({
         Minionette.View.__super__.remove.apply(this, arguments);
 
         this.trigger('removed', this);
-        this.unbind();
     },
 
     // A useful default render method.
