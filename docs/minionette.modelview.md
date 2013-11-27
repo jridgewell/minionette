@@ -1,8 +1,9 @@
 Minionette.ModelView
 ====================
 
-`Minionette.ModelView` is nothing more than `Minionette.View` with two
-defaults programmed in, `#modelEvents` and `#serialize()`.
+`Minionette.ModelView` is nothing more than
+[Minionette.View](/docs/minionette.view.md) with two defaults programmed
+in, `#modelEvents` and `#serialize()`.
 
 ## #modelEvents
 

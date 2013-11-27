@@ -13,6 +13,16 @@ In addition to the default options that Backbone pulls from the
 initialization options, Minionette will also pull a `#template`
 function, a `Region` class, and a `regions` object.
 
+```javascript
+var v = new Minionette.View({
+    Region: Minionette.Region.extend(/* ... */),
+    regions: {
+        'one': '#one'
+    },
+    template: _.template('<p id="one"></p>')
+});
+```
+
 ### #modelEvents
 
 `#modelEvents` is an object, in the same form as Backbone's `#events`,
@@ -21,6 +31,17 @@ function to call when that event is triggered. The function can either
 be directly assigned, or specified with a string of the function name on
 the view. This property must be specified before an object is
 instantiated, because the event listening happens in the constructor.
+
+```javascript
+var V = Minionette.View.extend({
+    modelEvents: {
+        'change': function() {/* ... */}
+    }
+});
+var m = new Backbone.Model();
+var v = new V({model: m});
+m.set('test', 'er'); //=> change listener will fire.
+```
 
 ### #collectionEvents
 
@@ -32,6 +53,17 @@ the function name on the view. This property must be specified before an
 object is instantiated, because the event listening happens in the
 constructor.
 
+```javascript
+var V = Minionette.View.extend({
+    collectionEvents: {
+        'add': function() {/* ... */}
+    }
+});
+var c = new Backbone.Collection();
+var v = new V({collection: c});
+c.add({}); //=> add listener will fire.
+```
+
 
 ## #serialize()
 
@@ -39,6 +71,19 @@ The `#serialize()` method is meant to provide any data needed by the
 `#template` method and should be overridden in a subclass. There is no
 need to clone the output before returning, as it's data will be copied
 over into a new object before being fed into `#template()`.
+
+```javascript
+var V = Minionette.View.extend({
+    template: _.template('<%= data %>'),
+    serialize: function() {
+        return {data: 'test'};
+    }
+});
+
+var v = new V();
+v.render();
+console.log(v.el); //=> <div>test</div>
+```
 
 
 ## #template(data)

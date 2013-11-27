@@ -1,13 +1,14 @@
 Minionette.CollectionView
 =========================
 
-`Minionette.CollectionView` is an optimized `Minionette.View` for your
-Backbone collections. It quickly handles rendering using a
-DocumentFragment, ensuring at most three content reflows. The most
-important feature of `CollectionView` is the `#ModelView` property, from
-which all models will have a view instantiated from. Additionally, will
-forward a modelView's events, prefixed by `#modelViewEventPrefix`, for
-easy event listening directly on the collectionView.
+`Minionette.CollectionView` is an optimized
+[Minionette.View](/docs/minionette.view.md) for your Backbone
+collections. It quickly handles rendering using a DocumentFragment,
+ensuring at most three content reflows. The most important feature of
+`CollectionView` is the `#ModelView` property, from which all models
+will have a view instantiated from. Additionally, it will forward a
+modelView's events, prefixed by `#modelViewEventPrefix`, for easy event
+listening directly on the collectionView.
 
 
 ## #ModelView
@@ -49,7 +50,7 @@ collectionEvents = {
 rendering the appropriate function to keep things speedy.
 
 
-## #modelViewEventPrefix
+## #modelViewEventPrefix = 'modelView'
 
 `CollectionView` listens to all events triggered by instantiated
 modelView's and will forward them. By default, `#modelViewEventPrefix`
@@ -62,19 +63,34 @@ be forwarded without a prefix, so that "test" will be forwarded as
 Additionally, the collectionView will append itself as the final
 argument passed to the event listeners.
 
+```javascript
+var CV = Minionette.CollectionView.extend({
+    modelViewEventPrefix: 'prefix'
+});
+
+var cv = new CV({collection: new Backbone.Collection()});
+cv.on('prefix:render', function(modelView, collectionView) {
+    // do stuff...
+});
+cv.collection.add({});  // above event listener will be fired,
+                        // adding a model creates a modelView and renders it.
+```
+
 
 ## #render()
 
-The `#render()` method augments `Minionette.View`'s `#render()` with the
-collection specific rendering. It will remove all previously associated
-modelViews, and render the new ones inside a DocumentFragment, which
-will be appended to the collectionView's $el.
+The `#render()` method augments `Minionette.View`'s
+[#render()](/docs/minionette.view.md#render) with the collection
+specific rendering. It will remove all previously associated modelViews,
+and render the new ones inside a DocumentFragment, which will be
+appended to the collectionView's $el.
 
 
 ## #addOne(model)
 
-`#addOne()` creates a new modelView by calling `#buildModelView()`. It
-then renders that modelView, and passes it's `$el` to `#appendHtml()`.
+`#addOne()` creates a new modelView by calling
+[#buildModelView()](#buildmodelviewmodel). It then renders that
+modelView, and passes it's `$el` to [#appendHtml()](#appendhtmlelement).
 
 ### #buildModelView(model)
 
@@ -82,11 +98,29 @@ then renders that modelView, and passes it's `$el` to `#appendHtml()`.
 it. It's helpful to override this method if you need to pass custom data
 during the construction of the instance.
 
-### #appendHtml(element)
+```javascript
+var CV = Minionette.CollectionView.extend({
+    buildModelView: function(model) {
+        return new this.ModelView({model: model, custom: 'options'});
+    }
+});
+```
+
+### #appendHtml($element)
 
 `#appendHtml()`, by default, takes the passed in element and appends it
 to the collectionView's $el. Override this method to append elements to
 to specific spots in the collectionView's $el.
+
+```javascript
+var CV = Minionette.CollectionView.extend({
+    tagName: 'div',
+    template: _.template('<ul><li>last</li></ul>'),
+    appendHtml: function($element) {
+       this.$('ul :last-child').before($element); 
+    }
+});
+```
 
 ### "addOne" Event
 
@@ -118,5 +152,5 @@ and is passed that modelView and the collectionView as it's arguments.
 
 ## #remove()
 
-`CollectionView` augments `Minionette.View`'s `#remove()` method to make
+`CollectionView` augments `Minionette.View`'s [#remove()](/docs/minionette.view.md#remove) method to make
 sure all associated modelViews are `#remove()`ed.
