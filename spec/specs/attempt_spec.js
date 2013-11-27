@@ -1,23 +1,23 @@
 describe("#attempt()", function() {
     it("returns undefined if object is undefined", function() {
-        var ret = attempt(undefined, 'method');
+        var ret = attempt(undefined, 'prop');
 
         expect(ret).to.equal(undefined);
     });
 
     it("returns undefined if object is null", function() {
-        var ret = attempt(null, 'method');
+        var ret = attempt(null, 'prop');
 
         expect(ret).to.equal(undefined);
     });
 
-    it("returns undefined if 'method' is not a method", function() {
-        var ret = attempt({method: true}, 'method');
+    it("returns property if 'prop' is not a method", function() {
+        var ret = attempt({prop: true}, 'prop');
 
-        expect(ret).to.equal(undefined);
+        expect(ret).to.equal(true);
     });
 
-    it("sets the context of the functio to the object", function() {
+    it("sets the context of the method to the object", function() {
         var spy = sinon.spy(),
         obj = {method: spy};
         attempt(obj, 'method');
