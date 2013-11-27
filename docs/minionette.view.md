@@ -107,7 +107,7 @@ easy way to re-render any regions that need it.
 
 ```javascript
 var View = Minionette.View.extend({
-    template: _.template('This following is rendered by a subview: <%= view("text") %>')
+    template: _.template('The following is rendered by a subview: <%= view("text") %>')
 });
 var SubView = Minionette.View.extend({
     tagName: 'span',
@@ -121,6 +121,7 @@ view.addRegion('text', subView);
 
 view.render();
 subView.render();
+console.log(view.el); //=> <div>The following is rendered by a subview:<span>Hello from a subview!</span></div>
 ```
 
 
@@ -192,10 +193,14 @@ var View = Minionette.View.extend({
 });
 
 var v = new View();
-// This does exactly what you'd want it to do.
-v.subView.attach(new Minionette.View().render());
 v.render();
+console.log(v.el); //=> <div><div id="subView">This is a place holder view</div><span data-cid="123"></span></div>
+
 v.subView2.attach(new Minionette.View()).render();
+console.log(v.el); //=> <div><div id="subView">This is a place holder view</div><div></div></div>
+
+v.subView.attach(new Minionette.View().render());
+console.log(v.el); //=> <div><div></div><div></div></div>
 ```
 
 
@@ -205,3 +210,13 @@ The `#addRegions()` method adds several regions at a time. The `regions`
 parameter must be an object, with keys specifying the region name and
 values having the view (or selector string). Refer to
 [#addRegion()](#addregionname-subview) for more information.
+
+```javascript
+var v = new Minionette.View);
+
+v.addRegions({
+    subView: '#subView',
+    subView2: new Minionette.View(),
+    subView3: null
+});
+```
