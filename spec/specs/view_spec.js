@@ -283,6 +283,16 @@ describe('Minionette.View', function() {
                 expect(stub).to.have.been.calledWith(template);
             });
 
+            it("suppots #template being a string", function() {
+                var stub = sinon.stub(view.$el, 'html');
+                view.template = 'test';
+
+                view.render();
+
+                expect(stub).to.have.been.calledWith(view.template);
+            });
+
+
             it("reattaches regions", function() {
                 var subView = new Minionette.View({tagName: 'p'});
                 view.template = _.template("<%= view('region') %>");

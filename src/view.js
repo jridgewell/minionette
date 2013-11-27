@@ -54,7 +54,7 @@ Minionette.View = Backbone.View.extend({
         // Detach all our regions, so they don't need to be re-rendered.
         _.invoke(this._regions, 'detach');
 
-        this.$el.html(this.template(this._serialize()));
+        this.$el.html(attempt(this, 'template', this._serialize()));
 
         // Reattach all our regions
         _.invoke(this._regions, 'reattach');
