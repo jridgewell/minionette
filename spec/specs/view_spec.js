@@ -161,10 +161,11 @@ describe('Minionette.View', function() {
                 view.addRegion('region', innerView);
             });
 
-            it("return a blank string if passed in region name isn't set", function() {
+            it("creates the region if region isn't set yet", function() {
+                expect(view.notset).to.not.exist;
                 var ret = view._viewHelper('notset');
 
-                expect(ret).to.equal('');
+                expect(ret).to.equal(view.notset.view.el.outerHTML);
             });
 
             it("renders the region", function() {
