@@ -2,7 +2,6 @@ Minionette.CollectionView = Minionette.View.extend({
     constructor: function(options) {
         // Initialize a storage object for our modelViews
         this._modelViews = {};
-        this._modelViewModels = {};
 
         // Ensure this has a ModelView to initialize
         // new modelViews from.
@@ -73,8 +72,7 @@ Minionette.CollectionView = Minionette.View.extend({
         this._forwardEvents(view);
 
         // Add the modelView, and keep track of it.
-        this._modelViews[view.cid] = view;
-        this._modelViewModels[model.cid] = view;
+        this._modelViews[model.cid] = view;
         view._parent = this;
 
         this.trigger('addOne', view, this);
@@ -94,7 +92,7 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // Remove an individual model's view from this.$el.
     removeOne: function(model) {
-        var view = this._modelViewModels[model.cid];
+        var view = this._modelViews[model.cid];
 
         if (view) {
             this.trigger('removeOne', view, this);
@@ -109,8 +107,7 @@ Minionette.CollectionView = Minionette.View.extend({
     // A hook method that is called during
     // a view#remove().
     _removeView: function(view) {
-        delete this._modelViews[view.cid];
-        delete this._modelViewModels[view.model.cid];
+        delete this._modelViews[view.model.cid];
     },
 
     // A callback method bound to the 'remove:before'
