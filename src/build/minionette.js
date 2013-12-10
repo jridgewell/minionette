@@ -6,8 +6,8 @@ var Minionette = (function(_, Backbone) {
 
 // @include ../attempt.js
 
-// @include ../view.js
 // @include ../region.js
+// @include ../view.js
 // @include ../model_view.js
 // @include ../collection_view.js
 

@@ -19,6 +19,8 @@ Minionette.View = Backbone.View.extend({
         _.bindAll(this, '_viewHelper');
     },
 
+    Region: Minionette.Region,
+
     // A default template that will clear this.$el.
     // Override this in a subclass to something useful.
     template: function() { return ''; },
@@ -41,7 +43,6 @@ Minionette.View = Backbone.View.extend({
 
         this._removeFromParent();
         _.invoke(this._regions, 'remove');
-
         Minionette.View.__super__.remove.apply(this, arguments);
 
         this.trigger('removed', this);
@@ -126,9 +127,6 @@ Minionette.View = Backbone.View.extend({
     _initializeRegions: function() {
         // Initialize our regions object
         this._regions = {};
-        // If Region is not passed in options or set in the
-        // prototype chain, set it to Minionette.Region
-        this.Region = this.Region || Minionette.Region;
 
         // Add the regions
         this.addRegions(_.result(this, 'regions'));

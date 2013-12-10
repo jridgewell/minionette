@@ -31,6 +31,8 @@ Minionette.CollectionView = Minionette.View.extend({
     // used ("event" -> "event").
     modelViewEventPrefix: 'modelView',
 
+    ModelView: Minionette.ModelView,
+
     // A default useful render function.
     render: function() {
         // Remove all our modelViews after the 'render' event is
