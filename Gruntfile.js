@@ -55,7 +55,7 @@ module.exports = function(grunt) {
         },
 
         mocha: {
-            browser: ['spec/index.html'],
+            browser: ['test/index.html'],
             options: {
                 // run: true
             }
