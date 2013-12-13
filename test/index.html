@@ -40,21 +40,20 @@
         <script src="../node_modules/grunt-mocha/phantomjs/bridge.js" type="text/javascript" charset="utf-8"></script>
 
         <script type="text/javascript" charset="utf-8">
-            console = window.console || function() {};
-            mocha.setup('bdd');
+            mocha.setup({ui: 'bdd', slow: 10});
 
             var sandbox;
             var _sinon = sinon;
-            window.expect = chai.expect;
+            var expect = chai.expect;
 
             // Make sinon clean itself
             beforeEach(function() {
                 sandbox = sinon.sandbox.create();
-                window.sinon = sandbox;
+                sinon = sandbox;
             });
             afterEach(function(){
-                sinon.restore();
-                window.sinon = _sinon;
+                sinon = _sinon;
+                sandbox.restore();
             });
         </script>
 
