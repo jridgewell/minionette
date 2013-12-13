@@ -45,13 +45,13 @@ Minionette.CollectionView = Minionette.View.extend({
 
     _renderModelViews: function() {
         // Use a DocumentFragment to speed up #render()
-        var frag = $(document.createDocumentFragment());
+        var frag = document.createDocumentFragment();
 
         // Override `appendHtml()` for the time being.
         // This is so we can append directly to the DocumentFragment,
         // and then append it all at once later.
         var appendHtml = this.appendHtml;
-        this.appendHtml = function(element) { frag.append(element); };
+        this.appendHtml = function($element) { frag.appendChild($element[0]); };
 
         // Loop through all our models, and build their view.
         this.collection.each(this.addOne, this);
@@ -59,7 +59,7 @@ Minionette.CollectionView = Minionette.View.extend({
         // Append the DocumentFragment to the rendered template,
         // and set `appendHtml()` back to normal.
         this.appendHtml = appendHtml;
-        this.appendHtml(frag);
+        this.appendHtml(Backbone.$(frag));
     },
 
     appendHtml: function($element) {
