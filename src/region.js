@@ -8,10 +8,6 @@ Minionette.Region = function(options) {
     this._ensureView(options);
 };
 
-function getParentViewContext(view) {
-    return _.result(view._parent, '$el') || Backbone.$();
-}
-
 // Allow Regions to be extended.
 // Backbone's extend is generic, just copy it over.
 Minionette.Region.extend = Backbone.View.extend;
@@ -44,7 +40,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     },
 
     _ensureElement: function(view) {
-        var $context = getParentViewContext(this),
+        var $context = _.result(this._parent, '$el') || Backbone.$(),
             viewSelector = view.$el.selector,
             $el;
 
@@ -160,10 +156,10 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         this.trigger('reattach', newView, this);
 
         // Attach our old view!
-        var ret = this.attach(newView, true);
-        this.trigger('reattached', ret, this);
+        this.attach(newView, true);
+        this.trigger('reattached', newView, this);
 
-        return ret;
+        return newView;
     },
 
     // A hook method that is called during
