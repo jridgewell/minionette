@@ -127,7 +127,7 @@ Minionette.CollectionView = Minionette.View.extend({
     // then a subclass' prototype ModelView, and defaults to Minionette.ModelView
     _ensureModelView: function(options) {
         var mv = options.ModelView || this.ModelView || {};
-        if (!_.isFunction(mv)) {
+        if (typeof mv !== 'function') {
             mv = Minionette.ModelView.extend(mv);
         }
         this.ModelView = mv;
@@ -139,8 +139,8 @@ Minionette.CollectionView = Minionette.View.extend({
     // this collectionView, not on all the modelViews.
     _forwardEvents: function(view) {
         this.listenTo(view, 'all', function() {
-            var args = _.toArray(arguments);
-            var prefix = _.result(this, 'modelViewEventPrefix');
+            var args = slice.call(arguments);
+            var prefix = attempt(this, 'modelViewEventPrefix');
             prefix = (prefix) ? prefix + ':' : '';
 
             args[0] = prefix + args[0];

@@ -9,8 +9,8 @@ Minionette.View = Backbone.View.extend({
         Backbone.View.apply(this, arguments);
 
         // Have the view listenTo the model and collection.
-        this._listenToEvents(this.model, _.result(this, 'modelEvents'));
-        this._listenToEvents(this.collection, _.result(this, 'collectionEvents'));
+        this._listenToEvents(this.model, attempt(this, 'modelEvents'));
+        this._listenToEvents(this.collection, attempt(this, 'collectionEvents'));
 
         // Always bind this._viewHelper to this.
         // This._viewHelper will be passed into
@@ -79,7 +79,7 @@ Minionette.View = Backbone.View.extend({
         } else {
             // If view is a selector, find the DOM element
             // that matches it.
-            options.selector = view.selector || view;
+            options.selector = typeof view === 'object' ? view.selector : view;
             options.el = this.$(view);
         }
 
@@ -115,7 +115,7 @@ Minionette.View = Backbone.View.extend({
     _listenToEvents: function(entity, events) {
         if (!entity) { return; }
         _.each(events, function(method, event) {
-            if (!_.isFunction(method)) { method = this[method]; }
+            if (typeof method !== 'function') { method = this[method]; }
             this.listenTo(entity, event, method);
         }, this);
     },
@@ -129,7 +129,7 @@ Minionette.View = Backbone.View.extend({
         this._regions = {};
 
         // Add the regions
-        this.addRegions(_.result(this, 'regions'));
+        this.addRegions(attempt(this, 'regions'));
     },
 
     // A helper that is passed to #template() that will

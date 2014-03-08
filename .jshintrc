@@ -27,6 +27,7 @@
         "_": true,
         "Minionette": true,
         "attempt": true,
+        "slice": true,
         "define": true,
         "sinon": true,
         "chai": true,
