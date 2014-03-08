@@ -65,8 +65,8 @@ module.exports = function(grunt) {
                     'src/*.js': 'coverage'
                 },
                 coverageReporter: {
-                    type: "lcov",
-                    dir: "coverage/"
+                    type: 'lcov',
+                    dir: 'coverage/'
                 }
             }
         },
