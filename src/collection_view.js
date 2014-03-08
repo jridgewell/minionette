@@ -38,7 +38,12 @@ Minionette.CollectionView = Minionette.View.extend({
         // Remove all our modelViews after the 'render' event is
         // fired. This is set on #render() so that the removing
         // will happen after all other 'render' listeners.
-        this.once('render', this._removeModelViews);
+        this.once('render', function() {
+            // Empty the entire $el, that way each individual
+            // modelView removal won't trigger a DOM reflow.
+            this.$el.empty();
+            this._removeModelViews();
+        }, this);
 
         return Minionette.CollectionView.__super__.render.apply(this);
     },
@@ -115,9 +120,6 @@ Minionette.CollectionView = Minionette.View.extend({
     // A callback method bound to the 'remove:before'
     // event. Removes all our modelViews.
     _removeModelViews: function() {
-        // Empty the entire $el, that way each individual
-        // modelView removal won't trigger a DOM reflow.
-        this.$el.empty();
         _.invoke(this._modelViews, 'remove');
     },
 
