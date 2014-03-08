@@ -90,7 +90,7 @@ appended to the collectionView's $el.
 
 `#addOne()` creates a new modelView by calling
 [#buildModelView()](#buildmodelviewmodel). It then renders that
-modelView, and passes it's `$el` to [#appendHtml()](#appendhtmlelement).
+modelView, and passes it's `$el` to [#appendModelView()](#appendhtmlelement).
 
 ### #buildModelView(model)
 
@@ -106,9 +106,9 @@ var CV = Minionette.CollectionView.extend({
 });
 ```
 
-### #appendHtml($element)
+### #appendModelView($element)
 
-`#appendHtml()`, by default, takes the passed in element and appends it
+`#appendModelView()`, by default, takes the passed in element and appends it
 to the collectionView's $el. Override this method to append elements to
 to specific spots in the collectionView's $el.
 
@@ -116,7 +116,7 @@ to specific spots in the collectionView's $el.
 var CV = Minionette.CollectionView.extend({
     tagName: 'div',
     template: _.template('<ul><li>last</li></ul>'),
-    appendHtml: function($element) {
+    appendModelView: function($element) {
        this.$('ul :last-child').before($element); 
     }
 });

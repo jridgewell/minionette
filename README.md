@@ -24,7 +24,7 @@ var Nav = Minionette.CollectionView.extend({
     ModelView: NavItem,
     tagName: 'ul',
     template: _.template('<li>before</li><li class="last">last</li>'),
-    appendHtml: function(element) {
+    appendModelView: function(element) {
         this.$('.last').before(element);
     }
 });

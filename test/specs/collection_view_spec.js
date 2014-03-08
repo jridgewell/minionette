@@ -131,7 +131,7 @@ describe('Minionette.CollectionView', function() {
             });
         });
 
-        describe("#appendHtml()", function() {
+        describe("#appendModelView()", function() {
             beforeEach(function() {
                 collection.add(new Backbone.Model());
                 view.template = _.template('<p></p>');
@@ -144,7 +144,7 @@ describe('Minionette.CollectionView', function() {
             });
 
             it("can be overridden to put elements anywhere", function() {
-                view.appendHtml = function(element) { this.$('p').append(element); };
+                view.appendModelView = function(element) { this.$('p').append(element); };
                 view.render();
 
                 expect(view.$el).to.have.html('<p><div></div></p>');
