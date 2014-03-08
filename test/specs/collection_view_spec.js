@@ -144,7 +144,7 @@ describe('Minionette.CollectionView', function() {
             });
 
             it("can be overridden to put elements anywhere", function() {
-                view.appendModelView = function(element) { this.$('p').append(element); };
+                view.appendModelView = function(view) { this.$('p').append(view.$el); };
                 view.render();
 
                 expect(view.$el).to.have.html('<p><div></div></p>');
