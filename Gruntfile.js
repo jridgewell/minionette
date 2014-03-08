@@ -57,6 +57,24 @@ module.exports = function(grunt) {
         karma: {
             unit: {
                 configFile: 'karma.conf.js'
+            },
+            coverage: {
+                configFile: 'karma.conf.js',
+                reporters: ['coverage'],
+                preprocessors: {
+                    'src/*.js': 'coverage'
+                },
+                coverageReporter: {
+                    type: "lcov",
+                    dir: "coverage/"
+                }
+            }
+        },
+
+        coveralls: {
+            options: {
+                coverage_dir: 'coverage',
+                force: true
             }
         }
     });
@@ -66,10 +84,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-preprocess');
     grunt.loadNpmTasks('grunt-plato');
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-karma-coveralls');
 
     // Default task.
     grunt.registerTask('lint-test', 'jshint:test');
     grunt.registerTask('test', 'karma:unit');
+    grunt.registerTask('coverage', ['karma:coverage', 'coveralls']);
     grunt.registerTask('travis', ['jshint:minionette', 'test']);
     grunt.registerTask('default', ['jshint:minionette', 'test', 'preprocess', 'uglify']);
 
