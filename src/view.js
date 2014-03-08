@@ -79,8 +79,8 @@ Minionette.View = Backbone.View.extend({
         } else {
             // If view is a selector, find the DOM element
             // that matches it.
+            options.selector = view.selector || view;
             options.el = this.$(view);
-            options.el.selector = view.selector || view;
         }
 
         var region = new this.Region(options);

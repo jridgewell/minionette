@@ -30,8 +30,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         };
 
         this._view = new Backbone.View(viewOpts);
-        this._view.$el.selector = this._view.$el.selector ||
-            '[data-cid=' + this._view.cid + ']';
+        this._view._selector = options.selector || '[data-cid=' + this._view.cid + ']';
 
         this.view = options.view || this._view;
 
@@ -41,14 +40,12 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
     _ensureElement: function(view) {
         var $context = _.result(this._parent, '$el') || Backbone.$(),
-            viewSelector = view.$el.selector,
             $el;
 
         // Don't reset the view's $el if the parent
         // context is the same.
         if (!view.$el.parent().is($context)) {
-            $el = $context.find(viewSelector);
-            $el.selector = viewSelector;
+            $el = $context.find(view._selector);
             view.setElement($el);
         }
     },
