@@ -1,4 +1,4 @@
-Minionette
+Minionette [![Build Status](https://travis-ci.org/jridgewell/minionette.png?branch=master)](https://travis-ci.org/jridgewell/minionette) [![Coverage Status](https://coveralls.io/repos/jridgewell/minionette/badge.png)](https://coveralls.io/r/jridgewell/minionette)
 ==========
 
 A mini Marionette for Backbone.js
