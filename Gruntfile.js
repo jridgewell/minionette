@@ -41,7 +41,7 @@ module.exports = function(grunt) {
                 jshintrc : '.jshintrc'
             },
             minionette : [ 'src/*.js' ],
-            test : [ 'spec/*.js', 'spec/specs/*.js' ],
+            test : [ 'test/*.js', 'test/specs/*.js' ],
         },
 
         plato: {

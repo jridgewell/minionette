@@ -345,8 +345,8 @@ describe('Minionette.View', function() {
             });
 
             it("removes the old region if name is the same", function() {
-                region = view.addRegion('region', innerView),
-                spy = sinon.spy(region, 'remove');
+                var region = view.addRegion('region', innerView),
+                    spy = sinon.spy(region, 'remove');
 
                 view.addRegion('region', innerView);
 
