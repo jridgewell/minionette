@@ -2,3 +2,4 @@ node_modules/
 test/support/
 reports/
 coverage/
+src/build/.tmp/

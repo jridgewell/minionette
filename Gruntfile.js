@@ -76,6 +76,18 @@ module.exports = function(grunt) {
                 coverage_dir: 'coverage',
                 force: true
             }
+        },
+
+        indent: {
+            src: {
+                src: ['src/*.js'],
+                dest: 'src/build/.tmp/',
+                options: {
+                    style: 'space',
+                    size: 4,
+                    change: 1
+                }
+            }
         }
     });
 
@@ -85,12 +97,13 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-plato');
     grunt.loadNpmTasks('grunt-karma');
     grunt.loadNpmTasks('grunt-karma-coveralls');
+    grunt.loadNpmTasks('grunt-indent');
 
     // Default task.
     grunt.registerTask('lint-test', 'jshint:test');
     grunt.registerTask('test', 'karma:unit');
     grunt.registerTask('coverage', ['karma:coverage', 'coveralls']);
     grunt.registerTask('travis', ['jshint:minionette', 'test']);
-    grunt.registerTask('default', ['jshint:minionette', 'test', 'preprocess', 'uglify']);
+    grunt.registerTask('default', ['jshint:minionette', 'test', 'indent', 'preprocess', 'uglify']);
 
 };

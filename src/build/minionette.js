@@ -4,12 +4,11 @@ var Minionette = (function(_, Backbone) {
     // Define and export the Minionette namespace
     var Minionette = Backbone.Minionette = {};
 
-// @include ../attempt.js
-
-// @include ../region.js
-// @include ../view.js
-// @include ../model_view.js
-// @include ../collection_view.js
+// @include .tmp/attempt.js
+// @include .tmp/region.js
+// @include .tmp/view.js
+// @include .tmp/model_view.js
+// @include .tmp/collection_view.js
 
     return Minionette;
 })(_, Backbone);

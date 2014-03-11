@@ -30,6 +30,7 @@
         "grunt-karma-coveralls": "~2.4.0",
         "karma-coverage": "~0.2.0",
         "mocha": "~1.17.1",
-        "karma-mocha": "~0.1.1"
+        "karma-mocha": "~0.1.1",
+        "grunt-indent": "~0.1.4"
     }
 }
