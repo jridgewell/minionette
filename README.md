@@ -23,14 +23,14 @@ var NavItem = Minionette.ModelView.extend({
 var Nav = Minionette.CollectionView.extend({
     ModelView: NavItem,
     tagName: 'ul',
-    template: _.template('<li>before</li><li class="last">last</li>'),
+    template: _.template('<li>First</li><li class="last">last</li>'),
     appendModelView: function(view) {
         this.$('.last').before(view.$el);
     }
 });
 
 var Main = Minionette.View.extend({
-    template: _.template('<p>Some content</p>')
+    template: _.template('<p>Some content from another view</p>')
 });
 
 var navCollection = new Backbone.Collection([
@@ -42,19 +42,18 @@ var App = Minionette.View.extend({
     el: $('body'),
     template: _.template(
         '<nav><%= view("nav") %></nav>' +
-        '<%= view("contents") %>'
+        '<div id="content"></div>'
     ),
     regions: {
-        nav: false,
-        contents: new Main()
+        nav: new Nav({collection: navCollection}),
+        contents: '#content'
     }
 });
 
 var app = (new App()).render();
-app.contents.render();
+app.nav.render();
 
-var nav = new Nav({collection: navCollection});
-app.nav.attach(nav.render());
+app.nav.attach(new Main()).render();
 ```
 
 [Minionette.View](/docs/minionette.view.md)
