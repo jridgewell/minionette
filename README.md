@@ -13,7 +13,7 @@ easily removed.
 Why?
 ----
 
-Because Backbone doesn't get much better than this: [JS Bin](http://jsbin.com/oKEruPE/9/edit?js,output)
+Because Backbone doesn't get much better than this:
 
 ```javascript
 var NavItem = Minionette.ModelView.extend({
@@ -46,14 +46,14 @@ var App = Minionette.View.extend({
     ),
     regions: {
         nav: new Nav({collection: navCollection}),
-        contents: '#content'
+        content: '#content'
     }
 });
 
 var app = (new App()).render();
 app.nav.render();
 
-app.nav.attach(new Main()).render();
+app.content.attach(new Main()).render();
 ```
 
 [Minionette.View](/docs/minionette.view.md)
@@ -105,9 +105,8 @@ Handlebars.registerHelper('view', function(name) {
 });
 ```
 
-This will allow for subview insertion using the special `{{view
-'regionName'}}` syntax. See [JS Bin](http://jsbin.com/oKEruPE/5/edit?js,output)
-for an example.
+This will allow for template subview insertion using the special `{{view
+'regionName'}}` syntax.
 
 ### Mustache.js
 
@@ -126,8 +125,7 @@ var View = Minionette.extend({
 });
 ```
 
-This will allow for subview insertion using the special
+This will allow for template subview insertion using the special
 `{{#view}}regionName{{/view}}` syntax.  For ease of use, have all of
 your new View classes extend from this, and they will all be compatible
-with Mustache. See [JS Bin](http://jsbin.com/oKEruPE/6/edit?js,output) for an
-example.
+with Mustache.
