@@ -5,17 +5,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         meta: {
-            version: '<%= pkg.version %>',
-            banner:
-                '// Backbone.Minionette\n' +
-                '// -------------------\n' +
-                '// v<%= pkg.version %>\n' +
-                '//\n' +
-                '// Copyright (c)<%= grunt.template.today("yyyy") %> Justin Ridgewell\n' +
-                '// Distributed under MIT license\n' +
-                '//\n' +
-                '// https://github.com/jridgewell/minionette\n' +
-                '\n'
+            version: '<%= pkg.version %>'
         },
 
         preprocess: {
@@ -27,9 +17,6 @@ module.exports = function(grunt) {
         },
 
         uglify : {
-            options: {
-                banner: "<%= meta.banner %>"
-            },
             core : {
                 src : 'lib/minionette.js',
                 dest : 'lib/minionette-min.js',
