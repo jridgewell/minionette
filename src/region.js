@@ -55,6 +55,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // oldView will just be detached.
     reset: function(detach) {
         this.attach(this._view, detach);
+        return this;
     },
 
     // A proxy method to the view's render().
@@ -92,7 +93,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
         this.trigger('attached', newView, this);
 
-        return newView;
+        return this;
     },
 
     // Removes this region, and it's view.
@@ -104,6 +105,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         this.stopListening();
 
         this.trigger('removed', this);
+        return this;
     },
 
     _removeViews: function() {

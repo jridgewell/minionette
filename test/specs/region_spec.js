@@ -168,10 +168,10 @@ describe('Minionette.Region', function() {
             expect(region.view).to.equal(newView);
         });
 
-        it("returns newView", function() {
+        it("returns the region", function() {
             var ret = region.attach(newView);
 
-            expect(ret).to.equal(newView);
+            expect(ret).to.equal(region);
         });
 
         it("will correctly render even when not rendered and initialized with selector", function() {
@@ -429,6 +429,12 @@ describe('Minionette.Region', function() {
 
             expect(parentView.region).to.not.exist;
         });
+
+        it("returns the region", function() {
+            var ret = region.remove();
+
+            expect(ret).to.equal(region);
+        });
     });
 
     describe("#reset()", function() {
@@ -448,6 +454,12 @@ describe('Minionette.Region', function() {
             region.reset();
 
             expect(spy).to.have.been.called;
+        });
+
+        it("returns the region", function() {
+            var ret = region.reset();
+
+            expect(ret).to.equal(region);
         });
     });
 

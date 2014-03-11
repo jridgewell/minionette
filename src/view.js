@@ -46,6 +46,7 @@ Minionette.View = Backbone.View.extend({
         Minionette.View.__super__.remove.apply(this, arguments);
 
         this.trigger('removed', this);
+        return this;
     },
 
     // A useful default render method.
@@ -97,6 +98,7 @@ Minionette.View = Backbone.View.extend({
         _.each(regions, function(view, name) {
             this.addRegion(name, view);
         }, this);
+        return this;
     },
 
     // A remove helper to remove this view from it's parent

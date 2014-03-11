@@ -227,6 +227,12 @@ describe('Minionette.View', function() {
                 }, this);
                 expect(view._regions).to.be.empty;
             });
+
+            it("returns the view", function() {
+                var ret = view.remove();
+
+                expect(ret).to.equal(view);
+            });
         });
 
         describe("#render()", function() {
@@ -380,6 +386,12 @@ describe('Minionette.View', function() {
 
                 expect(view.view1.view).to.equal(view1);
                 expect(view.view2.view).to.equal(view2);
+            });
+
+            it("returns the view", function() {
+                var ret = view.addRegions();
+
+                expect(ret).to.equal(view);
             });
         });
     });
