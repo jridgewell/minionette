@@ -85,15 +85,26 @@ describe('Minionette.View', function() {
         describe("Regions", function() {
             var regionView = new Minionette.View();
             var RegionTest = Minionette.View.extend({
+                template: '<div id="test"></div>',
                 regions: {
-                    region: regionView
+                    region: regionView,
+                    selector: '#test'
                 }
             });
 
-            it("attaches regions to the view", function() {
+            it("attaches view to the region", function() {
                 view = new RegionTest();
 
                 expect(view.region.view).to.equal(regionView);
+            });
+
+            it("attaches selector to the region", function() {
+                view = new RegionTest();
+
+                var expectedIndex = view.$(RegionTest.prototype.regions.selector).index();
+                var subView = view.selector.view;
+                expect(subView).to.equal(view.selector._view);
+                expect(subView.$el.index()).to.equal(expectedIndex);
             });
         });
     });
