@@ -3,10 +3,15 @@ Minionette.View = Backbone.View.extend({
         // Pick out a few initializing options
         _.extend(this, _.pick(options || {}, 'regions', 'Region', 'template'));
 
-        // Setup our regions.
-        this._initializeRegions();
+        // Initialize our regions object
+        this._regions = {};
 
         Backbone.View.apply(this, arguments);
+
+        // Add the regions
+        // This is done _after_ calling Backbone.View's constructor,
+        // so that this.$el will be defined when we bind selectors.
+        this.addRegions(attempt(this, 'regions'));
 
         // Have the view listenTo the model and collection.
         this._listenToEvents(this.model, attempt(this, 'modelEvents'));
@@ -80,7 +85,7 @@ Minionette.View = Backbone.View.extend({
         } else {
             // If view is a selector, find the DOM element
             // that matches it.
-            options.selector = typeof view === 'object' ? view.selector : view;
+            options.selector = (typeof view === 'object') ? view.selector : view;
             options.el = this.$(view);
         }
 
@@ -120,18 +125,6 @@ Minionette.View = Backbone.View.extend({
             if (typeof method !== 'function') { method = this[method]; }
             this.listenTo(entity, event, method);
         }, this);
-    },
-
-    // Takes the #regions object and creates the regions,
-    // using the keys as the name and the values as the original
-    // view. Keys are all that is required, passing in a false-y
-    // value will make Region use a placeholder span element.
-    _initializeRegions: function() {
-        // Initialize our regions object
-        this._regions = {};
-
-        // Add the regions
-        this.addRegions(attempt(this, 'regions'));
     },
 
     // A helper that is passed to #template() that will
