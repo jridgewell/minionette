@@ -139,7 +139,7 @@ Minionette.CollectionView = Minionette.View.extend({
     // this collectionView, not on all the modelViews.
     _forwardEvents: function(view) {
         this.listenTo(view, 'all', function() {
-            var args = slice.call(arguments);
+            var args = _.toArray(arguments);
             var prefix = _.result(this, 'modelViewEventPrefix');
             prefix = (prefix) ? prefix + ':' : '';
 

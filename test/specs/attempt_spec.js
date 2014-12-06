@@ -33,10 +33,10 @@ describe("#attempt()", function() {
         expect(ret).to.equal(unique);
     });
 
-    it("passes the everything but the first two params as arguments to the method", function() {
+    it("passes the args param as arguments to the method", function() {
         var spy = sinon.spy(),
         obj = {method: spy};
-        attempt(obj, 'method', 1, 2, 3);
+        attempt(obj, 'method', [1, 2, 3]);
 
         expect(spy).to.have.been.calledWithExactly(1, 2, 3);
     });

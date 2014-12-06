@@ -61,7 +61,9 @@ Minionette.View = Backbone.View.extend({
         // Detach all our regions, so they don't need to be re-rendered.
         _.invoke(this._regions, 'detach');
 
-        this.$el.html(attempt(this, 'template', this._serialize()));
+        var template = this.template;
+        var html = typeof template === 'function' ? this.template(this._serialize()) : template;
+        this.$el.html(html);
 
         // Reattach all our regions
         _.invoke(this._regions, 'reattach');
@@ -109,7 +111,7 @@ Minionette.View = Backbone.View.extend({
     // A remove helper to remove this view from it's parent
     _removeFromParent: function() {
         // Remove this view from _parent, if it exists
-        attempt(this._parent, '_removeView', this);
+        attempt(this._parent, '_removeView', [this]);
     },
 
     _removeRegion: function(region) {

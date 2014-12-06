@@ -1,21 +1,25 @@
 // A helper function, similar to _.result
 // that will return the property on obj, unless obj
-// is undefined or null. Passes the 3rd+ params
+// is undefined or null. Passes the 3rd params
 // as arguments to the property, if it is a method
-var slice = Array.prototype.slice;
-function attempt(obj, property) {
+function attempt(obj, property, args) {
     // Return undefined unless obj
     // is not null or undefined
     if (obj == null) { return void 0; }
     var prop = obj[property];
 
-    if (typeof prop === 'function') {
-        // Grab the 3rd+ params
-        var args = slice.call(arguments, 2);
-
+    if (_.isFunction(prop)) {
         // Call the method, as obj, with the
         // additional params
-        return prop.apply(obj, args);
+        var length = _.result(args, 'length') || 0;
+        switch (length) {
+            case 0: return obj[property]();
+            case 1: return obj[property](args[0]);
+            case 2: return obj[property](args[0], args[1]);
+            case 3: return obj[property](args[0], args[1], args[2]);
+            default: return prop.apply(obj, args);
+        }
+
     }
     return prop;
 }
