@@ -168,7 +168,6 @@ describe('Minionette.View', function() {
             var innerView;
             beforeEach(function() {
                 innerView = new Minionette.View({tagName: 'p'});
-                innerView.template = _.template('test');
                 view.addRegion('region', innerView);
             });
 
@@ -179,17 +178,17 @@ describe('Minionette.View', function() {
                 expect(ret).to.equal(view.notset.view.el.outerHTML);
             });
 
-            it("renders the region", function() {
+            it("does not render the region", function() {
                 var spy = sinon.spy(innerView, 'render');
                 view._viewHelper('region');
 
-                expect(spy).to.have.been.called;
+                expect(spy).not.to.have.been.called;
             });
 
-            it("returns the regions rendered outerHTML", function() {
+            it("returns the regions outerHTML", function() {
                 var ret = view._viewHelper('region');
 
-                expect(ret).to.equal('<p>test</p>');
+                expect(ret).to.equal('<p></p>');
             });
         });
 

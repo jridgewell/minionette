@@ -131,8 +131,8 @@ Minionette.View = Backbone.View.extend({
     // render regions inline.
     _viewHelper: function(name) {
         var region = this._regions[name] || this.addRegion(name);
-        var el;
-        if ((el = region.render().el)) {
+        var el = region.view.el;
+        if (el) {
             return el.outerHTML;
         }
         return '';
