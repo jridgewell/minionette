@@ -217,6 +217,24 @@ describe('Minionette.Region', function() {
 
             expect(spy).to.have.been.calledWith(newView, region);
         });
+
+        it("triggers 'unattach' event", function() {
+            var spy = sinon.spy();
+            region.on('unattach', spy);
+
+            region.attach(newView);
+
+            expect(spy).to.have.been.calledWith(view, region);
+        });
+
+        it("triggers 'unattached' event", function() {
+            var spy = sinon.spy();
+            region.on('unattached', spy);
+
+            region.attach(newView);
+
+            expect(spy).to.have.been.calledWith(view, region);
+        });
     });
 
     describe("#detach()", function() {

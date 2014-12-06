@@ -70,6 +70,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         var oldView = this.view,
             $current = oldView.$el;
 
+        this.trigger('unattach', oldView, this);
         this.trigger('attach', newView, this);
 
         this.view = newView;
@@ -91,6 +92,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
             if (!detach) { oldView.remove(); }
         }
 
+        this.trigger('unattached', oldView, this);
         this.trigger('attached', newView, this);
 
         return this;
