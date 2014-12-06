@@ -62,7 +62,7 @@ Minionette.View = Backbone.View.extend({
         _.invoke(this._regions, 'detach');
 
         var template = this.template;
-        var html = typeof template === 'function' ? this.template(this._serialize()) : template;
+        var html = _.isFunction(template) ? this.template(this._serialize()) : template;
         this.$el.html(html);
 
         // Reattach all our regions
@@ -124,7 +124,7 @@ Minionette.View = Backbone.View.extend({
     _listenToEvents: function(entity, events) {
         if (!entity) { return; }
         _.each(events, function(method, event) {
-            if (typeof method !== 'function') { method = this[method]; }
+            if (!_.isFunction(method)) { method = this[method]; }
             this.listenTo(entity, event, method);
         }, this);
     },

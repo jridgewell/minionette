@@ -127,7 +127,7 @@ Minionette.CollectionView = Minionette.View.extend({
     // then a subclass' prototype ModelView, and defaults to Minionette.ModelView
     _ensureModelView: function(options) {
         var mv = options.ModelView || this.ModelView || {};
-        if (typeof mv !== 'function') {
+        if (!_.isFunction(mv)) {
             mv = Minionette.ModelView.extend(mv);
         }
         this.ModelView = mv;
