@@ -48,7 +48,7 @@ Minionette.View = Backbone.View.extend({
 
         this._removeFromParent();
         _.invoke(this._regions, 'remove');
-        Minionette.View.__super__.remove.apply(this, arguments);
+        Backbone.View.prototype.remove.apply(this, arguments);
 
         this.trigger('removed', this);
         return this;

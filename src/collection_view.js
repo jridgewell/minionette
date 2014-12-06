@@ -45,7 +45,7 @@ Minionette.CollectionView = Minionette.View.extend({
             this._removeModelViews();
         }, this);
 
-        return Minionette.CollectionView.__super__.render.apply(this);
+        return Minionette.View.prototype.render.apply(this);
     },
 
     _renderModelViews: function() {
