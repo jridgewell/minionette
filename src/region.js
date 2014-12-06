@@ -77,7 +77,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         newView._parent = this;
 
         // Remove the old _detachedView, if it exists
-        attempt(this._detachedView, 'remove');
+        _.result(this._detachedView, 'remove');
         delete this._detachedView;
 
         // Let's not do any DOM manipulations if
@@ -114,7 +114,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         this.view.remove();
         this._view.remove();
         // Remove the _detachedView, if it exists
-        attempt(this._detachedView, 'remove');
+        _.result(this._detachedView, 'remove');
     },
 
     _removeFromParent: function() {

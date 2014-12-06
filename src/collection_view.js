@@ -140,7 +140,7 @@ Minionette.CollectionView = Minionette.View.extend({
     _forwardEvents: function(view) {
         this.listenTo(view, 'all', function() {
             var args = slice.call(arguments);
-            var prefix = attempt(this, 'modelViewEventPrefix');
+            var prefix = _.result(this, 'modelViewEventPrefix');
             prefix = (prefix) ? prefix + ':' : '';
 
             args[0] = prefix + args[0];

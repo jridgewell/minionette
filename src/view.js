@@ -11,11 +11,11 @@ Minionette.View = Backbone.View.extend({
         // Add the regions
         // This is done _after_ calling Backbone.View's constructor,
         // so that this.$el will be defined when we bind selectors.
-        this.addRegions(attempt(this, 'regions'));
+        this.addRegions(_.result(this, 'regions'));
 
         // Have the view listenTo the model and collection.
-        this._listenToEvents(this.model, attempt(this, 'modelEvents'));
-        this._listenToEvents(this.collection, attempt(this, 'collectionEvents'));
+        this._listenToEvents(this.model, _.result(this, 'modelEvents'));
+        this._listenToEvents(this.collection, _.result(this, 'collectionEvents'));
 
         // Always bind this._viewHelper to this.
         // This._viewHelper will be passed into
@@ -75,7 +75,7 @@ Minionette.View = Backbone.View.extend({
     // internal management.
     addRegion: function(name, view) {
         // Remove the old region, if it exists already
-        attempt(this._regions[name], 'remove');
+        _.result(this._regions[name], 'remove');
 
         var options = { cid: name };
         // If this is a Backbone.View, pass that as the
@@ -85,7 +85,7 @@ Minionette.View = Backbone.View.extend({
         } else {
             // If view is a selector, find the DOM element
             // that matches it.
-            options.selector = (typeof view === 'object') ? view.selector : view;
+            options.selector = _.result(view, 'selector') || view;
             options.el = this.$(view);
         }
 
