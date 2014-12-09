@@ -20,6 +20,7 @@ describe('Minionette.View', function() {
                     expect(view[key]).to.equal(val);
                 }, this);
             });
+
             it("picks 'regions'", function() {
                 opts = {regions: {test: false}};
                 view = new Minionette.View(opts);
@@ -32,6 +33,11 @@ describe('Minionette.View', function() {
 
             it("picks 'regions'", function() {
                 opts = {template: function() {}};
+                view = new Minionette.View(opts);
+            });
+
+            it("picks 'ui'", function() {
+                opts = {ui: {test: 'selector'}};
                 view = new Minionette.View(opts);
             });
         });
@@ -300,7 +306,7 @@ describe('Minionette.View', function() {
                 expect(stub).to.have.been.calledWith(template);
             });
 
-            it("suppots #template being a string", function() {
+            it("supports #template being a string", function() {
                 var stub = sinon.stub(view.$el, 'html');
                 view.template = 'test';
 
@@ -318,6 +324,16 @@ describe('Minionette.View', function() {
                 view.render();
 
                 expect(view.$el).to.have(subView.$el);
+            });
+
+            it("sets ui elements", function() {
+                view.ui = {test: '.selector'};
+                view.template = _.template('<p class="selector"></p>');
+
+                view.render();
+
+                expect(view.$test).to.be.an.instanceof(Backbone.$);
+                expect(view.$test).to.match('.selector');
             });
 
             it("returns the view", function() {

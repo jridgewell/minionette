@@ -1,7 +1,7 @@
 Minionette.View = Backbone.View.extend({
     constructor: function(options) {
         // Pick out a few initializing options
-        _.extend(this, _.pick(options || {}, 'regions', 'Region', 'template'));
+        _.extend(this, _.pick(options || {}, 'regions', 'Region', 'template', 'ui'));
 
         // Initialize our regions object
         this._regions = {};
@@ -64,6 +64,7 @@ Minionette.View = Backbone.View.extend({
         var template = this.template;
         var html = _.isFunction(template) ? this.template(this._serialize()) : template;
         this.$el.html(html);
+        this._bindUIElements();
 
         // Reattach all our regions
         _.invoke(this._regions, 'reattach');
@@ -127,6 +128,12 @@ Minionette.View = Backbone.View.extend({
             if (!_.isFunction(method)) { method = this[method]; }
             this.listenTo(entity, event, method);
         }, this);
+    },
+
+    _bindUIElements: function() {
+        _.each(_.result(this, 'ui'), function(selector, name) {
+            this['$' + name] = this.$(selector);
+        });
     },
 
     // A helper that is passed to #template() that will
