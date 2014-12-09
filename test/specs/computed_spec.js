@@ -11,7 +11,7 @@ describe('Minionette.Computed()', function() {
 
     it('sets initial params as the dependencies', function() {
         var computed = Minionette.Computed('1', '2', fn);
-        expect(computed._dependentKeys).to.deep.eq(['1', '2']);
+        expect(computed._dependentKeys).to.deep.equal(['1', '2']);
     });
 
     it('throws TypeError if any dependencies are not strings', function() {
