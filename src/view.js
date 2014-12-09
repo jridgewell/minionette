@@ -133,7 +133,7 @@ Minionette.View = Backbone.View.extend({
     _bindUIElements: function() {
         _.each(_.result(this, 'ui'), function(selector, name) {
             this['$' + name] = this.$(selector);
-        });
+        }, this);
     },
 
     // A helper that is passed to #template() that will
