@@ -39,6 +39,7 @@ module.exports = function(config) {
             'src/model_view.js',
             'src/collection_view.js',
             'src/computed.js',
+            'src/model.js',
             'src/router.js',
 
             'test/specs/*.js'
