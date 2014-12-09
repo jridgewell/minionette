@@ -64,7 +64,7 @@ Minionette.View = Backbone.View.extend({
         var template = this.template;
         var html = _.isFunction(template) ? this.template(this._serialize()) : template;
         this.$el.html(html);
-        this._bindUIElements();
+        this._addUIElements();
 
         // Reattach all our regions
         _.invoke(this._regions, 'reattach');
@@ -130,7 +130,7 @@ Minionette.View = Backbone.View.extend({
         }, this);
     },
 
-    _bindUIElements: function() {
+    _addUIElements: function() {
         _.each(_.result(this, 'ui'), function(selector, name) {
             this['$' + name] = this.$(selector);
         }, this);
