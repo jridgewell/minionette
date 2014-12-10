@@ -11,9 +11,12 @@ describe('Minionette.Router', function() {
         });
 
         describe('#navigate', function() {
+            beforeEach(function() {
+                router.on('route', spy);
+            });
+
             it('triggers route event', function() {
                 router.route('test', 'controller/action', function() {});
-                router.on('route', spy);
 
                 router.navigate('test', true);
 
@@ -22,7 +25,6 @@ describe('Minionette.Router', function() {
 
             it('passes router params to event', function() {
                 router.route('test/:id/*splat', 'controller/action', function(){});
-                router.on('route', spy);
 
                 router.navigate('test/er/ing/this', true);
 
@@ -31,21 +33,19 @@ describe('Minionette.Router', function() {
         });
 
         describe("Router Events", function() {
-            it("parses route event into controller/action", function() {
+            beforeEach(function() {
                 router.controller = {
                     action: spy
                 };
+            });
 
+            it("parses route event into controller/action", function() {
                 router.trigger('route', 'controller/action');
 
                 expect(spy).to.have.been.called;
             });
 
             it("passes params as arguments to controller/action", function() {
-                router.controller = {
-                    action: spy
-                };
-
                 router.trigger('route', 'controller/action', [1, 2, 3]);
 
                 expect(spy).to.have.been.calledWith(1, 2, 3);
