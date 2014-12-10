@@ -16,18 +16,13 @@ function attempt(obj, property, args) {
             length = (args == null) ? 0 : -1;
         }
         switch (length) {
-            case -1:
-                return obj[property](args);
-            case 0:
-                return obj[property]();
-            case 1:
-                return obj[property](args[0]);
-            case 2:
-                return obj[property](args[0], args[1]);
-            case 3:
-                return obj[property](args[0], args[1], args[2]);
+            case -1: return obj[property](args);
+            case 0: return obj[property]();
+            case 1: return obj[property](args[0]);
+            case 2: return obj[property](args[0], args[1]);
+            case 3: return obj[property](args[0], args[1], args[2]);
+            default: return prop.apply(obj, args);
         }
-        return prop.apply(obj, args);
     }
     return prop;
 }
