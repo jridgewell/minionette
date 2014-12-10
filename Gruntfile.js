@@ -27,8 +27,7 @@ module.exports = function(grunt) {
             options: {
                 jshintrc : '.jshintrc'
             },
-            minionette : [ 'src/*.js' ],
-            test : [ 'test/*.js', 'test/specs/*.js' ],
+            minionette : [ 'src/*.js' ]
         },
 
         plato: {
