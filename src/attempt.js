@@ -9,17 +9,25 @@ function attempt(obj, property, args) {
     var prop = obj[property];
 
     if (_.isFunction(prop)) {
-        // Call the method, as obj, with the
-        // additional params
-        var length = _.result(args, 'length') || 0;
-        switch (length) {
-            case 0: return obj[property]();
-            case 1: return obj[property](args[0]);
-            case 2: return obj[property](args[0], args[1]);
-            case 3: return obj[property](args[0], args[1], args[2]);
-            default: return prop.apply(obj, args);
+        var length;
+        if (_.isArray(args)) {
+            length = args.length;
+        } else {
+            length = (args == null) ? 0 : -1;
         }
-
+        switch (length) {
+            case -1:
+                return obj[property](args);
+            case 0:
+                return obj[property]();
+            case 1:
+                return obj[property](args[0]);
+            case 2:
+                return obj[property](args[0], args[1]);
+            case 3:
+                return obj[property](args[0], args[1], args[2]);
+        }
+        return prop.apply(obj, args);
     }
     return prop;
 }
