@@ -2,6 +2,7 @@ Minionette.CollectionView = Minionette.View.extend({
     constructor: function(options) {
         // Initialize a storage object for our modelViews
         this._modelViews = {};
+        this.modelViewsFrag = null;
 
         // Ensure this has a ModelView to initialize
         // new modelViews from.
@@ -45,25 +46,30 @@ Minionette.CollectionView = Minionette.View.extend({
 
     _renderModelViews: function() {
         // Use a DocumentFragment to speed up #render()
-        var frag = new Backbone.View({el: document.createDocumentFragment()});
-
-        // Override `appendModelView()` for the time being.
-        // This is so we can append directly to the DocumentFragment,
-        // and then append it all at once later.
-        var appendModelView = this.appendModelView;
-        this.appendModelView = function(view) { frag.el.appendChild(view.el); };
+        this.modelViewsFrag = document.createDocumentFragment();
 
         // Loop through all our models, and build their view.
-        this.collection.each(this.addOne, this);
+        var modelViews = this.collection.map(this.addOne, this);
 
-        // Append the DocumentFragment to the rendered template,
-        // and set `appendModelView()` back to normal.
-        this.appendModelView = appendModelView;
-        this.appendModelView(frag);
+        this.appendModelViewFrag(this.modelViewsFrag);
+
+        _.each(modelViews, function(view) {
+            this.trigger('addedOne', view, this);
+        }, this);
+
+        this.modelViewsFrag = null;
     },
 
     appendModelView: function(view) {
         this.$el.append(view.$el);
+    },
+
+    appendModelViewToFrag: function(view) {
+        this.modelViewsFrag.appendChild(view.render().el);
+    },
+
+    appendModelViewFrag: function(frag) {
+        this.$el.append(frag);
     },
 
     // Add an individual model's view to this.$el.
@@ -78,10 +84,13 @@ Minionette.CollectionView = Minionette.View.extend({
         view._parent = this;
 
         this.trigger('addOne', view, this);
-
-        this.appendModelView(view.render());
-
-        this.trigger('addedOne', view, this);
+        view.render();
+        if (this.modelViewsFrag) {
+            this.appendModelViewToFrag(view);
+        } else {
+            this.appendModelView(view);
+            this.trigger('addedOne', view, this);
+        }
 
         return view;
     },
