@@ -6,6 +6,13 @@
     "eqeqeq": true,
     "eqnull": true,
     "esnext": true,
+    "exported": ["attempt"],
+    "globals": {
+        "Backbone": true,
+        "Minionette": true,
+        "_": true,
+        "attempt": true
+    },
     "immed": true,
     "indent": 4,
     "jquery": true,
@@ -14,12 +21,5 @@
     "noarg": true,
     "strict": false,
     "undef": true,
-    "unused": true,
-    "globals": {
-        "Backbone": true,
-        "_": true,
-        "Minionette": true,
-        "attempt": true
-    },
-    "exported": ["attempt"]
+    "unused": true
 }
