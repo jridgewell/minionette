@@ -1,4 +1,6 @@
-Minionette.Computed = function() {
+import _ from 'underscore';
+
+export default function Computed() {
     var dependencies = _.initial(arguments);
     var fn = _.last(arguments);
 
@@ -6,11 +8,9 @@ Minionette.Computed = function() {
         throw new TypeError('Minionette.Computed must be called with dependent keys.');
     }
     if (!_.isFunction(fn)) {
-        throw new TypeError('Minionette.Computed must be with a computing function as last parameter.');
+        throw new TypeError('Minionette.Computed must be with a computing function as last argument.');
     }
 
     fn._dependentKeys = dependencies;
     return fn;
-};
-
-
+}

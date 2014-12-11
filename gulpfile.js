@@ -1,10 +1,7 @@
 var gulp = require('gulp');
 var karma = require('karma').server;
 var jshint = require('gulp-jshint');
-var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
-var preprocess = require('gulp-preprocess');
-var esformatter = require('gulp-esformatter');
+var to5 = require('gulp-6to5');
 
 
 gulp.task('test', function (done) {
@@ -28,12 +25,8 @@ gulp.task('jshint', function() {
 });
 
 gulp.task('build', ['default'], function() {
-    return gulp.src(['./src/build/*.js'])
-        .pipe(preprocess())
-        .pipe(esformatter({ indent: { value: '    ' } }))
-        .pipe(gulp.dest('lib'))
-        .pipe(uglify())
-        .pipe(rename({ suffix: '-min' }))
+    return gulp.src(['./src/*.js'])
+        .pipe(to5())
         .pipe(gulp.dest('lib'));
 });
 

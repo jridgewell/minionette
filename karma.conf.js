@@ -31,7 +31,6 @@ module.exports = function(config) {
             'test/support/sinon/lib/sinon/test_case.js',
             'test/support/sinon-chai/lib/sinon-chai.js',
             'test/support/chai-jquery/chai-jquery.js',
-            'test/*.js',
 
             'src/attempt.js',
             'src/region.js',
@@ -42,8 +41,26 @@ module.exports = function(config) {
             'src/model.js',
             'src/router.js',
 
+            'test/test.js',
             'test/specs/*.js'
         ],
+
+        preprocessors: {
+            'src/*.js': ['6to5']
+        },
+
+        '6to5Preprocessor': {
+            options: {
+                sourceMap: 'inline',
+                modules: 'ignore'
+            },
+            filename: function(file) {
+                return file.originalPath.replace(/\.js$/, '.es5.js');
+            },
+            sourceFileName: function(file) {
+                return file.originalPath;
+            }
+        },
 
         // list of files / patterns to exclude
         exclude: [],

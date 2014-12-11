@@ -1,5 +1,10 @@
-Minionette.CollectionView = Minionette.View.extend({
-    constructor: function(options) {
+import _ from 'underscore';
+import Backbone from 'backbone';
+import View from 'view';
+import ModelView from 'model_view';
+
+class CollectionView extends View {
+    constructor(options) {
         // Initialize a storage object for our modelViews
         this._modelViews = {};
 
@@ -7,34 +12,16 @@ Minionette.CollectionView = Minionette.View.extend({
         // new modelViews from.
         this._ensureModelView(options || {});
 
-        Minionette.View.apply(this, arguments);
+        super(options);
 
         // Augment #render() with our collection specific items.
         this.on('rendered', this._renderModelViews);
         // Make sure we remove our modelViews when this is removed.
         this.on('removed', this._removeModelViews);
-    },
-
-    // Listen to the default events.
-    collectionEvents: {
-        add: 'addOne',
-        remove: 'removeOne',
-        reset: 'render',
-        sort: 'render'
-    },
-
-    // The prefix that will be put on every event triggered
-    // by one of the modelViews. So, if a modelView triggers
-    // "event", collectionView will trigger "modelView:event"
-    // ("event" -> "modelView:event").
-    // A falsey value will cause no prefix (or colon) to be
-    // used ("event" -> "event").
-    modelViewEventPrefix: 'modelView',
-
-    ModelView: Minionette.ModelView,
+    }
 
     // A default useful render function.
-    render: function() {
+    render() {
         // Remove all our modelViews after the 'render' event is
         // fired. This is set on #render() so that the removing
         // will happen after all other 'render' listeners.
@@ -46,9 +33,9 @@ Minionette.CollectionView = Minionette.View.extend({
         }, this);
 
         return Minionette.View.prototype.render.apply(this);
-    },
+    }
 
-    _renderModelViews: function() {
+    _renderModelViews() {
         // Use a DocumentFragment to speed up #render()
         var frag = new Backbone.View({el: document.createDocumentFragment()});
 
@@ -65,14 +52,14 @@ Minionette.CollectionView = Minionette.View.extend({
         // and set `appendModelView()` back to normal.
         this.appendModelView = appendModelView;
         this.appendModelView(frag);
-    },
+    }
 
-    appendModelView: function(view) {
+    appendModelView(view) {
         this.$el.append(view.$el);
-    },
+    }
 
     // Add an individual model's view to this.$el.
-    addOne: function(model) {
+    addOne(model) {
         var view = this.buildModelView(model);
 
         // Setup event forwarding
@@ -89,16 +76,16 @@ Minionette.CollectionView = Minionette.View.extend({
         this.trigger('addedOne', view, this);
 
         return view;
-    },
+    }
 
     // An override-able method to construct a new
     // modelView.
-    buildModelView: function(model) {
+    buildModelView(model) {
         return new this.ModelView({model: model});
-    },
+    }
 
     // Remove an individual model's view from this.$el.
-    removeOne: function(model) {
+    removeOne(model) {
         var view = this._modelViews[model.cid];
 
         if (view) {
@@ -109,35 +96,35 @@ Minionette.CollectionView = Minionette.View.extend({
         }
 
         return view;
-    },
+    }
 
     // A hook method that is called during
     // a view#remove().
-    _removeView: function(view) {
+    _removeView(view) {
         delete this._modelViews[view.model.cid];
-    },
+    }
 
     // A callback method bound to the 'remove:before'
     // event. Removes all our modelViews.
-    _removeModelViews: function() {
+    _removeModelViews() {
         _.invoke(this._modelViews, 'remove');
-    },
+    }
 
     // Sets this.ModelView. Prioritizes instantiated options.ModelView,
     // then a subclass' prototype ModelView, and defaults to Minionette.ModelView
-    _ensureModelView: function(options) {
+    _ensureModelView(options) {
         var mv = options.ModelView || this.ModelView || {};
         if (!_.isFunction(mv)) {
             mv = Minionette.ModelView.extend(mv);
         }
         this.ModelView = mv;
-    },
+    }
 
     // Since CollectionView is meant to be largely automated,
     // setup event forwarding from modelViews. That way,
     // you only need to listen to events that happen on
     // this collectionView, not on all the modelViews.
-    _forwardEvents: function(view) {
+    _forwardEvents(view) {
         this.listenTo(view, 'all', function() {
             var args = _.toArray(arguments);
             var prefix = _.result(this, 'modelViewEventPrefix');
@@ -149,4 +136,28 @@ Minionette.CollectionView = Minionette.View.extend({
             this.trigger.apply(this, args);
         });
     }
+}
+
+CollectionView.extend = View.extend;
+
+_.extend(CollectionView.prototype, {
+    // Listen to the default events.
+    collectionEvents: {
+        add: 'addOne',
+        remove: 'removeOne',
+        reset: 'render',
+        sort: 'render'
+    },
+
+    // The prefix that will be put on every event triggered
+    // by one of the modelViews. So, if a modelView triggers
+    // "event", collectionView will trigger "modelView:event"
+    // ("event" -> "modelView:event").
+    // A falsey value will cause no prefix (or colon) to be
+    // used ("event" -> "event").
+    modelViewEventPrefix: 'modelView',
+
+    ModelView: ModelView
 });
+
+export default CollectionView;

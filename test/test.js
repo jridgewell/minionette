@@ -1,4 +1,12 @@
-var Minionette = Backbone.Minionette = {};
+var Minionette = Backbone.Minionette = {
+    Region: Region,
+    Model: Model,
+    Computed: Computed,
+    Router: Router,
+    View: View,
+    ModelView: ModelView,
+    CollectionView: CollectionView
+};
 var sandbox;
 var _sinon = sinon;
 var expect = chai.expect;

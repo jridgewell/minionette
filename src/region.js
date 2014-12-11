@@ -1,20 +1,20 @@
-Minionette.Region = function(options) {
-    options = options || {};
-    // Setup a unique id for this region.
-    // Not really necessary, but it doesn't hurt.
-    this.cid = options.cid;
+import _ from 'underscore';
+import Backbone from 'backbone';
+import attempt from 'attempt';
 
-    // Make sure we have a view.
-    this._ensureView(options);
-};
+class Region {
+    constructor(options) {
+        options = options || {};
+        // Setup a unique id for this region.
+        // Not really necessary, but it doesn't hurt.
+        this.cid = options.cid;
 
-// Allow Regions to be extended.
-// Backbone's extend is generic, just copy it over.
-Minionette.Region.extend = Backbone.View.extend;
+        // Make sure we have a view.
+        this._ensureView(options);
+    }
 
-_.extend(Minionette.Region.prototype, Backbone.Events, {
     // Ensures the region has a view.
-    _ensureView: function(options) {
+    _ensureView(options) {
         var viewOpts = {
             // Grab the el from options.
             // This will override the following if it exists.
@@ -36,9 +36,9 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
         // And set our view's _parent to this region.
         this.view._parent = this;
-    },
+    }
 
-    _ensureElement: function(view) {
+    _ensureElement(view) {
         var $context = _.result(this._parent, '$el') || Backbone.$(),
             $el;
 
@@ -48,25 +48,25 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
             $el = $context.find(view._selector);
             view.setElement($el);
         }
-    },
+    }
 
     // Resets the region's view to placeholder view.
     // Optionally takes a boolean, in which case the
     // oldView will just be detached.
-    reset: function(detach) {
+    reset(detach) {
         this.attach(this._view, detach);
         return this;
-    },
+    }
 
     // A proxy method to the view's render().
-    render: function() {
+    render() {
         return this.view.render();
-    },
+    }
 
     // Attaches newView. This sets newView#$el
     // at the same index (inside the parent element)
     // as the old view, and removes the old view.
-    attach: function(newView, detach) {
+    attach(newView, detach) {
         var oldView = this.view,
             $current = oldView.$el;
 
@@ -96,10 +96,10 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         this.trigger('attached', newView, this);
 
         return this;
-    },
+    }
 
     // Removes this region, and it's view.
-    remove: function() {
+    remove() {
         this.trigger('remove', this);
 
         this._removeViews();
@@ -108,24 +108,24 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
         this.trigger('removed', this);
         return this;
-    },
+    }
 
-    _removeViews: function() {
+    _removeViews() {
         this.view.remove();
         this._view.remove();
         // Remove the _detachedView, if it exists
         _.result(this._detachedView, 'remove');
-    },
+    }
 
-    _removeFromParent: function() {
+    _removeFromParent() {
         // Remove this region from its parent, if it exists
-        attempt(this._parent, '_removeRegion', this);
-    },
+        attempt(this._parent, '_removeRegion', [this]);
+    }
 
     // Detaches the current view, replacing it with
     // the placeholder. Convenient for detaching
     // during rendering.
-    detach: function() {
+    detach() {
         var view = this.view;
         if (view !== this._view) {
             this.trigger('detach', view, this);
@@ -137,10 +137,10 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         }
 
         return this;
-    },
+    }
 
     // Reattaches the detached view.
-    reattach: function() {
+    reattach() {
         // After a render, #_view references an element that is
         // not really in the parent. Reattach #_view to it.
         this._ensureElement(this._view);
@@ -161,12 +161,20 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         this.trigger('reattached', newView, this);
 
         return newView;
-    },
+    }
 
     // A hook method that is called during
     // a view#remove(). Allows a view to be removed,
     // replacing it with the placeholder.
-    _removeView: function(view) {
+    _removeView(view) {
         if (this.view === view) { this.reset(true); }
     }
-});
+}
+
+// Allow Regions to be extended.
+// Backbone's extend is generic, just copy it over.
+Region.extend = Backbone.View.extend;
+
+_.extend(Region.prototype, Backbone.Events);
+
+export default Region;
