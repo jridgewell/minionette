@@ -65,7 +65,7 @@ Minionette.CollectionView = Minionette.View.extend({
     },
 
     appendModelViewToFrag: function(view) {
-        this.modelViewsFrag.appendChild(view.render().el);
+        this.modelViewsFrag.appendChild(view.el);
     },
 
     appendModelViewFrag: function(frag) {
@@ -108,6 +108,7 @@ Minionette.CollectionView = Minionette.View.extend({
 
         if (view) {
             this.trigger('removeOne', view, this);
+            delete this._modelViews[model.cid];
             view.remove();
             this.trigger('removedOne', view, this);
             this.stopListening(view);
@@ -126,6 +127,7 @@ Minionette.CollectionView = Minionette.View.extend({
     // event. Removes all our modelViews.
     _removeModelViews: function() {
         _.invoke(this._modelViews, 'remove');
+        this._modelViews = {};
     },
 
     // Sets this.ModelView. Prioritizes instantiated options.ModelView,

@@ -111,7 +111,10 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     },
 
     _removeViews: function() {
-        this.view.remove();
+        var view = this.view;
+        delete this.view;
+
+        view.remove();
         this._view.remove();
         // Remove the _detachedView, if it exists
         _.result(this._detachedView, 'remove');
@@ -165,6 +168,8 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // a view#remove(). Allows a view to be removed,
     // replacing it with the placeholder.
     _removeView: function(view) {
-        if (this.view === view) { this.reset(true); }
+        if (this.view === view && view !== this._view) {
+            this.reset(true);
+        }
     }
 });
