@@ -220,11 +220,11 @@ describe('Minionette.View', function() {
             it("removes from parent view", function() {
                 var subView = new Minionette.View();
                 view.addRegion('region', subView);
-                var spy = sinon.spy(view.region, '_removeView');
 
                 subView.remove();
 
-                expect(spy).to.have.been.called;
+                expect(view.region).to.be(undefined);
+                expect(view._regions.region).to.be(undefined);
             });
 
             it("removes regions", function() {
