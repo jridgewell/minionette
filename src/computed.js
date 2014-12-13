@@ -12,5 +12,3 @@ Minionette.Computed = function() {
     fn._dependentKeys = dependencies;
     return fn;
 };
-
-
