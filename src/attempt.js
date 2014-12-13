@@ -9,12 +9,8 @@ function attempt(obj, property, args) {
     var prop = obj[property];
 
     if (_.isFunction(prop)) {
-        var length;
-        if (_.isArray(args)) {
-            length = args.length;
-        } else {
-            length = (args == null) ? 0 : -1;
-        }
+        var length = (args) ? args.length : 0;
+
         switch (length) {
             case -1: return obj[property](args);
             case 0: return obj[property]();
