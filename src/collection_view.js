@@ -75,16 +75,17 @@ Minionette.CollectionView = Minionette.View.extend({
     // Add an individual model's view to this.$el.
     addOne: function(model) {
         var view = this.buildModelView(model);
+        view._parent = this;
 
         // Setup event forwarding
         this._forwardEvents(view);
 
         // Add the modelView, and keep track of it.
         this._modelViews[model.cid] = view;
-        view._parent = this;
 
         this.trigger('addOne', view, this);
         view.render();
+
         if (this.modelViewsFrag) {
             this.appendModelViewToFrag(view);
         } else {
@@ -130,7 +131,7 @@ Minionette.CollectionView = Minionette.View.extend({
     // Sets this.ModelView. Prioritizes instantiated options.ModelView,
     // then a subclass' prototype ModelView, and defaults to Minionette.ModelView
     _ensureModelView: function(options) {
-        var mv = options.ModelView || this.ModelView || {};
+        var mv = options.ModelView || this.ModelView || Minionette.ModelView;
         if (!_.isFunction(mv)) {
             mv = Minionette.ModelView.extend(mv);
         }
