@@ -35,7 +35,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         this.view = options.view || this._view;
 
         // And set our view's _parent to this region.
-        this.view._parent = this;
+        this._view._parent = this.view._parent = this;
     },
 
     _ensureElement: function(view) {
@@ -70,7 +70,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         var oldView = this.view,
             $current = oldView.$el;
 
-        this.trigger('unattach', oldView, this);
+        this.trigger('detach', oldView, this);
         this.trigger('attach', newView, this);
 
         this.view = newView;
@@ -87,12 +87,12 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
             newView.$el.insertAfter($current);
 
             // And detaches the view.
-            $current.detach();
             // Remove the view, unless we are only detaching.
-            if (!detach) { oldView.remove(); }
+            if (detach) { $current.detach(); }
+            else { oldView.remove(); }
         }
 
-        this.trigger('unattached', oldView, this);
+        this.trigger('detached', oldView, this);
         this.trigger('attached', newView, this);
 
         return this;
@@ -128,12 +128,10 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     detach: function() {
         var view = this.view;
         if (view !== this._view) {
-            this.trigger('detach', view, this);
             this.reset(true);
 
             // Store the current view for later reattaching.
             this._detachedView = view;
-            this.trigger('detached', view, this);
         }
 
         return this;
