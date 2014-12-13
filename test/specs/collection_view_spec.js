@@ -144,8 +144,11 @@ describe('Minionette.CollectionView', function() {
             });
 
             it("can be overridden to put elements anywhere", function() {
+                collection.remove(collection.models);
                 view.appendModelView = function(view) { this.$('p').append(view.$el); };
                 view.render();
+
+                collection.add({});
 
                 expect(view.$el).to.have.html('<p><div></div></p>');
             });
