@@ -41,7 +41,7 @@ describe('Minionette.Model', function() {
 
                 model = new Child();
 
-                expect(_.has(Child.prototype, '_computedProperties')).to.be(false);
+                expect(_.has(Child.prototype, '_computedProperties')).to.equal(false);
                 expect(model._computedProperties).to.deep.equal(['name']);
             });
         });
@@ -56,7 +56,7 @@ describe('Minionette.Model', function() {
 
             model = new Child();
 
-            expect(name).to.eq(model.name());
+            expect(name).to.equal(model.name());
         });
 
         it("sets computed properties with constructor options", function() {

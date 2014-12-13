@@ -1,4 +1,7 @@
 describe('Minionette.View', function() {
+    var RegionTest = Minionette.View.extend({
+        template: _.template('<p>test</p><%= view("region") %><p>test</p>')
+    });
     var view;
     beforeEach(function() {
         view = new Minionette.View();
@@ -217,14 +220,44 @@ describe('Minionette.View', function() {
                 expect(spy).to.have.been.called;
             });
 
+            it("triggers 'remove' event before any DOM manipulations", function() {
+                var parentView = new RegionTest();
+                var view = new RegionTest();
+                parentView.render();
+                view.render();
+                parentView.region.attach(view);
+
+                view.on('remove', function() {
+                    expect(parentView.$el).to.have(view.$el);
+                    expect(view.$el).to.have(view.region.view.$el);
+                });
+
+                view.remove();
+            });
+
+            it("triggers 'removed' event after any DOM manipulations", function() {
+                var parentView = new RegionTest();
+                var view = new RegionTest();
+                parentView.render();
+                view.render();
+                parentView.region.attach(view);
+                var $v = view.region.view.$el;
+
+                view.on('removed', function() {
+                    expect(parentView.$el).not.to.have(view.$el);
+                    expect(view.$el).not.to.have($v);
+                });
+
+                view.remove();
+            });
+
             it("removes from parent view", function() {
                 var subView = new Minionette.View();
                 view.addRegion('region', subView);
 
                 subView.remove();
 
-                expect(view.region).to.be(undefined);
-                expect(view._regions.region).to.be(undefined);
+                expect(view.region.view).not.to.equal(subView);
             });
 
             it("removes regions", function() {
@@ -268,6 +301,30 @@ describe('Minionette.View', function() {
                 view.render();
 
                 expect(spy).to.have.been.called;
+            });
+
+            it("triggers 'render' event before any DOM manipulations", function() {
+                view = new RegionTest();
+                view.render();
+                $v = view.$('p');
+
+                view.on('render', function() {
+                    expect(view.$el).to.have($v);
+                });
+
+                view.render();
+            });
+
+            it("triggers 'rendered' event after any DOM manipulations", function() {
+                view = new RegionTest();
+                view.render();
+                $v = view.$('p');
+
+                view.on('rendered', function() {
+                    expect(view.$el).not.to.have($v);
+                });
+
+                view.render();
             });
 
             it("detaches regions before emptying $el", function() {
@@ -317,13 +374,14 @@ describe('Minionette.View', function() {
 
 
             it("reattaches regions", function() {
-                var subView = new Minionette.View({tagName: 'p'});
-                view.template = _.template("<%= view('region') %>");
-                view.addRegion('region', subView).render();
+                view = new RegionTest();
+                view.render();
+                view.region.attach(new Minionette.View());
+                var $v = view.region.view.$el;
 
                 view.render();
 
-                expect(view.$el).to.have(subView.$el);
+                expect(view.$el).to.have($v);
             });
 
             it("sets ui elements", function() {

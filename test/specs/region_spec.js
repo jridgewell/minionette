@@ -215,7 +215,7 @@ describe('Minionette.Region', function() {
         it("triggers 'attach' event before setting #view", function() {
             var view = region.view;
             region.on('attach', function() {
-                expect(region.view).to.eq(view);
+                expect(region.view).to.equal(view);
             });
 
             region.attach(newView);
@@ -224,7 +224,7 @@ describe('Minionette.Region', function() {
         it("triggers 'attached' event after setting #view", function() {
             var view = region.view;
             region.on('attached', function() {
-                expect(region.view).not.to.eq(view);
+                expect(region.view).not.to.equal(view);
             });
 
             region.attach(newView);
@@ -291,7 +291,7 @@ describe('Minionette.Region', function() {
         it("triggers 'detach' event before setting #view", function() {
             var view = region.view;
             region.on('detach', function() {
-                expect(region.view).to.eq(view);
+                expect(region.view).to.equal(view);
             });
 
             region.attach(newView);
@@ -300,7 +300,7 @@ describe('Minionette.Region', function() {
         it("triggers 'detached' event after setting #view", function() {
             var view = region.view;
             region.on('detached', function() {
-                expect(region.view).not.to.eq(view);
+                expect(region.view).not.to.equal(view);
             });
 
             region.attach(newView);
@@ -409,7 +409,7 @@ describe('Minionette.Region', function() {
         it("triggers 'detach' event before setting #view", function() {
             var view = region.view;
             region.on('detach', function() {
-                expect(region.view).to.eq(view);
+                expect(region.view).to.equal(view);
             });
 
             region.detach();
@@ -418,7 +418,7 @@ describe('Minionette.Region', function() {
         it("triggers 'detached' event after setting #view", function() {
             var view = region.view;
             region.on('detached', function() {
-                expect(region.view).not.to.eq(view);
+                expect(region.view).not.to.equal(view);
             });
 
             region.detach();
@@ -523,7 +523,7 @@ describe('Minionette.Region', function() {
         it("triggers 'reattach' event before setting #view", function() {
             var view = region.view;
             region.on('reattach', function() {
-                expect(region.view).to.eq(view);
+                expect(region.view).to.equal(view);
             });
 
             region.reattach();
@@ -532,7 +532,7 @@ describe('Minionette.Region', function() {
         it("triggers 'reattached' event after setting #view", function() {
             var view = region.view;
             region.on('reattached', function() {
-                expect(region.view).not.to.eq(view);
+                expect(region.view).not.to.equal(view);
             });
 
             region.reattach();

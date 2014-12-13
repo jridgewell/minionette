@@ -6,7 +6,7 @@ describe('Minionette.Computed()', function() {
 
     it('returns the computing function', function() {
         var computed = Minionette.Computed('1', '2', fn);
-        expect(computed).to.be(fn);
+        expect(computed).to.equal(fn);
     });
 
     it('sets initial params as the dependencies', function() {
