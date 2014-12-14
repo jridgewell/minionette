@@ -1,16 +1,17 @@
 Minionette.Model = Backbone.Model.extend({
-    // Find any computed property functions,
-    // if they have not been cached already when instantiating
-    // a prior instance.
     constructor: function() {
+        // Find any computed property functions,
+        // if they have not been cached already when instantiating
+        // a prior instance.
         if (!this._computedProperties) {
             this._findComputedProperties();
         }
+
         Backbone.Model.apply(this, arguments);
     },
 
     // Model's constructor will call #set before calling #initialize.
-    // Wrapping set allows us to set the normal attributes, then the
+    // Wrapping #set allows us to set the normal attributes, then the
     // computed attributes before #initialize is called.
     set: function(key, val, options) {
         var ret = Backbone.Model.prototype.set.apply(this, arguments);
@@ -56,8 +57,7 @@ Minionette.Model = Backbone.Model.extend({
     // Sets up the event listeners for each computed property's
     // dependencies
     _listenToComputedDependencies: function(prop) {
-        var fn = this[prop];
-        var dependencies = fn._dependentKeys;
+        var dependencies = this[prop]._dependentKeys;
         var updater = function() {
             this.set(prop, this[prop]());
         };
