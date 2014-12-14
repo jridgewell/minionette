@@ -3,7 +3,8 @@ Minionette.Model = Backbone.Model.extend({
         // Find any computed property functions,
         // if they have not been cached already when instantiating
         // a prior instance.
-        if (!this._computedProperties) {
+        var proto = _.result(this.constructor, 'prototype') || this;
+        if (!_.has(proto, '_computedProperties')) {
             this._findComputedProperties();
         }
 
@@ -31,7 +32,7 @@ Minionette.Model = Backbone.Model.extend({
     // the associated property names on the prototype, falling back
     // to this instance.
     _findComputedProperties: function() {
-        var ptype = _.result(this.constructor, 'prototype') || this;
+        var proto = _.result(this.constructor, 'prototype') || this;
         var computedProps = [];
 
         for (var prop in this) {
@@ -40,7 +41,7 @@ Minionette.Model = Backbone.Model.extend({
                 computedProps.push(prop);
             }
         }
-        ptype._computedProperties = computedProps;
+        proto._computedProperties = computedProps;
     },
 
     // Sets up event listeners for each computed property,

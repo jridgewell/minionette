@@ -23,14 +23,28 @@ describe('Minionette.Model', function() {
                 expect(spy).to.have.been.calledOnce;
             });
 
-            it("finds computed properties from parent class", function() {
-                var Child = Model.extend();
-                model = new Child();
-                var spy = sinon.spy(model, 'name');
+            describe("when inheriting from a parent class", function() {
+                it("finds computed properties from parent class", function() {
+                    var Child = Model.extend();
+                    model = new Child();
+                    var spy = sinon.spy(model, 'name');
 
-                model.set('first', 'test');
+                    model.set('first', 'test');
 
-                expect(spy).to.have.been.called;
+                    expect(spy).to.have.been.called;
+                });
+
+                it("finds computed properties from own class", function() {
+                    var Child = Model.extend({
+                        own: Minionette.Computed('own', function() {})
+                    });
+                    model = new Child();
+                    var spy = sinon.spy(model, 'own');
+
+                    model.set('own', 'test');
+
+                    expect(spy).to.have.been.called;
+                });
             });
         });
 
