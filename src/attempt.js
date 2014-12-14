@@ -12,7 +12,6 @@ function attempt(obj, property, args) {
         var length = (args) ? args.length : 0;
 
         switch (length) {
-            case -1: return obj[property](args);
             case 0: return obj[property]();
             case 1: return obj[property](args[0]);
             case 2: return obj[property](args[0], args[1]);
