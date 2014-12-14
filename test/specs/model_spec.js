@@ -81,4 +81,56 @@ describe('Minionette.Model', function() {
             });
         });
     });
+
+    describe("#set", function() {
+        describe("when changing computed property's dependent property", function() {
+            it("updates computed property", function() {
+                model.set('first', 'test');
+
+                expect(model.get('name')).to.equal('test last');
+            });
+
+            it("updates correctly when multiple dependencies change", function() {
+                model.set({
+                    first: 'test',
+                    last: 'test'
+                });
+
+                expect(model.get('name')).to.equal('test test');
+            });
+
+            it("only changes computed property once", function() {
+                var spy = sinon.spy();
+                model.on('change:name', spy);
+
+                model.set({
+                    first: 'test',
+                    last: 'test'
+                });
+
+                expect(spy).to.have.been.calledOnce;
+            });
+
+            it("only calls computed property once", function() {
+                var spy = sinon.spy(model, 'name');
+
+                model.set({
+                    first: 'test',
+                    last: 'test'
+                });
+
+                expect(spy).to.have.been.calledOnce;
+            });
+        });
+
+        describe("when changing unrelated dependent property", function() {
+            it("does not update computed property", function() {
+                var spy = sinon.spy(model, 'other');
+
+                model.set('last', 'test');
+
+                expect(spy).not.to.have.been.called;
+            });
+        });
+    });
 });
