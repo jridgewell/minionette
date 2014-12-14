@@ -39,7 +39,7 @@ Minionette.CollectionView = Minionette.View.extend({
         // Remove all our modelViews after the 'render' event is
         // fired. This is set on #render() so that the removing
         // will happen after all other 'render' listeners.
-        this.once('render', this._removeModelViews, this);
+        this.once('render', this._removeModelViews);
 
         return Minionette.View.prototype.render.apply(this);
     },

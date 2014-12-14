@@ -1,7 +1,7 @@
 Minionette.Router = Backbone.Router.extend({
     constructor: function() {
         Backbone.Router.apply(this, arguments);
-        this.on('route', this.routeToControllerAction, this);
+        this.on('route', this.routeToControllerAction);
     },
 
     routeToControllerAction: function(event, args) {
