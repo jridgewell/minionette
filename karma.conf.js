@@ -1,8 +1,11 @@
 // Karma configuration
 // http://karma-runner.github.io/0.10/config/configuration-file.html
+var minimist = require('minimist');
+
+var opts = minimist(process.argv.slice(2));
 
 module.exports = function(config) {
-    config.set({
+    var conf = {
         // base path, that will be used to resolve files and exclude
         basePath: '',
 
@@ -73,5 +76,22 @@ module.exports = function(config) {
         },
 
         reportSlowerThan: 10
-    });
+    };
+
+    if (opts.coverage) {
+        conf.reporters.push('coverage');
+
+        conf.preprocessors = conf.preprocessors || {};
+        var covPre = conf.preprocessors['src/*.js'] || [];
+        covPre.push('coverage');
+        conf.preprocessors['src/*.js'] = covPre;
+
+        conf.coverageReporter = {
+            dir: 'coverage',
+            subdir: '.',
+            type: 'lcovonly'
+        };
+    }
+
+    config.set(conf);
 };

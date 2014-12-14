@@ -34,6 +34,7 @@
     "karma-coverage": "^0.2.0",
     "karma-mocha": "^0.1.1",
     "karma-phantomjs-launcher": "^0.1.2",
+    "minimist": "^1.1.0",
     "mocha": "^1.17.1"
   }
 }

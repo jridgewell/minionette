@@ -5,18 +5,14 @@ var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var preprocess = require('gulp-preprocess');
 var esformatter = require('gulp-esformatter');
+var minimist = require('minimist');
 
+var opts = minimist(process.argv.slice(2));
 
 gulp.task('test', function (done) {
     karma.start({
-        configFile: 'karma.conf.js',
-        singleRun: true
-    }, done);
-});
-
-gulp.task('continuous', function (done) {
-    karma.start({
-        configFile: 'karma.conf.js'
+        configFile: __dirname + '/karma.conf.js',
+        singleRun: !opts.continuous
     }, done);
 });
 
