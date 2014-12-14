@@ -306,6 +306,16 @@ describe('Minionette.Region', function() {
             region.attach(newView);
         });
 
+        it("will not cause view to become detached", function() {
+            parentView.render();
+            var view = region.view;
+            var expectedIndex = view.$el.index();
+
+            region.attach(view);
+
+            expect(region.view).to.equal(view);
+            expect(view.$el.index()).to.equal(expectedIndex);
+        });
     });
 
     describe("#detach()", function() {
