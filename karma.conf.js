@@ -89,7 +89,7 @@ module.exports = function(config) {
         conf.coverageReporter = {
             dir: 'coverage',
             subdir: '.',
-            type: 'lcovonly'
+            type: 'lcov'
         };
     }
 
