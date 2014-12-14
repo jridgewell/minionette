@@ -111,6 +111,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     },
 
     _removeViews: function() {
+        // Prevent an extra reflow from resetting
         var view = this.view;
         delete this.view;
 
