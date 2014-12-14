@@ -19,6 +19,7 @@
     "latedef": true,
     "newcap": true,
     "noarg": true,
+    "node": true,
     "strict": false,
     "undef": true,
     "unused": true
