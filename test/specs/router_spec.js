@@ -39,6 +39,21 @@ describe('Minionette.Router', function() {
                 };
             });
 
+            it("does not throw errors for unmatched route", function() {
+                router.trigger('route', 'controlleraction');
+                // Noop. Error would have been thrown by trigger
+            });
+
+            it("does not throw errors for unmatched action", function() {
+                router.trigger('route', 'nonexistent/action');
+                // Noop. Error would have been thrown by trigger
+            });
+
+            it("does not throw errors for unmatched action", function() {
+                router.trigger('route', 'controller/nonexistent');
+                // Noop. Error would have been thrown by trigger
+            });
+
             it("parses route event into controller/action", function() {
                 router.trigger('route', 'controller/action');
 
