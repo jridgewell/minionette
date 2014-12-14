@@ -1,4 +1,10 @@
 describe('Minionette.CollectionView', function() {
+    describe("constructor", function() {
+        it("does not error when instance without options", function() {
+            expect(new Minionette.CollectionView()).to.be.instanceof(Minionette.CollectionView);
+        });
+    });
+
     describe("instances", function() {
         var collection, view;
         beforeEach(function() {
@@ -268,6 +274,16 @@ describe('Minionette.CollectionView', function() {
                 modelView.trigger('event');
 
                 expect(spy).to.not.have.been.called;
+            });
+
+            it("will not remove any view for a model it is not tracking", function() {
+                model = new Backbone.Model();
+                modelView = new Minionette.ModelView({ model: model });
+                var spy = sinon.spy(modelView, 'remove');
+
+                view.removeOne(model);
+
+                expect(spy).not.to.have.been.called;
             });
         });
 
