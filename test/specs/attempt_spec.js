@@ -1,20 +1,14 @@
 describe("#attempt()", function() {
-    it("returns undefined if object is undefined", function() {
+    it("does not error if object is undefined", function() {
         var ret = attempt(undefined, 'prop');
 
         expect(ret).to.equal(undefined);
     });
 
-    it("returns undefined if object is null", function() {
+    it("does not error if object is null", function() {
         var ret = attempt(null, 'prop');
 
         expect(ret).to.equal(undefined);
-    });
-
-    it("returns property if 'prop' is not a method", function() {
-        var ret = attempt({prop: true}, 'prop');
-
-        expect(ret).to.equal(true);
     });
 
     it("sets the context of the method to the object", function() {
@@ -39,5 +33,13 @@ describe("#attempt()", function() {
         attempt(obj, 'method', [1, 2, 3]);
 
         expect(spy).to.have.been.calledWithExactly(1, 2, 3);
+    });
+
+    it("passes the args param as argument to the method", function() {
+        var spy = sinon.spy(),
+        obj = {method: spy};
+        attempt(obj, 'method', 1);
+
+        expect(spy).to.have.been.calledWithExactly(1);
     });
 });
