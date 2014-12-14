@@ -1,12 +1,13 @@
 describe('Minionette.Model', function() {
-    var Model = Minionette.Model.extend({
+    var proto = {
         name: Minionette.Computed('first', 'last', function() {
             return [this.get('first'), this.get('last')].join(' ');
         }),
         other: Minionette.Computed('first', function() {
             return this.get('first');
         })
-    });
+    };
+    var Model = Minionette.Model.extend(proto);
     var model;
     beforeEach(function() {
         model = new Model({first: 'first', last: 'last'});
@@ -35,7 +36,7 @@ describe('Minionette.Model', function() {
 
         describe("caches computed property property names", function() {
             it("caches property names on prototype", function() {
-                expect(Model.prototype._computedProperties).to.deep.equal(['name']);
+                expect(Model.prototype._computedProperties).to.deep.equal(_.methods(proto));
             });
 
             it("falls back to instance", function() {
@@ -45,7 +46,7 @@ describe('Minionette.Model', function() {
                 model = new Child();
 
                 expect(_.has(Child.prototype, '_computedProperties')).to.equal(false);
-                expect(model._computedProperties).to.deep.equal(['name']);
+                expect(model._computedProperties).to.deep.equal(_.methods(proto));
             });
         });
 
@@ -112,7 +113,6 @@ describe('Minionette.Model', function() {
                 });
 
                 expect(spy).to.have.been.calledOnce;
-            });
             });
         });
 
