@@ -44,6 +44,7 @@ Minionette.CollectionView = Minionette.View.extend({
         return Minionette.View.prototype.render.apply(this);
     },
 
+    //TODO
     _renderEmptyView: function() {
         if (!this.EmptyView) { return; }
 
@@ -57,39 +58,51 @@ Minionette.CollectionView = Minionette.View.extend({
         this.appendModelView(view.render());
     },
 
+    //TODO
     _removeEmptyView: function() {
         _.result(this.emptyView, 'remove');
         delete this.emptyView;
     },
 
+    //TODO
+    buildDocumentFragment: function() {
+        // Use a DocumentFragment to speed up #render()
+        return document.createDocumentFragment();
+    },
+
+    //TODO
     _renderModelViews: function() {
         if (this.collection.isEmpty()) {
             return this._renderEmptyView();
         }
 
-        // Use a DocumentFragment to speed up #render()
-        this.modelViewsFrag = document.createDocumentFragment();
+        this.modelViewsFrag = this.buildDocumentFragment();
 
         // Loop through all our models, and build their view.
         var modelViews = this.collection.map(this.addOne, this);
 
-        this.appendModelViewFrag(this.modelViewsFrag);
+        if (this.modelViewsFrag) {
+            this.appendModelViewFrag(this.modelViewsFrag);
 
-        _.each(modelViews, function(view) {
-            this.trigger('addedOne', view, this);
-        }, this);
+            _.each(modelViews, function(view) {
+                this.trigger('addedOne', view, this);
+            }, this);
 
-        this.modelViewsFrag = null;
+            this.modelViewsFrag = null;
+        }
     },
 
+    //TODO
     appendModelView: function(view) {
         this.$el.append(view.$el);
     },
 
+    //TODO
     appendModelViewToFrag: function(view) {
         this.modelViewsFrag.appendChild(view.el);
     },
 
+    //TODO
     appendModelViewFrag: function(frag) {
         this.$el.append(frag);
     },
