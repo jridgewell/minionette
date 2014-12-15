@@ -80,7 +80,7 @@ Minionette.View = Backbone.View.extend({
         // Remove the old region, if it exists already
         _.result(this._regions[name], 'remove');
 
-        var options = { cid: name };
+        var options = { name: name };
         // If this is a Backbone.View, pass that as the
         // view to the region.
         if (!view || view.$el) {
@@ -95,7 +95,7 @@ Minionette.View = Backbone.View.extend({
         var region = new this.Region(options);
 
         region._parent = this;
-        this[region.cid] = this._regions[region.cid] = region;
+        this[name] = this._regions[name] = region;
 
         return region;
     },
@@ -117,8 +117,8 @@ Minionette.View = Backbone.View.extend({
 
     // A remove helper to remove a region
     _removeRegion: function(region) {
-        delete this[region.cid];
-        delete this._regions[region.cid];
+        delete this[region.name];
+        delete this._regions[region.name];
     },
 
     // Loop through the events given, and listen to

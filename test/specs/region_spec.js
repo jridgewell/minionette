@@ -9,21 +9,10 @@ describe('Minionette.Region', function() {
         region = parentView.addRegion('region', view);
     });
 
-    describe("constructor", function() {
-        var cid = 'cid';
-        it("sets #cid to cid if passed in", function() {
-            region = new Minionette.Region({cid: cid});
-            expect(region.cid).to.equal(cid);
-        });
-    });
-
     describe("instantiated with options", function() {
         var newView, expectedIndex;
         beforeEach(function() {
             newView = new Minionette.View();
-        });
-        afterEach(function() {
-            expect(expectedIndex).to.be.above(-1);
         });
 
         it("falsey view", function() {
@@ -34,6 +23,7 @@ describe('Minionette.Region', function() {
             view.region.attach(newView);
 
             expect(newView.$el.index()).to.equal(expectedIndex);
+            expect(expectedIndex).to.be.above(-1);
         });
 
         it("real view", function() {
@@ -44,6 +34,7 @@ describe('Minionette.Region', function() {
             view.region.attach(newView);
 
             expect(newView.$el.index()).to.equal(expectedIndex);
+            expect(expectedIndex).to.be.above(-1);
         });
 
         it("selector", function() {
@@ -54,6 +45,7 @@ describe('Minionette.Region', function() {
             view.test.attach(newView);
 
             expect(newView.$el.index()).to.equal(expectedIndex);
+            expect(expectedIndex).to.be.above(-1);
         });
 
         it("jQuery object", function() {
@@ -64,6 +56,7 @@ describe('Minionette.Region', function() {
             view.test.attach(newView);
 
             expect(newView.$el.index()).to.equal(expectedIndex);
+            expect(expectedIndex).to.be.above(-1);
         });
     });
 
