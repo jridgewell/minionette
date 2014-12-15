@@ -1,12 +1,8 @@
 Minionette.CollectionView = Minionette.View.extend({
     constructor: function(options) {
-        // Initialize a storage object for our modelViews
-        this._modelViews = {};
-        this.modelViewsFrag = null;
-
         // Ensure this has a ModelView to initialize
         // new modelViews from.
-        this._ensureModelView(options || {});
+        this._ensureModelViews(options || {});
 
         Minionette.View.apply(this, arguments);
 
@@ -44,7 +40,29 @@ Minionette.CollectionView = Minionette.View.extend({
         return Minionette.View.prototype.render.apply(this);
     },
 
+    _renderEmptyView: function() {
+        if (!this.EmptyView) { return; }
+
+        var view = this.emptyView = this.buildModelView(
+            null,
+            this.EmptyView
+        );
+
+        this._forwardEvents(view);
+
+        this.appendModelView(view.render());
+    },
+
+    _removeEmptyView: function() {
+        _.result(this.emptyView, 'remove');
+        delete this.emptyView;
+    },
+
     _renderModelViews: function() {
+        if (this.collection.isEmpty()) {
+            return this._renderEmptyView();
+        }
+
         // Use a DocumentFragment to speed up #render()
         this.modelViewsFrag = document.createDocumentFragment();
 
@@ -74,7 +92,9 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // Add an individual model's view to this.$el.
     addOne: function(model) {
-        var view = this.buildModelView(model);
+        this._removeEmptyView();
+
+        var view = this.buildModelView(model, this.ModelView);
         view._parent = this;
 
         // Setup event forwarding
@@ -98,8 +118,8 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // An override-able method to construct a new
     // modelView.
-    buildModelView: function(model) {
-        return new this.ModelView({model: model});
+    buildModelView: function(model, ModelView) {
+        return new ModelView({model: model});
     },
 
     // Remove an individual model's view from this.$el.
@@ -108,10 +128,16 @@ Minionette.CollectionView = Minionette.View.extend({
 
         if (view) {
             this.trigger('removeOne', view, this);
+
             delete this._modelViews[model.cid];
             view.remove();
+
             this.trigger('removedOne', view, this);
             this.stopListening(view);
+        }
+
+        if (!this.emptyView && this.collection.isEmpty()) {
+            this._renderEmptyView();
         }
 
         return view;
@@ -126,18 +152,29 @@ Minionette.CollectionView = Minionette.View.extend({
     // A callback method bound to the 'remove:before'
     // event. Removes all our modelViews.
     _removeModelViews: function() {
+        _.result(this.emptyView, 'remove');
         _.invoke(this._modelViews, 'remove');
         this._modelViews = {};
     },
 
     // Sets this.ModelView. Prioritizes instantiated options.ModelView,
     // then a subclass' prototype ModelView, and defaults to Minionette.ModelView
-    _ensureModelView: function(options) {
+    _ensureModelViews: function(options) {
+        // Initialize a storage object for our modelViews
+        this._modelViews = {};
+        this.modelViewsFrag = null;
+
         var mv = options.ModelView || this.ModelView;
         if (!_.isFunction(mv)) {
             mv = Minionette.ModelView.extend(mv);
         }
         this.ModelView = mv;
+
+        var ev = options.EmptyView || this.EmptyView || void 0;
+        if (ev && !_.isFunction(ev)) {
+            ev = Minionette.ModelView.extend(ev);
+        }
+        this.EmptyView = ev;
     },
 
     // Since CollectionView is meant to be largely automated,
