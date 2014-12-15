@@ -119,6 +119,41 @@ describe('Minionette.View', function() {
     });
 
     describe("instances", function() {
+        describe("#initialize", function() {
+            it("allows custom regions", function() {
+                var regions = {};
+                var view = new (Minionette.View.extend({
+                    initialize: function() {
+                        this.regions = regions;
+                    }
+                }))();
+
+                expect(view.regions).to.equal(regions);
+            });
+
+            it("allows custom modelEvents", function() {
+                var modelEvents = {};
+                var view = new (Minionette.View.extend({
+                    initialize: function() {
+                        this.modelEvents = modelEvents;
+                    }
+                }))();
+
+                expect(view.modelEvents).to.equal(modelEvents);
+            });
+
+            it("allows custom collectionEvents", function() {
+                var collectionEvents = {};
+                var view = new (Minionette.View.extend({
+                    initialize: function() {
+                        this.collectionEvents = collectionEvents;
+                    }
+                }))();
+
+                expect(view.collectionEvents).to.equal(collectionEvents);
+            });
+        });
+
         it("creates #template()", function() {
             expect(view.template).to.exist;
             expect(view.template()).to.exist;

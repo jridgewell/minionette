@@ -16,6 +16,14 @@ describe('Minionette.CollectionView', function() {
             expect(new view.ModelView()).to.be.instanceof(Minionette.ModelView);
         });
 
+        it("sets ModelView to an extended Minionette.ModelView", function() {
+            expect(new view.ModelView()).to.be.instanceof(Minionette.ModelView);
+        });
+
+        it("does not set EmptyView by default", function() {
+            expect(view.EmptyView).to.equal(undefined);
+        });
+
         it("Allows you to specify tagName and template for ModelView", function() {
             var opts = {template: function() { return 'hello!'; }, tagName: 'li'};
             view = new Minionette.CollectionView({ModelView: opts});
@@ -42,43 +50,69 @@ describe('Minionette.CollectionView', function() {
             });
         });
 
+        describe("#initialize", function() {
+            it("allows custom ModelView", function() {
+                var ModelView = function() {};
+                var cv = new (Minionette.CollectionView.extend({
+                    initialize: function() {
+                        this.ModelView = ModelView;
+                    }
+                }))();
+
+                expect(cv.ModelView).to.equal(ModelView);
+            });
+
+            it("allows custom EmptyView", function() {
+                var EmptyView = function() {};
+                var cv = new (Minionette.CollectionView.extend({
+                    initialize: function() {
+                        this.EmptyView = EmptyView;
+                    }
+                }))();
+
+                expect(cv.EmptyView).to.equal(EmptyView);
+            });
+        });
+
         describe("#modelViewEventPrefix", function() {
+            var spy, modelView;
+            beforeEach(function() {
+                spy = sinon.spy();
+                modelView = view.addOne(new Backbone.Model());
+                view.on('all', spy);
+            });
+
             it("uses 'modelView:' as prefix by default", function() {
-                view.modelViewEventPrefix = 'modelView';
+                expect(view.modelViewEventPrefix).to.equal('modelView');
+            });
+
+            it("forwards all events under '{modelViewEventPrefix}:{eventName}'", function() {
+                modelView.trigger('event');
+
+                expect(spy).to.have.been.calledWith('modelView:event');
             });
 
             it("is changeable at any time", function() {
-                var spy = sinon.spy();
-                var v = view.addOne(new Backbone.Model());
                 // Change modelViewEventPrefix AFTER adding the new model.
                 view.modelViewEventPrefix = 'tester';
-                view.on('tester:event', spy);
 
-                v.trigger('event');
+                modelView.trigger('event');
 
-                expect(spy).to.have.been.called;
+                expect(spy).to.have.been.calledWith('tester:event');
             });
 
             it("can be set to false, and event will have same name", function() {
                 view.modelViewEventPrefix = false;
-                var spy = sinon.spy();
-                var v = view.addOne(new Backbone.Model());
-                view.on('event', spy);
 
-                v.trigger('event');
+                modelView.trigger('event');
 
-                expect(spy).to.have.been.called;
+                expect(spy).to.have.been.calledWith('event');
             });
 
-            it("passes the modelView as the last param", function(done) {
-                var v = view.addOne(new Backbone.Model());
-                view.on('modelView:event', function(data, view) {
-                    expect(data).to.equal(true);
-                    expect(view).to.equal(v);
-                    done();
-                });
+            it("passes the modelView as the last param", function() {
+                modelView.trigger('event', true);
 
-                v.trigger('event', true);
+                expect(spy).to.have.been.calledWith('modelView:event', true, modelView);
             });
         });
 
