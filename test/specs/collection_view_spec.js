@@ -233,12 +233,6 @@ describe('Minionette.CollectionView', function() {
                 expect(v).to.be.instanceOf(Backbone.View);
             });
 
-            it("sets the new modelView's _parent to this", function() {
-                var v = view.addOne(model);
-
-                expect(v._parent).to.equal(view);
-            });
-
             it("appends the new modelView's el to this.$el", function() {
                 var v = view.addOne(model);
 
