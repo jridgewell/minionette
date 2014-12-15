@@ -133,11 +133,10 @@ Minionette.CollectionView = Minionette.View.extend({
         if (view) {
             this.trigger('removeOne', view, this);
 
-            delete this._modelViews[model.cid];
             view.remove();
 
             this.trigger('removedOne', view, this);
-            this.stopListening(view);
+            this._removeView(view);
         }
 
         if (!this.emptyView && this.collection.isEmpty()) {
@@ -150,7 +149,8 @@ Minionette.CollectionView = Minionette.View.extend({
     // A hook method that is called during
     // a view#remove().
     _removeView: function(view) {
-        delete this._modelViews[view.model.cid];
+        delete this._modelViews[_.result(view.model, 'cid')];
+        this.stopListening(view);
     },
 
     // A callback method bound to the 'remove:before'
