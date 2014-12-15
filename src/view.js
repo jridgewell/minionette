@@ -74,8 +74,7 @@ Minionette.View = Backbone.View.extend({
     },
 
     // Adds the region "name" to this as this[name].
-    // Also attaches it to this._regions[name], for
-    // internal management.
+    // Also attaches it to this._regions for internal management.
     addRegion: function(name, view) {
         // Remove the old region, if it exists already
         _.result(this._regions[name], 'remove');

@@ -472,9 +472,8 @@ describe('Minionette.View', function() {
                 expect(spy).to.have.been.called;
             });
 
-            it("sets this#[region] and this#_regions[region] to the region", function() {
+            it("sets this#[region] to the region", function() {
                 expect(view.region).to.equal(region);
-                expect(view._regions.region).to.equal(region);
             });
 
             it("returns the region", function() {
