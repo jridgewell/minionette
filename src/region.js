@@ -40,11 +40,11 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
     _ensureElement: function(view) {
         var $context = _.result(this._parent, '$el') || Backbone.$(),
-            $el;
+            $el = view.$el;
 
-        // Don't reset the view's $el if the parent
-        // context is the same.
-        if (!view.$el.parent().is($context)) {
+        // Don't reset the view's $el if it is contained
+        // in the parent's $el.
+        if (!$el.closest($context).length) {
             $el = $context.find(view._selector);
             view.setElement($el);
         }
@@ -143,9 +143,9 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
     // Reattaches the detached view.
     reattach: function() {
-        // After a render, #_view references an element that is
-        // not really in the parent. Reattach #_view to it.
-        this._ensureElement(this._view);
+        // After a render, #view references an element that is
+        // not really in the parent. Reattach #view to it.
+        this._ensureElement(this.view);
 
         // If there's not a detached view, stop!
         if (!this._detachedView) { return; }
