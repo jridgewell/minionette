@@ -10,7 +10,7 @@ Minionette.Computed = function() {
         throw new TypeError('Minionette.Computed must be called with dependent keys.');
     }
     if (!_.isFunction(fn)) {
-        throw new TypeError('Minionette.Computed must be with a computing function as last parameter.');
+        throw new TypeError('Minionette.Computed must be called with a computing function as last parameter.');
     }
 
     fn._dependentKeys = dependencies;
