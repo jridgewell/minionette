@@ -6,7 +6,7 @@ Minionette.Region = function(options) {
     this.name = options.name;
 
     // Make sure we have a view.
-    this._ensureView(options);
+    this._setView(options);
 };
 
 // Allow Regions to be extended.
@@ -35,7 +35,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     },
 
     // Ensures the region has a view.
-    _ensureView: function(options) {
+    _setView: function(options) {
         var _view = this._view = this.buildPlaceholderView(options);
         if (options.selector) { _view.selector = options.selector; }
 
