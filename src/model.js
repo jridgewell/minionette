@@ -24,6 +24,7 @@ Minionette.Model = Backbone.Model.extend({
         return ret;
     },
 
+    // Omit the computed properties from our JSON POSTs.
     toJSON: function() {
         return _.omit(this.attributes, this._computedProperties);
     },

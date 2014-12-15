@@ -115,6 +115,7 @@ Minionette.View = Backbone.View.extend({
         attempt(this._parent, '_removeView', this);
     },
 
+    // A remove helper to remove a region
     _removeRegion: function(region) {
         delete this[region.cid];
         delete this._regions[region.cid];
@@ -130,6 +131,8 @@ Minionette.View = Backbone.View.extend({
         }, this);
     },
 
+    // Loops through all UI elements, attaching them
+    // for easy access
     _addUIElements: function() {
         _.each(_.result(this, 'ui'), function(selector, name) {
             this['$' + name] = this.$(selector);

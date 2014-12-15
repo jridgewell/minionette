@@ -38,6 +38,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         this._view._parent = this.view._parent = this;
     },
 
+    // Ensures that the view's el is contained inside the parent view's.
     _ensureElement: function(view) {
         var $context = _.result(this._parent, '$el') || Backbone.$(),
             $el = view.$el;
