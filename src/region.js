@@ -14,40 +14,46 @@ Minionette.Region = function(options) {
 Minionette.Region.extend = Backbone.View.extend;
 
 _.extend(Minionette.Region.prototype, Backbone.Events, {
+    PlaceholderView: Backbone.View.extend({
+        selector: function() {
+            return this.tagName + '[data-cid="' + this.cid + '"]';
+        },
+
+        // Use a span so it collapses on the DOM.
+        tagName: 'span',
+        // Use the data-cid attribute as a unique
+        // attribute. Used for reattaching a detached view.
+        attributes: function() {
+            return { 'data-cid': this.cid };
+        }
+    }),
+
+    // An override-able method to construct a new
+    // placeholder view.
+    buildPlaceholderView: function(options) {
+        return new this.PlaceholderView(options);
+    },
+
     // Ensures the region has a view.
     _ensureView: function(options) {
-        var viewOpts = {
-            // Grab the el from options.
-            // This will override the following if it exists.
-            el: options.el,
-            // If not, set it to a span so when it's
-            // empty it's collapsed on the DOM.
-            tagName: 'span',
-            // Use the data-cid attribute as a unique
-            // attribute. Used for reattaching a detached view.
-            attributes: function() {
-                return {'data-cid': this.cid};
-            }
-        };
-
-        this._view = new Backbone.View(viewOpts);
-        this._view._selector = options.selector || '[data-cid=' + this._view.cid + ']';
+        var _view = this._view = this.buildPlaceholderView(options);
+        if (options.selector) { _view.selector = options.selector; }
 
         this.view = options.view || this._view;
 
-        // And set our view's _parent to this region.
+        // And set our views' _parent to this region.
         this._view._parent = this.view._parent = this;
     },
 
     // Ensures that the view's el is contained inside the parent view's.
     _ensureElement: function(view) {
-        var $context = _.result(this._parent, '$el') || Backbone.$(),
-            $el = view.$el;
+        var $context = _.result(this._parent, '$el') || Backbone.$();
+        var $el = view.$el;
 
         // Don't reset the view's $el if it is contained
         // in the parent's $el.
         if (!$el.closest($context).length) {
-            $el = $context.find(view._selector);
+            $el = $context.find(_.result(view, 'selector'));
             view.setElement($el);
         }
     },
@@ -112,6 +118,8 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         return this;
     },
 
+    // A remove helper to remove all the regions possible
+    // view references.
     _removeViews: function() {
         // Prevent an extra reflow from resetting
         var view = this.view;
@@ -123,6 +131,8 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         _.result(this._detachedView, 'remove');
     },
 
+    // A remove helper to remove this region from it's parent
+    // view.
     _removeFromParent: function() {
         // Remove this region from its parent, if it exists
         attempt(this._parent, '_removeRegion', this);

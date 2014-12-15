@@ -9,10 +9,42 @@ describe('Minionette.Region', function() {
         region = parentView.addRegion('region', view);
     });
 
-    describe("instantiated with options", function() {
+    describe("constructor", function() {
         var newView, expectedIndex;
         beforeEach(function() {
             newView = new Minionette.View();
+        });
+
+        describe("PlaceholderView", function() {
+            beforeEach(function() {
+                newView = new region.PlaceholderView({});
+            });
+
+            it("sets PlaceholderView to an extended Backbone.View", function() {
+                expect(newView).to.be.instanceof(Backbone.View);
+            });
+
+            it("sets tagName to span", function() {
+                expect(newView.$el).to.match('span');
+            });
+
+            it("sets data attributes to placeholder cid", function() {
+                expect(newView.$el).to.match('[data-cid="' + newView.cid + '"]');
+            });
+
+            describe("#buildPlaceholderView", function() {
+                it("sets placeholder view to return value", function() {
+                    var Region = Minionette.Region.extend({
+                        buildPlaceholderView: function() {
+                            return view;
+                        }
+                    });
+
+                    region = new Region();
+
+                    expect(region.view).to.equal(view);
+                });
+            });
         });
 
         it("falsey view", function() {
