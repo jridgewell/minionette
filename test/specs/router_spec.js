@@ -34,34 +34,53 @@ describe('Minionette.Router', function() {
 
         describe("Router Events", function() {
             beforeEach(function() {
-                router.controller = {
-                    action: spy
-                };
+                spy = sinon.spy(router, 'routeToControllerAction');
             });
 
-            it("does not throw errors for unmatched route", function() {
+            it("does not call #routeToControllerAction for unmatched route", function() {
                 router.trigger('route', 'controlleraction');
-                // Noop. Error would have been thrown by trigger
-            });
 
-            it("does not throw errors for unmatched action", function() {
-                router.trigger('route', 'nonexistent/action');
-                // Noop. Error would have been thrown by trigger
-            });
-
-            it("does not throw errors for unmatched action", function() {
-                router.trigger('route', 'controller/nonexistent');
-                // Noop. Error would have been thrown by trigger
+                expect(spy).not.to.have.been.called;
             });
 
             it("parses route event into controller/action", function() {
                 router.trigger('route', 'controller/action');
 
-                expect(spy).to.have.been.called;
+                expect(spy).to.have.been.calledWith('controller', 'action');
             });
 
             it("passes params as arguments to controller/action", function() {
                 router.trigger('route', 'controller/action', [1, 2, 3]);
+
+                expect(spy).to.have.been.calledWith('controller', 'action', [1, 2, 3]);
+            });
+        });
+
+        describe("#routeToControllerAction", function() {
+            beforeEach(function() {
+                router.controller = {
+                    action: spy
+                };
+            });
+
+            it("does not error for unmatched controller", function() {
+                router.routeToControllerAction('nonexistent', 'action');
+                // Noop. Error would have been thrown by trigger
+            });
+
+            it("does not error for unmatched action", function() {
+                router.routeToControllerAction('controller', 'nonexistent');
+                // Noop. Error would have been thrown by trigger
+            });
+
+            it("calls corresponding controller.action method", function() {
+                router.routeToControllerAction('controller', 'action', []);
+
+                expect(spy).to.have.been.called;
+            });
+
+            it("passes params as arguments to controller/action", function() {
+                router.routeToControllerAction('controller', 'action', [1, 2, 3]);
 
                 expect(spy).to.have.been.calledWith(1, 2, 3);
             });
