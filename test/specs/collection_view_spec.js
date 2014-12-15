@@ -251,12 +251,20 @@ describe('Minionette.CollectionView', function() {
         });
 
         describe("#buildModelView()", function() {
+            var ModelView = function() {};
+
             it("creates a view from ModelView", function() {
-                var spy = sinon.spy(view, 'ModelView');
+                var mv = view.buildModelView(null, ModelView);
 
-                view.addOne(new Backbone.Model());
+                expect(mv).to.be.instanceof(ModelView);
+            });
 
-                expect(spy).to.have.been.called;
+            it("passes model as model property of options", function() {
+                var model = {};
+                var spy = sinon.spy();
+                view.buildModelView(model, spy);
+
+                expect(spy).to.have.been.calledWith({ model: model });
             });
         });
 
