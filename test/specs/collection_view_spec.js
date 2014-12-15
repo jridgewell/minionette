@@ -174,22 +174,91 @@ describe('Minionette.CollectionView', function() {
         describe("#appendModelView()", function() {
             beforeEach(function() {
                 view.template = _.template('<p></p>');
+                view.render();
             });
 
             it("just appends by default", function() {
-                view.render();
-                collection.add({});
+                view.appendModelView(new Backbone.View());
 
                 expect(view.$el).to.have.html('<p></p><div></div>');
             });
 
             it("can be overridden to put elements anywhere", function() {
-                view.appendModelView = function(view) { this.$('p').append(view.$el); };
-                view.render();
+                view.appendModelView = function(view) {
+                    this.$('p').append(view.$el);
+                };
 
-                collection.add({});
+                view.appendModelView(new Backbone.View());
 
                 expect(view.$el).to.have.html('<p><div></div></p>');
+            });
+        });
+
+        describe("#buildDocumentFragment", function() {
+            it("it returns a new documentFragment", function() {
+                var frag = {};
+                sinon.stub(document, 'createDocumentFragment', function() {
+                    return frag;
+                });
+
+                expect(view.buildDocumentFragment()).to.equal(frag);
+            });
+        });
+
+        describe("#appendModelViewFrag", function() {
+            var el;
+            beforeEach(function() {
+                view.template = _.template('<p></p>');
+                view.render();
+                el = document.createElement('div');
+            });
+
+            it("just appends by default", function() {
+                view.appendModelViewFrag(el);
+
+                expect(view.$el).to.have.html('<p></p><div></div>');
+            });
+
+            it("can be overridden to put elements anywhere", function() {
+                view.appendModelViewFrag = function(frag) {
+                    this.$('p').append(frag);
+                };
+
+                view.appendModelViewFrag(el);
+
+                expect(view.$el).to.have.html('<p><div></div></p>');
+            });
+        });
+
+        describe("#appendModelViewToFrag", function() {
+            var frag, $el;
+            beforeEach(function() {
+                $el = $('<p/>');
+                frag = view.modelViewsFrag = view.buildDocumentFragment();
+            });
+
+            it("just appends by default", function() {
+                view.appendModelViewToFrag(new Backbone.View());
+
+                $el.append(frag);
+                expect($el).to.have.html('<div></div>');
+            });
+
+            it("can be overridden to put elements anywhere", function() {
+                view.appendModelViewToFrag = function(view) {
+                    var div = this.modelViewsFrag.childNodes[0];
+                    if (div) {
+                        div.appendChild(view.el);
+                    } else {
+                        this.modelViewsFrag.appendChild(view.el);
+                    }
+                };
+
+                view.appendModelViewToFrag(new Backbone.View());
+                view.appendModelViewToFrag(new Backbone.View({tagName: 'span'}));
+
+                $el.append(frag);
+                expect($el).to.have.html('<div><span></span></div>');
             });
         });
 

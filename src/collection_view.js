@@ -64,7 +64,10 @@ Minionette.CollectionView = Minionette.View.extend({
         delete this.emptyView;
     },
 
-    //TODO
+    // An override-able method to construct a new
+    // documentFragment. Return false to prevent
+    // its use, meaning a render will append all the
+    // collection's modelViews individually.
     buildDocumentFragment: function() {
         // Use a DocumentFragment to speed up #render()
         return document.createDocumentFragment();
@@ -92,17 +95,21 @@ Minionette.CollectionView = Minionette.View.extend({
         }
     },
 
-    //TODO
+    // An override-able method to append a modelView to this
+    // collectionView's element.
     appendModelView: function(view) {
         this.$el.append(view.$el);
     },
 
-    //TODO
+    // An override-able method to append a collection of modelView
+    // elements (inside a document fragment) to this collectionView's
+    // elements at once.
     appendModelViewToFrag: function(view) {
         this.modelViewsFrag.appendChild(view.el);
     },
 
-    //TODO
+    // An override-able method to append a modelView to an efficient
+    // DOM element store (a document fragment).
     appendModelViewFrag: function(frag) {
         this.$el.append(frag);
     },
@@ -169,7 +176,7 @@ Minionette.CollectionView = Minionette.View.extend({
     // A callback method bound to the 'remove:before'
     // event. Removes all our modelViews.
     _removeModelViews: function() {
-        _.result(this.emptyView, 'remove');
+        this._removeEmptyView();
         _.invoke(this._modelViews, 'remove');
         this._modelViews = {};
     },
