@@ -44,39 +44,12 @@ Minionette.CollectionView = Minionette.View.extend({
         return Minionette.View.prototype.render.apply(this);
     },
 
-    //TODO
-    _renderEmptyView: function() {
-        if (!this.EmptyView) { return; }
-
-        var view = this.emptyView = this.buildModelView(
-            null,
-            this.EmptyView
-        );
-
-        this._forwardEvents(view);
-
-        this.appendModelView(view.render());
-    },
-
-    //TODO
-    _removeEmptyView: function() {
-        _.result(this.emptyView, 'remove');
-        delete this.emptyView;
-    },
-
-    // An override-able method to construct a new
-    // documentFragment. Return false to prevent
-    // its use, meaning a render will append all the
-    // collection's modelViews individually.
-    buildDocumentFragment: function() {
-        // Use a DocumentFragment to speed up #render()
-        return document.createDocumentFragment();
-    },
-
-    //TODO
+    // Render all the collection's models as modelViews,
+    // using a DocumentFragment to add all modelViews
+    // efficiently.
     _renderModelViews: function() {
         if (this.collection.isEmpty()) {
-            return this._renderEmptyView();
+            return this.renderEmptyView();
         }
 
         this.modelViewsFrag = this.buildDocumentFragment();
@@ -93,6 +66,20 @@ Minionette.CollectionView = Minionette.View.extend({
 
             this.modelViewsFrag = null;
         }
+    },
+
+    // Add the empty view to this.$el, if the
+    // EmptyView constructor is present.
+    renderEmptyView: function() {
+        if (!this.EmptyView) { return; }
+
+        var view = this.buildEmptyView();
+
+        this._forwardEvents(view);
+
+        this.appendModelView(view.render());
+
+        return view;
     },
 
     // An override-able method to append a modelView to this
@@ -116,7 +103,7 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // Add an individual model's view to this.$el.
     addOne: function(model) {
-        this._removeEmptyView();
+        this.removeEmptyView();
 
         var view = this.buildModelView(model, this.ModelView);
         view._parent = this;
@@ -146,6 +133,20 @@ Minionette.CollectionView = Minionette.View.extend({
         return new ModelView({model: model});
     },
 
+    // An override-able method to construct a new
+    // documentFragment. Return false to prevent
+    // its use, meaning a render will append all the
+    // collection's modelViews individually.
+    buildDocumentFragment: function() {
+        // Use a DocumentFragment to speed up #render()
+        return document.createDocumentFragment();
+    },
+
+    // An override-able method to construct a new
+    // emptyView.
+    buildEmptyView: function() {
+    },
+
     // Remove an individual model's view from this.$el.
     removeOne: function(model) {
         var view = this._modelViews[model.cid];
@@ -160,7 +161,7 @@ Minionette.CollectionView = Minionette.View.extend({
         }
 
         if (!this.emptyView && this.collection.isEmpty()) {
-            this._renderEmptyView();
+            this.renderEmptyView();
         }
 
         return view;
@@ -176,9 +177,19 @@ Minionette.CollectionView = Minionette.View.extend({
     // A callback method bound to the 'remove:before'
     // event. Removes all our modelViews.
     _removeModelViews: function() {
-        this._removeEmptyView();
+        this.removeEmptyView();
         _.invoke(this._modelViews, 'remove');
         this._modelViews = {};
+    },
+
+    // Removes the emptyView, if it exists.
+    removeEmptyView: function() {
+        var view = this.emptyView;
+
+        delete this.emptyView;
+        _.result(view, 'remove');
+
+        return view;
     },
 
     // Sets this.ModelView. Prioritizes instantiated options.ModelView,
@@ -190,7 +201,7 @@ Minionette.CollectionView = Minionette.View.extend({
         }
         this.ModelView = mv;
 
-        var ev = options.EmptyView || this.EmptyView || void 0;
+        var ev = options.EmptyView || this.EmptyView;
         if (ev && !_.isFunction(ev)) {
             ev = Minionette.ModelView.extend(ev);
         }
