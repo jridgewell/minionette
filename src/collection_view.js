@@ -32,6 +32,10 @@ Minionette.CollectionView = Minionette.View.extend({
     // used ("event" -> "event").
     modelViewEventPrefix: 'modelView',
 
+    // The same as `modelViewEventPrefix`, except used exclusively
+    // for forwarding events from the emptyView.
+    emptyViewEventPrefix: 'emptyView',
+
     ModelView: Minionette.ModelView,
 
     // A default useful render function.
@@ -74,7 +78,7 @@ Minionette.CollectionView = Minionette.View.extend({
         if (!this.EmptyView) { return; }
 
         var view = this.buildEmptyView();
-        this._forwardEvents(view);
+        this._forwardEvents(view, 'emptyViewEventPrefix');
         this.appendModelView(view.render());
     },
 
@@ -105,7 +109,7 @@ Minionette.CollectionView = Minionette.View.extend({
         view._parent = this;
 
         // Setup event forwarding
-        this._forwardEvents(view);
+        this._forwardEvents(view, 'modelViewEventPrefix');
 
         // Add the modelView, and keep track of it.
         this._modelViews[model.cid] = view;
@@ -205,10 +209,10 @@ Minionette.CollectionView = Minionette.View.extend({
     // setup event forwarding from modelViews. That way,
     // you only need to listen to events that happen on
     // this collectionView, not on all the modelViews.
-    _forwardEvents: function(view) {
+    _forwardEvents: function(view, prefixer) {
         this.listenTo(view, 'all', function() {
             var args = _.toArray(arguments);
-            var prefix = _.result(this, 'modelViewEventPrefix');
+            var prefix = _.result(this, prefixer);
             prefix = (prefix) ? prefix + ':' : '';
 
             args[0] = prefix + args[0];
