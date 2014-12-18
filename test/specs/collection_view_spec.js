@@ -24,13 +24,22 @@ describe('Minionette.CollectionView', function() {
             expect(view.EmptyView).to.equal(undefined);
         });
 
-        it("Allows you to specify tagName and template for ModelView", function() {
+        it("allows you to specify prototype for ModelView", function() {
             var opts = {template: function() { return 'hello!'; }, tagName: 'li'};
             view = new Minionette.CollectionView({ModelView: opts});
             _.each(opts, function(val, key) {
                 expect(view.ModelView.prototype[key]).to.equal(val);
             });
         });
+
+        it("allows you to specify prototype for EmptyView", function() {
+            var opts = {template: function() { return 'hello!'; }, tagName: 'li'};
+            view = new Minionette.CollectionView({EmptyView: opts});
+            _.each(opts, function(val, key) {
+                expect(view.EmptyView.prototype[key]).to.equal(val);
+            });
+        });
+
 
         describe("Collection Events", function() {
             it("#render() on collection's 'reset' event", function() {

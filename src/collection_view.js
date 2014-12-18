@@ -200,7 +200,7 @@ Minionette.CollectionView = Minionette.View.extend({
 
         var ev = options.EmptyView || this.EmptyView;
         if (ev && !_.isFunction(ev)) {
-            ev = Minionette.ModelView.extend(ev);
+            ev = Minionette.View.extend(ev);
         }
         this.EmptyView = ev;
     },
