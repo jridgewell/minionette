@@ -44,6 +44,7 @@ module.exports = function(config) {
             'src/computed.js',
             'src/model.js',
             'src/router.js',
+            'src/trigger.js',
 
             'test/specs/*.js'
         ],
