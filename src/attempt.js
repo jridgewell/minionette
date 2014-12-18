@@ -5,7 +5,7 @@
 function attempt(obj, prop, args, precheck) {
     // Return undefined unless obj
     // is not null or undefined
-    if (obj == null) { return void 0; }
+    if (obj == null) { return; }
     var fn = obj[prop];
 
     if (precheck || _.isFunction(fn)) {
