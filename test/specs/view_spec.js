@@ -243,7 +243,7 @@ describe('Minionette.View', function() {
 
                 view.remove();
 
-                expect(spy).to.have.been.called;
+                expect(spy).to.have.been.calledWith(view);
             });
 
             it("triggers 'removed' event", function() {
@@ -252,7 +252,7 @@ describe('Minionette.View', function() {
 
                 view.remove();
 
-                expect(spy).to.have.been.called;
+                expect(spy).to.have.been.calledWith(view);
             });
 
             it("triggers 'remove' event before any DOM manipulations", function() {
@@ -326,7 +326,7 @@ describe('Minionette.View', function() {
 
                 view.render();
 
-                expect(spy).to.have.been.called;
+                expect(spy).to.have.been.calledWith(view);
             });
 
             it("triggers 'rendered' event", function() {
@@ -335,7 +335,7 @@ describe('Minionette.View', function() {
 
                 view.render();
 
-                expect(spy).to.have.been.called;
+                expect(spy).to.have.been.calledWith(view);
             });
 
             it("triggers 'render' event before any DOM manipulations", function() {
