@@ -1,3 +1,5 @@
+var routeMatcher = /^(\w+)\/(\w+)$/;
+
 Minionette.Router = Backbone.Router.extend({
     constructor: function() {
         Backbone.Router.apply(this, arguments);
@@ -8,7 +10,7 @@ Minionette.Router = Backbone.Router.extend({
     // the event name into "{controller}/{action}".
     _parseRouteEvent: function(event, args) {
         var _this = this;
-        event.replace(/^(\w+)\/(\w+)$/, function(_match, controller, action) {
+        event.replace(routeMatcher, function(_match, controller, action) {
             _this.routeToControllerAction(controller, action, args);
         });
     },

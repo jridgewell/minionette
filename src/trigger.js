@@ -1,10 +1,12 @@
+var eventSplitter = /\s+/;
+var eventReplacer = /(^|:| )(\w)/g;
+
 Minionette.trigger = function trigger(event) {
-    var eventSplitter = /\s+/;
-    var method = 'on' + event.replace(/(^|:| )(\w)/g, function(_match, separator, letter) {
+    var method = 'on' + event.replace(eventReplacer, function(_match, separator, letter) {
         return (separator === ' ' ? ' on' : '') + letter.toUpperCase();
     });
 
-    if (eventSplitter.test(event)) {
+    if (eventSplitter.test(method)) {
         var args = _.tail(arguments);
         _.each(method.split(eventSplitter), function(method) {
             attempt(this, method, args);
