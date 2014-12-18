@@ -42,4 +42,9 @@ describe("#attempt()", function() {
 
         expect(spy).to.have.been.calledWithExactly(1);
     });
+
+    it("can be forced to call function by passing `precheck`", function() {
+        obj = {};
+        expect(function() { attempt(obj, 'method', [], true); }).to.throw(TypeError);
+    });
 });
