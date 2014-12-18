@@ -49,7 +49,7 @@ Minionette.CollectionView = Minionette.View.extend({
     // efficiently.
     _renderModelViews: function() {
         if (this.collection.isEmpty()) {
-            return this.renderEmptyView();
+            return this._renderEmptyView();
         }
 
         this.modelViewsFrag = this.buildDocumentFragment();
@@ -70,16 +70,12 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // Add the empty view to this.$el, if the
     // EmptyView constructor is present.
-    renderEmptyView: function() {
+    _renderEmptyView: function() {
         if (!this.EmptyView) { return; }
 
         var view = this.buildEmptyView();
-
         this._forwardEvents(view);
-
         this.appendModelView(view.render());
-
-        return view;
     },
 
     // An override-able method to append a modelView to this
@@ -103,7 +99,7 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // Add an individual model's view to this.$el.
     addOne: function(model) {
-        this.removeEmptyView();
+        this._removeEmptyView();
 
         var view = this.buildModelView(model, this.ModelView);
         view._parent = this;
@@ -145,6 +141,7 @@ Minionette.CollectionView = Minionette.View.extend({
     // An override-able method to construct a new
     // emptyView.
     buildEmptyView: function() {
+        return new this.EmptyView();
     },
 
     // Remove an individual model's view from this.$el.
@@ -161,7 +158,7 @@ Minionette.CollectionView = Minionette.View.extend({
         }
 
         if (!this.emptyView && this.collection.isEmpty()) {
-            this.renderEmptyView();
+            this._renderEmptyView();
         }
 
         return view;
@@ -177,19 +174,15 @@ Minionette.CollectionView = Minionette.View.extend({
     // A callback method bound to the 'remove:before'
     // event. Removes all our modelViews.
     _removeModelViews: function() {
-        this.removeEmptyView();
+        this._removeEmptyView();
         _.invoke(this._modelViews, 'remove');
         this._modelViews = {};
     },
 
     // Removes the emptyView, if it exists.
     removeEmptyView: function() {
-        var view = this.emptyView;
-
+        _.result(this.emptyView, 'remove');
         delete this.emptyView;
-        _.result(view, 'remove');
-
-        return view;
     },
 
     // Sets this.ModelView. Prioritizes instantiated options.ModelView,
