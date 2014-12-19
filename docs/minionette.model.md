@@ -1,5 +1,5 @@
 Minionette.Model
-====================
+================
 
 `Minionette.Model` is a base Model class, designed to work with
 [Minionette.Computed](/docs/minionette.model.md). Any methods wrapped

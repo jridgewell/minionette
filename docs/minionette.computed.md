@@ -1,5 +1,5 @@
 Minionette.Computed
-====================
+===================
 
 `Minionette.Computed` is a helper function, designed to specify the
 attributes a Model's method depends on for its result. When used in

@@ -1,5 +1,5 @@
 Minionette.Router
-====================
+=================
 
 `Minionette.Router` is a base Router class, designed to separate your
 app's routes from its controller actions. This prevents Router bloat by
