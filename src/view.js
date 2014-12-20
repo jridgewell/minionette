@@ -144,7 +144,7 @@ Minionette.View = Backbone.View.extend({
         }, this);
     },
 
-    // A helper that is passed to #template() that will
+    // A helper that is passed to #template that will
     // render regions inline.
     _viewHelper: function(name) {
         var region = this._regions[name] || this.addRegion(name);

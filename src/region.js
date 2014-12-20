@@ -181,7 +181,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     },
 
     // A hook method that is called during
-    // a view#remove(). Allows a view to be removed,
+    // a view#remove. Allows a view to be removed,
     // replacing it with the placeholder.
     _removeView: function(view) {
         if (this.view === view && view !== this._view) {

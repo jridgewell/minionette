@@ -10,7 +10,7 @@ Minionette.CollectionView = Minionette.View.extend({
         // new modelViews from.
         this._ensureModelViews(options || {});
 
-        // Augment #render() with our collection specific items.
+        // Augment #render with our collection specific items.
         this.on('rendered', this._renderModelViews);
         // Make sure we remove our modelViews when this is removed.
         this.on('removed', this._removeModelViews);
@@ -38,10 +38,10 @@ Minionette.CollectionView = Minionette.View.extend({
 
     ModelView: Minionette.ModelView,
 
-    // A default useful render function.
+    // Augment View#render so we can remove our old modelViews.
     render: function() {
         // Remove all our modelViews after the 'render' event is
-        // fired. This is set on #render() so that the removing
+        // fired. This is set on #render so that the removing
         // will happen after all other 'render' listeners.
         this.once('render', this._removeModelViews);
 
@@ -138,7 +138,7 @@ Minionette.CollectionView = Minionette.View.extend({
     // its use, meaning a render will append all the
     // collection's modelViews individually.
     buildDocumentFragment: function() {
-        // Use a DocumentFragment to speed up #render()
+        // Use a DocumentFragment to speed up #render
         return document.createDocumentFragment();
     },
 
@@ -169,7 +169,7 @@ Minionette.CollectionView = Minionette.View.extend({
     },
 
     // A hook method that is called during
-    // a view#remove().
+    // a view#remove.
     _removeView: function(view) {
         delete this._modelViews[_.result(view.model, 'cid')];
         this.stopListening(view);
