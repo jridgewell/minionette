@@ -10,6 +10,6 @@ function attempt(obj, prop, args, precheck) {
 
     if (precheck || _.isFunction(fn)) {
         var apply = _.isArray(args);
-        return apply ? fn.apply(obj, args) : obj[prop](args);
+        return apply ? fn.apply(obj, args) : fn(args);
     }
 }
