@@ -15,6 +15,10 @@ Minionette.Region.extend = Backbone.View.extend;
 
 _.extend(Minionette.Region.prototype, Backbone.Events, {
     PlaceholderView: Backbone.View.extend({
+        initialize: function(options) {
+            this.selector = _.result(options, 'selector') || this.selector;
+        },
+
         selector: function() {
             return this.tagName + '[data-cid="' + this.cid + '"]';
         },
@@ -36,8 +40,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
     // Ensures the region has a view.
     _setView: function(options) {
-        var _view = this._view = this.buildPlaceholderView(options);
-        if (options.selector) { _view.selector = options.selector; }
+        this._view = this.buildPlaceholderView(options);
 
         this.view = options.view || this._view;
 
