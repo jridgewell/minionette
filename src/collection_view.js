@@ -105,7 +105,7 @@ Minionette.CollectionView = Minionette.View.extend({
     addOne: function(model) {
         this._removeEmptyView();
 
-        var view = this.buildModelView(model, this.ModelView);
+        var view = this.buildModelView(model);
         view._parent = this;
 
         // Setup event forwarding
@@ -129,8 +129,8 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // An override-able method to construct a new
     // modelView.
-    buildModelView: function(model, ModelView) {
-        return new ModelView({model: model});
+    buildModelView: function(model) {
+        return new this.ModelView({model: model});
     },
 
     // An override-able method to construct a new
