@@ -1,7 +1,4 @@
 describe('Minionette.View', function() {
-    var RegionTest = Minionette.View.extend({
-        template: _.template('<p>test</p><%= view("region") %><p>test</p>')
-    });
     var view;
     beforeEach(function() {
         view = new Minionette.View();
@@ -110,7 +107,7 @@ describe('Minionette.View', function() {
             it("attaches selector to the region", function() {
                 view = new RegionTest();
 
-                var expectedIndex = view.$(RegionTest.prototype.regions.selector).index();
+                var expectedIndex = view.$(view.regions.selector).index();
                 var subView = view.selector.view;
                 expect(subView).to.equal(view.selector._view);
                 expect(subView.$el.index()).to.equal(expectedIndex);
@@ -237,6 +234,10 @@ describe('Minionette.View', function() {
         });
 
         describe("#remove()", function() {
+            beforeEach(function() {
+                view.template = '<p></p>';
+            });
+
             it("triggers 'remove' event", function() {
                 var spy = sinon.spy();
                 view.on('remove', spy);
@@ -256,31 +257,48 @@ describe('Minionette.View', function() {
             });
 
             it("triggers 'remove' event before any DOM manipulations", function() {
-                var parentView = new RegionTest();
-                var view = new RegionTest();
-                parentView.render();
+                var region = view.addRegion('region', 'p');
                 view.render();
-                parentView.region.attach(view);
 
                 view.on('remove', function() {
-                    expect(parentView.$el).to.have(view.$el);
-                    expect(view.$el).to.have(view.region.view.$el);
+                    expect(view.$el).to.have(region.view.$el);
                 });
 
                 view.remove();
             });
 
             it("triggers 'removed' event after any DOM manipulations", function() {
-                var parentView = new RegionTest();
-                var view = new RegionTest();
-                parentView.render();
+                var region = view.addRegion('region', 'p');
                 view.render();
-                parentView.region.attach(view);
-                var $v = view.region.view.$el;
+
+                var $r = view.region.view.$el;
 
                 view.on('removed', function() {
-                    expect(parentView.$el).not.to.have(view.$el);
-                    expect(view.$el).not.to.have($v);
+                    expect(view.$el).not.to.have($r);
+                });
+
+                view.remove();
+            });
+
+            it("triggers subviews's 'remove' event before any DOM manipulations", function() {
+                var region = view.addRegion('region', 'p');
+                view.render();
+
+                region.on('remove', function() {
+                    expect(view.$el).to.have(region.view.$el);
+                });
+
+                view.remove();
+            });
+
+            it("triggers subview's 'removed' event after any DOM manipulations", function() {
+                var region = view.addRegion('region', 'p');
+                view.render();
+
+                var $r = region.view.$el;
+
+                region.on('removed', function() {
+                    expect(view.$el).not.to.have($r);
                 });
 
                 view.remove();
@@ -320,6 +338,10 @@ describe('Minionette.View', function() {
         });
 
         describe("#render()", function() {
+            beforeEach(function() {
+                view.template = _.template('<p></p>');
+            });
+
             it("triggers 'render' event", function() {
                 var spy = sinon.spy();
                 view.on('render', spy);
@@ -339,24 +361,24 @@ describe('Minionette.View', function() {
             });
 
             it("triggers 'render' event before any DOM manipulations", function() {
-                view = new RegionTest();
+                var region = view.addRegion('region', 'p');
                 view.render();
-                $v = view.$('p');
 
                 view.on('render', function() {
-                    expect(view.$el).to.have($v);
+                    expect(view.$el).to.have(region.view.$el);
                 });
 
                 view.render();
             });
 
             it("triggers 'rendered' event after any DOM manipulations", function() {
-                view = new RegionTest();
+                view.addRegion('region', 'p');
                 view.render();
-                $v = view.$('p');
+
+                var $r = view.region.view.$el;
 
                 view.on('rendered', function() {
-                    expect(view.$el).not.to.have($v);
+                    expect(view.$el).not.to.have($r);
                 });
 
                 view.render();
@@ -409,10 +431,10 @@ describe('Minionette.View', function() {
 
 
             it("reattaches regions", function() {
-                view = new RegionTest();
+                view.addRegion('region', 'p');
                 view.render();
-                view.region.attach(new Minionette.View());
-                var $v = view.region.view.$el;
+                var region = view.region.attach(new Minionette.View());
+                var $v = region.view.$el;
 
                 view.render();
 

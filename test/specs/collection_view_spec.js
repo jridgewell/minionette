@@ -706,6 +706,123 @@ describe('Minionette.CollectionView', function() {
 
                 expect(spy).to.have.been.called;
             });
+
+            it("triggers 'remove' event", function() {
+                var spy = sinon.spy();
+                view.on('remove', spy);
+
+                view.remove();
+
+                expect(spy).to.have.been.calledWith(view);
+            });
+
+            it("triggers 'removed' event", function() {
+                var spy = sinon.spy();
+                view.on('removed', spy);
+
+                view.remove();
+
+                expect(spy).to.have.been.calledWith(view);
+            });
+
+            it("triggers 'remove' event before any DOM manipulations", function() {
+                view.template = '<p></p>';
+                var region = view.addRegion('region', 'p');
+                view.render();
+
+                var mv = view.addOne(new Backbone.Model());
+
+                view.on('remove', function() {
+                    expect(view.$el).to.have(region.view.$el);
+                    expect(view.$el).to.have(mv.$el);
+                });
+
+                view.remove();
+            });
+
+            it("triggers 'removed' event after any DOM manipulations", function() {
+                view.template = '<p></p>';
+                var region = view.addRegion('region', 'p');
+                view.render();
+
+                var $r = view.region.view.$el;
+                var $mv = view.addOne(new Backbone.Model()).$el;
+
+                view.on('removed', function() {
+                    expect(view.$el).not.to.have($r);
+                    expect(view.$el).not.to.have($mv);
+                });
+
+                view.remove();
+            });
+
+            it("triggers subview's 'remove' event before any DOM manipulations", function() {
+                view.template = '<p></p>';
+                var region = view.addRegion('region', 'p');
+                view.render();
+
+                var mv = view.addOne(new Backbone.Model());
+
+                region.on('remove', function() {
+                    expect(view.$el).to.have(region.view.$el);
+                });
+                mv.on('remove', function() {
+                    expect(view.$el).to.have(mv.$el);
+                });
+
+                view.remove();
+            });
+
+            it("triggers subviews 'removed' event after any DOM manipulations", function() {
+                view.template = '<p></p>';
+                var region = view.addRegion('region', 'p');
+                view.render();
+
+                var mv = view.addOne(new Backbone.Model());
+                var $r = region.view.$el;
+                var $mv = mv.$el;
+
+                region.on('removed', function() {
+                    expect(view.$el).not.to.have($r);
+                });
+                mv.on('removed', function() {
+                    expect(view.$el).not.to.have($mv);
+                });
+
+                view.remove();
+            });
+
+            it("removes from parent view", function() {
+                var subView = new Minionette.View();
+                view.addRegion('region', subView);
+
+                subView.remove();
+
+                expect(view.region.view).not.to.equal(subView);
+            });
+
+            it("removes regions", function() {
+                var spys = [];
+
+                for (var i = 0; i < 5; ++i) {
+                    var v = new Minionette.View();
+                    spys.push(sinon.spy(v, 'remove'));
+                    view.addRegion('region' + i, v);
+                }
+
+                view.remove();
+
+                _.each(spys, function(spy) {
+                    expect(spy).to.have.been.called;
+                }, this);
+                expect(view._regions).to.be.empty;
+            });
+
+            it("returns the view", function() {
+                var ret = view.remove();
+
+                expect(ret).to.equal(view);
+            });
         });
     });
 });
