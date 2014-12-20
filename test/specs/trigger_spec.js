@@ -1,8 +1,8 @@
 describe("Minionette.trigger()", function() {
     it("is not mixed in by default", function() {
-        var Classes = _.functions(Minionette);
-        _.each(Classes, function(Class) {
-            expect(Class.trigger).not.to.equal(Minionette.trigger);
+        var classNames = _.functions(Minionette);
+        _.each(classNames, function(className) {
+            expect(Minionette[className].prototype.trigger).not.to.equal(Minionette.trigger);
         });
     });
 

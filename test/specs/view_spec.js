@@ -476,6 +476,24 @@ describe('Minionette.View', function() {
                 expect(view.region).to.equal(region);
             });
 
+            it("uses region constructed from #buildRegion", function() {
+                var region = new Minionette.Region();
+                view.buildRegion = function() { return region; }
+
+                view.addRegion('region', innerView);
+
+                expect(view.region).to.equal(region);
+            });
+
+            it("passes region's name in options to #buildRegion", function() {
+                var spy = sinon.spy(view, 'buildRegion');
+
+                view.addRegion('region', innerView);
+
+                var options = spy.getCall(0).args[0];
+                expect(options.name).to.equal('region');
+            });
+
             it("returns the region", function() {
                 region = new Minionette.Region();
                 view.Region = function() {

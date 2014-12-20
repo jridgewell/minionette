@@ -567,20 +567,19 @@ describe('Minionette.CollectionView', function() {
         });
 
         describe("#buildModelView()", function() {
-            var ModelView = function() {};
-
             it("creates a view from ModelView", function() {
-                var mv = view.buildModelView(null, ModelView);
+                var mv = view.buildModelView(null);
 
-                expect(mv).to.be.instanceof(ModelView);
+                expect(mv).to.be.instanceof(view.ModelView);
             });
 
             it("passes model as model property of options", function() {
                 var model = {};
-                var spy = sinon.spy();
-                view.buildModelView(model, spy);
+                var spy = sinon.stub(view, 'ModelView');
 
-                expect(spy).to.have.been.calledWith({ model: model });
+                view.buildModelView(model);
+
+                expect(spy).to.have.been.calledWith({ model: model});
             });
         });
 
