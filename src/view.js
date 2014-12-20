@@ -91,12 +91,18 @@ Minionette.View = Backbone.View.extend({
             options.el = this.$(view);
         }
 
-        var region = new this.Region(options);
+        var region = this.buildRegion(options);
 
         region._parent = this;
         this[name] = this._regions[name] = region;
 
         return region;
+    },
+
+    // An overrideable method to construct a new
+    // region.
+    buildRegion: function(options) {
+        return new this.Region(options);
     },
 
     // Adds multiple regions to the view. Takes
