@@ -284,8 +284,10 @@ describe('Minionette.View', function() {
                 var region = view.addRegion('region', 'p');
                 view.render();
 
+                var $wrapper = $('<div>').append(view.$el);
+
                 region.on('remove', function() {
-                    expect(view.$el).to.have(region.view.$el);
+                    expect($wrapper).to.have(region.view.$el);
                 });
 
                 view.remove();
@@ -295,10 +297,11 @@ describe('Minionette.View', function() {
                 var region = view.addRegion('region', 'p');
                 view.render();
 
+                var $wrapper = $('<div>').append(view.$el);
                 var $r = region.view.$el;
 
                 region.on('removed', function() {
-                    expect(view.$el).not.to.have($r);
+                    expect($wrapper).not.to.have($r);
                 });
 
                 view.remove();

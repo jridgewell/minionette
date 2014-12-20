@@ -760,14 +760,15 @@ describe('Minionette.CollectionView', function() {
                 view.template = '<p></p>';
                 var region = view.addRegion('region', 'p');
                 view.render();
-
                 var mv = view.addOne(new Backbone.Model());
 
+                var $wrapper = $('<div>').append(view.$el);
+
                 region.on('remove', function() {
-                    expect(view.$el).to.have(region.view.$el);
+                    expect($wrapper).to.have(region.view.$el);
                 });
                 mv.on('remove', function() {
-                    expect(view.$el).to.have(mv.$el);
+                    expect($wrapper).to.have(mv.$el);
                 });
 
                 view.remove();
@@ -777,16 +778,17 @@ describe('Minionette.CollectionView', function() {
                 view.template = '<p></p>';
                 var region = view.addRegion('region', 'p');
                 view.render();
-
                 var mv = view.addOne(new Backbone.Model());
+
+                var $wrapper = $('<div>').append(view.$el);
                 var $r = region.view.$el;
                 var $mv = mv.$el;
 
                 region.on('removed', function() {
-                    expect(view.$el).not.to.have($r);
+                    expect($wrapper).not.to.have($r);
                 });
                 mv.on('removed', function() {
-                    expect(view.$el).not.to.have($mv);
+                    expect($wrapper).not.to.have($mv);
                 });
 
                 view.remove();
