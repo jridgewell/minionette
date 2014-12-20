@@ -220,5 +220,12 @@ Minionette.CollectionView = Minionette.View.extend({
 
             this.trigger.apply(this, args);
         });
+        view.listenTo(this, 'remove', function() {
+            this.trigger('remove', this);
+            // TODO need to figure out a better way to do this.
+            // Trying to avoid a second "remove" event when
+            // #remove is actually called.
+            this.off('remove');
+        });
     }
 });

@@ -91,6 +91,15 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         _.result(this._detachedView, 'remove');
         delete this._detachedView;
 
+        newView.listenTo(this, 'remove', function() {
+            this.trigger('remove', this);
+            // TODO need to figure out a better way to do this.
+            // Trying to avoid a second "remove" event when
+            // #remove is actually called.
+            this.off('remove');
+        });
+        oldView.stopListening(this, 'remove');
+
         // Let's not do any DOM manipulations if
         // the elements are the same.
         if (!$current.is(newView.$el)) {
@@ -113,8 +122,8 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     remove: function() {
         this.trigger('remove', this);
 
-        this._removeViews();
         this._removeFromParent();
+        this._removeViews();
         this.stopListening();
 
         this.trigger('removed', this);

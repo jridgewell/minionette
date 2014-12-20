@@ -47,8 +47,9 @@ Minionette.View = Backbone.View.extend({
         this.trigger('remove', this);
 
         this._removeFromParent();
+        this.$el.remove();
         _.invoke(this._regions, 'remove');
-        Backbone.View.prototype.remove.apply(this, arguments);
+        this.stopListening();
 
         this.trigger('removed', this);
         return this;
@@ -92,6 +93,13 @@ Minionette.View = Backbone.View.extend({
         }
 
         var region = this.buildRegion(options);
+        region.listenTo(this, 'remove', function() {
+            this.trigger('remove', this);
+            // TODO need to figure out a better way to do this.
+            // Trying to avoid a second "remove" event when
+            // #remove is actually called.
+            this.off('remove');
+        });
 
         region._parent = this;
         this[name] = this._regions[name] = region;
