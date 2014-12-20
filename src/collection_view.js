@@ -45,7 +45,7 @@ Minionette.CollectionView = Minionette.View.extend({
         // will happen after all other 'render' listeners.
         this.once('render', this._removeModelViews);
 
-        return Minionette.View.prototype.render.apply(this);
+        return Minionette.View.prototype.render.apply(this, arguments);
     },
 
     // Render all the collection's models as modelViews,
