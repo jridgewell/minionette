@@ -12,8 +12,6 @@ Minionette.CollectionView = Minionette.View.extend({
 
         // Augment #render with our collection specific items.
         this.on('rendered', this._renderModelViews);
-        // Make sure we remove our modelViews when this is removed.
-        this.on('removed', this._removeModelViews);
     },
 
     // Listen to the default events.
@@ -46,6 +44,16 @@ Minionette.CollectionView = Minionette.View.extend({
         this.once('render', this._removeModelViews);
 
         return Minionette.View.prototype.render.apply(this, arguments);
+    },
+
+    // Augment View#remove so we can remove our modelViews.
+    remove: function() {
+        // Remove all our modelViews after the 'remove' event is
+        // fired. This is set on #remove so that the removing
+        // will happen after all other 'remove' listeners.
+        this.on('remove', this._removeModelViews);
+
+        return Minionette.View.prototype.remove.apply(this, arguments);
     },
 
     // Render all the collection's models as modelViews,
