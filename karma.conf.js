@@ -10,7 +10,7 @@ module.exports = function(config) {
         basePath: '',
 
         // testing framework to use (jasmine/mocha/qunit/...)
-        frameworks: ['mocha'],
+        frameworks: ['mocha', 'sinon', 'chai'],
 
         reporters: ['dots'],
 
@@ -19,19 +19,6 @@ module.exports = function(config) {
             'test/support/jquery/dist/jquery.js',
             'test/support/underscore/underscore.js',
             'test/support/backbone/backbone.js',
-            'test/support/mocha/mocha.js',
-            'test/support/chai/chai.js',
-            'test/support/sinon/lib/sinon.js',
-            'test/support/sinon/lib/sinon/match.js',
-            'test/support/sinon/lib/sinon/spy.js',
-            'test/support/sinon/lib/sinon/call.js',
-            'test/support/sinon/lib/sinon/stub.js',
-            'test/support/sinon/lib/sinon/mock.js',
-            'test/support/sinon/lib/sinon/assert.js',
-            'test/support/sinon/lib/sinon/collection.js',
-            'test/support/sinon/lib/sinon/sandbox.js',
-            'test/support/sinon/lib/sinon/test.js',
-            'test/support/sinon/lib/sinon/test_case.js',
             'test/support/sinon-chai/lib/sinon-chai.js',
             'test/support/chai-jquery/chai-jquery.js',
             'test/*.js',
