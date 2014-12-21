@@ -28,7 +28,8 @@ describe('Minionette.Router', function() {
 
                 router.navigate('test/er/ing/this', true);
 
-                expect(spy).to.have.been.calledWith('controller/action', ['er', 'ing/this']);
+                var args = spy.getCall(0).args[1];
+                expect(_.compact(args)).to.deep.equal(['er', 'ing/this']);
             });
         });
 
