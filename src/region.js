@@ -49,8 +49,8 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     },
 
     // Ensures that the view's el is contained inside the parent view's.
-    _ensureElement: function(view) {
-        var $context = _.result(this._parent, '$el');
+    _ensureElement: function(view, $context) {
+        if (!$context) { $context = _.result(this._parent, '$el'); }
         var $el = view.$el;
 
         // Don't reset the view's $el if it is contained

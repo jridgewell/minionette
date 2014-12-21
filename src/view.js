@@ -58,16 +58,31 @@ Minionette.View = Backbone.View.extend({
     render: function() {
         this.trigger('render', this);
 
-        // Detach all our regions, so they don't need to be re-rendered.
-        _.invoke(this._regions, 'detach');
+        var html = _.isFunction(this.template) ?
+            this.template(this._serialize()) :
+            this.template;
+        this.$el.contents().detach();
+        var $el = $('<div>').append(html);
 
-        var template = this.template;
-        var html = _.isFunction(template) ? this.template(this._serialize()) : template;
-        this.$el.html(html);
+        _.each(this._regions, function(region) {
+            var view = region.view;
+            region.trigger('detach', view, region);
+
+            if (region.view === region._view) {
+                region._ensureElement(region.view, $el);
+            } else {
+                $el.find(_.result(region._view, 'selector')).replaceWith(view.$el);
+            }
+
+            region.trigger('detached', view, region);
+            region.trigger('reattach', view, region);
+        });
+        this.$el.empty().append($el.contents());
+        _.each(this._regions, function(region) {
+            var view = region.view;
+            view.trigger('reattached', view, region);
+        });
         this._addUIElements();
-
-        // Reattach all our regions
-        _.invoke(this._regions, 'reattach');
 
         this.trigger('rendered', this);
         return this;

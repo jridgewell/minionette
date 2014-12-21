@@ -16,6 +16,7 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files: [
+            'https://rawgit.com/chjj/marked/master/lib/marked.js',
             'test/support/jquery/dist/jquery.js',
             'test/support/underscore/underscore.js',
             'test/support/backbone/backbone.js',
