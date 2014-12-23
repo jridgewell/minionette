@@ -52,7 +52,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
 
         // Special case childless nodes. This also handles
         // self closing tags, like <br />
-        if (!el.childNodes) { return el.outerHTML; }
+        if (!el.childNodes.length) { return el.outerHTML; }
 
         var tagName = el.tagName;
         var attributes = _.reduce(el.attributes, function(attributes, attr) {
