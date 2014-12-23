@@ -58,30 +58,18 @@ Minionette.View = Backbone.View.extend({
     render: function() {
         this.trigger('render', this);
 
+        var $span = $('<span>').append(this.$el.contents());
+
         var html = _.isFunction(this.template) ?
             this.template(this._serialize()) :
             this.template;
-        this.$el.contents().detach();
         var $el = $('<div>').append(html);
 
-        _.each(this._regions, function(region) {
-            var view = region.view;
-            region.trigger('detach', view, region);
+        _.invoke(this._regions, '_setInContext', $el);
 
-            if (region.view === region._view) {
-                region._ensureElement(region.view, $el);
-            } else {
-                $el.find(_.result(region._view, 'selector')).replaceWith(view.$el);
-            }
+        $span.empty();
+        this.$el.html($el.contents());
 
-            region.trigger('detached', view, region);
-            region.trigger('reattach', view, region);
-        });
-        this.$el.empty().append($el.contents());
-        _.each(this._regions, function(region) {
-            var view = region.view;
-            view.trigger('reattached', view, region);
-        });
         this._addUIElements();
 
         this.trigger('rendered', this);
@@ -109,12 +97,18 @@ Minionette.View = Backbone.View.extend({
         var region = this.buildRegion(options);
 
         region._parent = this;
-        this[name] = this._regions[name] = region;
+        this[name] = region.view;
+        this._regions[name] = region;
 
         return region;
     },
 
-    // An overrideable method to construct a new
+    //TODO
+    region: function(name) {
+        return this._regions[name] || this.addRegion(name);
+    },
+
+    // An override-able method to construct a new
     // region.
     buildRegion: function(options) {
         return new this.Region(options);
@@ -162,8 +156,7 @@ Minionette.View = Backbone.View.extend({
     // A helper that is passed to #template that will
     // render regions inline.
     _viewHelper: function(name) {
-        var region = this._regions[name] || this.addRegion(name);
-        var el = region.view.el;
+        var el = this.region(name).view.el;
         if (el) {
             return el.outerHTML;
         }
