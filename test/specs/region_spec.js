@@ -126,24 +126,50 @@ describe('Minionette.Region', function() {
         });
     });
 
-    describe("#render()", function() {
-        it("calls #view#render()", function() {
-            var stub = sinon.stub(view, 'render');
-
-            region.render();
-
-            expect(stub).to.have.been.called;
+    describe("#selector", function() {
+        var selector;
+        beforeEach(function() {
+            region = new Minionette.Region({
+                el: $('<a>').attr({
+                    'data-test': '',
+                    'disabled': 'disabled',
+                    'class': 'one two three'
+                })
+            });
+            selector = region.selector();
         });
 
-        it("returns #view#render()", function() {
-            var expected = _.uniqueId();
-            view.render = function() {
-                return expected;
-            };
+        it("transforms element into a selector", function() {
+            expect(region.view.$el).to.match(selector);
+        });
 
-            var ret = region.render();
+        it("special cases elements with an id", function() {
+            region.view.$el.attr('id', 'tester');
 
-            expect(ret).to.equal(expected);
+            expect(region.selector()).to.equal('#tester');
+        });
+
+        it("includes tagName in selector", function() {
+            expect(selector).to.match(/^a/i);
+        });
+        it("includes className in selector", function() {
+            expect(selector).to.have.string('one.two.three');
+        });
+
+        it("includes attributes in selector", function() {
+            expect(selector).to.have.string('[data-test]');
+            expect(selector).to.have.string('[disabled="disabled"]');
+        });
+
+        describe("when region is instantiated with selector", function() {
+            it("is overridden", function() {
+                region = new Minionette.Region({
+                    el: $(),
+                    selector: 'tester'
+                });
+
+                expect(region.selector).to.equal('tester');
+            });
         });
     });
 

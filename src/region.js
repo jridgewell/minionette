@@ -26,7 +26,18 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     }),
 
     selector: function() {
-        return this.view.tagName + '[data-cid="' + this.view.cid + '"]';
+        var el = this.view.el;
+        var selector = el.tagName;
+
+        // Special case id and class, for faster lookups.
+        if (el.id) { return '#' + el.id; }
+        if (el.className) { selector += '.' + el.className.replace(/ /g, '.'); }
+
+        selector = _.reduce(el.attributes, function(selector, attr) {
+            var value = attr.value ? '="' + attr.value + '"' : '';
+            return selector + '[' + attr.name + value + ']';
+        }, selector);
+        return selector;
     },
 
     // An override-able method to construct a new
@@ -41,13 +52,12 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         // And set our views' _parent to this region.
         this.view._parent = this;
 
-        var selector = _.result(options, 'selector');
-        this.selector = selector || _.result(this, 'selector');
+        _.extend(this, _.pick(options, 'selector'));
     },
 
     // Ensures that the view's el is contained inside the parent view's.
     _setInContext: function($context) {
-        var $el = $context.find(this.selector);
+        var $el = $context.find(_.result(this, 'selector'));
         if (!$el.length) {
             throw new Error("couldn't find region's selector in context");
         }
