@@ -49,7 +49,6 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // use with the view template helper.
     placeholder: function() {
         var el = this.view.el;
-        if (!el) { return ''; }
 
         // Special case childless nodes. This also handles
         // self closing tags, like <br />
