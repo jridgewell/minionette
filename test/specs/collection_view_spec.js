@@ -232,7 +232,7 @@ describe('Minionette.CollectionView', function() {
 
 
             it("reattaches regions", function() {
-                view.template = _.template('<%= view("region") %>');
+                view.template = _.template('<%= view("subview") %>');
                 view.render();
 
                 view.region.attach(new Minionette.View());
@@ -263,7 +263,7 @@ describe('Minionette.CollectionView', function() {
                 var subView = new Minionette.View({tagName: 'p'});
                 subView.template = _.template('subView');
                 view.addRegion('region', subView).render();
-                view.template = _.template('<p>before</p><%= view("region") %><p>after</p>');
+                view.template = _.template('<p>before</p><%= view("subview") %><p>after</p>');
 
                 view.render();
 

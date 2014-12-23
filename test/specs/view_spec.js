@@ -464,7 +464,7 @@ describe('Minionette.View', function() {
                 var subView = new Minionette.View({tagName: 'p'});
                 subView.template = _.template('subView');
                 view.addRegion('region', subView).render();
-                view.template = _.template('<p>before</p><%= view("region") %><p>after</p>');
+                view.template = _.template('<p>before</p><%= view("subview") %><p>after</p>');
 
                 view.render();
 
