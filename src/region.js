@@ -104,6 +104,11 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         return this;
     },
 
+    // A proxy method to the view's render().
+    render: function() {
+        return this.view.render();
+    },
+
     // Attaches newView. This sets newView#$el
     // at the same index (inside the parent element)
     // as the old view, and removes the old view.

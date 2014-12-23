@@ -195,6 +195,27 @@ describe('Minionette.Region', function() {
         });
     });
 
+    describe("#render()", function() {
+        it("calls #view#render()", function() {
+            var stub = sinon.stub(view, 'render');
+
+            region.render();
+
+            expect(stub).to.have.been.called;
+        });
+
+        it("returns #view#render()", function() {
+            var expected = _.uniqueId();
+            view.render = function() {
+                return expected;
+            };
+
+            var ret = region.render();
+
+            expect(ret).to.equal(expected);
+        });
+    });
+
     describe("#attach()", function() {
         var newView;
         beforeEach(function() {
