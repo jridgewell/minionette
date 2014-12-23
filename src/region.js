@@ -14,6 +14,13 @@ Minionette.Region = function(options) {
 // Backbone's extend is generic, just copy it over.
 Minionette.Region.extend = Backbone.View.extend;
 
+function attributeReducer(attributes, left, right) {
+    return _.map(attributes, function(attr) {
+        var value = attr.value ? '="' + attr.value + '"' : '';
+        return [left, attr.name, value, right].join('');
+    }).join('');
+}
+
 _.extend(Minionette.Region.prototype, Backbone.Events, {
     PlaceholderView: Backbone.View.extend({
         // Use a span so it collapses on the DOM.
@@ -30,19 +37,21 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // a selector.
     selector: function() {
         var el = this.view.el;
-        var selector = el.tagName;
 
-        // Special case id and class, for faster lookups.
+        // Special case id, for faster lookups.
         if (el.id) { return '#' + el.id; }
-        if (el.className) { selector += '.' + el.className.replace(/ /g, '.'); }
 
-        selector += _.chain(el.attributes).reject(function(attr) {
-            return attr.name === 'class';
-        }).map(function(attr) {
-            var value = attr.value ? '="' + attr.value + '"' : '';
-            return '[' + attr.name + value + ']';
-        }).value();
-        return selector;
+        var selector = el.tagName;
+        var attributes = el.attributes;
+        // Special case class, for faster lookups.
+        if (el.className) {
+            selector += '.' + el.className.replace(/ /g, '.');
+            attributes = _.reject(attributes, function(attr) {
+                return attr.name === 'class';
+            });
+        }
+
+        return selector + attributeReducer(attributes, '[', ']');
     },
 
     // Transforms the current view's el into a placeholder element for
@@ -55,10 +64,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         if (!el.childNodes.length) { return el.outerHTML; }
 
         var tagName = el.tagName;
-        var attributes = _.reduce(el.attributes, function(attributes, attr) {
-            var value = attr.value ? '="' + attr.value + '"' : '';
-            return attributes + ' ' + attr.name + value;
-        }, '');
+        var attributes = attributeReducer(el.attributes, ' ', '');
         return '<' + tagName + attributes + '></' + tagName + '>';
     },
 
