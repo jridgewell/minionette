@@ -33,10 +33,12 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         if (el.id) { return '#' + el.id; }
         if (el.className) { selector += '.' + el.className.replace(/ /g, '.'); }
 
-        selector = _.reduce(el.attributes, function(selector, attr) {
+        selector += _.chain(el.attributes).reject(function(attr) {
+            return attr.name === 'class';
+        }).map(function(attr) {
             var value = attr.value ? '="' + attr.value + '"' : '';
-            return selector + '[' + attr.name + value + ']';
-        }, selector);
+            return '[' + attr.name + value + ']';
+        }).value();
         return selector;
     },
 
