@@ -85,7 +85,16 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
             throw new Error("couldn't find region's selector in context");
         }
 
-        $el.replaceWith(this.view.$el);
+        // If we currently have a view element,
+        // just replace.
+        if (this.view.el) {
+            $el.replaceWith(this.view.el);
+        } else {
+            // If we don't have a view element,
+            // it means we instantiated the region
+            // when the parent view hadn't been rendered.
+            this.view.setElement($el);
+        }
     },
 
     // Resets the region's view to placeholder view.
