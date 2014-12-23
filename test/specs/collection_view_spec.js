@@ -156,7 +156,7 @@ describe('Minionette.CollectionView', function() {
 
             it("triggers 'render' event before any DOM manipulations", function() {
                 view.template = '<p></p>';
-                var region = view.addRegion('region', 'p');
+                var region = view.addRegion('subview', 'p');
                 view.render();
 
                 var mv = view.addOne(new Backbone.Model());
@@ -171,14 +171,13 @@ describe('Minionette.CollectionView', function() {
 
             it("triggers 'rendered' event after any DOM manipulations", function() {
                 view.template = '<p></p>';
-                view.addRegion('region', 'p');
                 view.render();
 
-                var $r = view.region.view.$el;
+                var $p = view.$('p');
                 var $mv = view.addOne(new Backbone.Model()).$el;
 
                 view.on('rendered', function() {
-                    expect(view.$el).not.to.have($r);
+                    expect(view.$el).not.to.have($p);
                     expect(view.$el).not.to.have($mv);
                 });
 
@@ -189,7 +188,8 @@ describe('Minionette.CollectionView', function() {
                 var subView = new Minionette.View(),
                 spy = sinon.spy();
                 subView.$el.on('click', spy);
-                view.addRegion('region', subView).render();
+                view.addRegion('subview', subView.render());
+                view.template = '<div></div>'
 
                 view.render();
 
@@ -209,8 +209,7 @@ describe('Minionette.CollectionView', function() {
                 expect(stub).to.have.been.calledWith(serialize);
             });
 
-            it("passes #template() output to $el#html()", function() {
-                var stub = sinon.stub(view.$el, 'html'),
+            it("renders with output of #template", function() {
                 template = _.uniqueId();
                 view.template = function() {
                     return template;
@@ -218,25 +217,24 @@ describe('Minionette.CollectionView', function() {
 
                 view.render();
 
-                expect(stub).to.have.been.calledWith(template);
+                expect(view.el.innerHTML).to.contain(template);
             });
 
             it("supports #template being a string", function() {
-                var stub = sinon.stub(view.$el, 'html');
                 view.template = 'test';
 
                 view.render();
 
-                expect(stub).to.have.been.calledWith(view.template);
+                expect(view.el.innerHTML).to.contain('test');
             });
 
 
             it("reattaches regions", function() {
-                view.template = _.template('<%= view("subview") %>');
+                view.template = '<p></p>';
+                view.addRegion('subview', 'p');
                 view.render();
 
-                view.region.attach(new Minionette.View());
-                var $v = view.region.view.$el;
+                var $v = view.subview.$el;
 
                 view.render();
 
@@ -260,14 +258,14 @@ describe('Minionette.CollectionView', function() {
             });
 
             it("Integration Test", function() {
-                var subView = new Minionette.View({tagName: 'p'});
+                var subView = new Minionette.View({tagName: 'span'});
                 subView.template = _.template('subView');
-                view.addRegion('region', subView).render();
+                view.addRegion('subview', subView.render());
                 view.template = _.template('<p>before</p><%= view("subview") %><p>after</p>');
 
                 view.render();
 
-                expect(view.$el).to.contain('beforesubViewafter');
+                expect(view.el.innerHTML).to.equal('<p>before</p><span>subView</span><p>after</p><div></div><div></div><div></div>');
             });
 
             it("it renders models as modelViews", function() {
@@ -727,7 +725,7 @@ describe('Minionette.CollectionView', function() {
 
             it("triggers 'remove' event before any DOM manipulations", function() {
                 view.template = '<p></p>';
-                var region = view.addRegion('region', 'p');
+                var region = view.addRegion('subview', 'p');
                 view.render();
 
                 var mv = view.addOne(new Backbone.Model());
@@ -742,10 +740,10 @@ describe('Minionette.CollectionView', function() {
 
             it("triggers 'removed' event after any DOM manipulations", function() {
                 view.template = '<p></p>';
-                var region = view.addRegion('region', 'p');
+                var region = view.addRegion('subview', 'p');
                 view.render();
 
-                var $r = view.region.view.$el;
+                var $r = view.subview.$el;
                 var $mv = view.addOne(new Backbone.Model()).$el;
 
                 view.on('removed', function() {
@@ -758,7 +756,7 @@ describe('Minionette.CollectionView', function() {
 
             it("triggers subview's 'remove' event before any DOM manipulations", function() {
                 view.template = '<p></p>';
-                var region = view.addRegion('region', 'p');
+                var region = view.addRegion('subview', 'p');
                 view.render();
                 var mv = view.addOne(new Backbone.Model());
 
@@ -776,7 +774,7 @@ describe('Minionette.CollectionView', function() {
 
             it("triggers subviews 'removed' event after any DOM manipulations", function() {
                 view.template = '<p></p>';
-                var region = view.addRegion('region', 'p');
+                var region = view.addRegion('subview', 'p');
                 view.render();
                 var mv = view.addOne(new Backbone.Model());
 
@@ -796,11 +794,11 @@ describe('Minionette.CollectionView', function() {
 
             it("removes from parent view", function() {
                 var subView = new Minionette.View();
-                view.addRegion('region', subView);
+                view.addRegion('subview', subView);
 
                 subView.remove();
 
-                expect(view.region.view).not.to.equal(subView);
+                expect(view.subview).not.to.equal(subView);
             });
 
             it("removes regions", function() {
@@ -809,7 +807,7 @@ describe('Minionette.CollectionView', function() {
                 for (var i = 0; i < 5; ++i) {
                     var v = new Minionette.View();
                     spys.push(sinon.spy(v, 'remove'));
-                    view.addRegion('region' + i, v);
+                    view.addRegion('subview' + i, v);
                 }
 
                 view.remove();
