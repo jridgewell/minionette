@@ -428,7 +428,6 @@ describe('Minionette.View', function() {
                 expect(view.el.innerHTML).to.equal('test');
             });
 
-
             it("reattaches regions", function() {
                 var region = view.addRegion('subview', 'p');
                 view.render();
@@ -438,6 +437,12 @@ describe('Minionette.View', function() {
                 view.render();
 
                 expect(view.$el).to.have($v);
+            });
+
+            it("throws error if it cannot reattach region", function() {
+                var region = view.addRegion('subview', 'notexist');
+
+                expect(function() { view.render(); }).to.throw(Error);
             });
 
             it("sets ui elements", function() {
