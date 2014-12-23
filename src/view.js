@@ -58,18 +58,22 @@ Minionette.View = Backbone.View.extend({
     render: function() {
         this.trigger('render', this);
 
-        var $span = $('<span>').append(this.$el.contents());
+        // Get a reference to everything currently
+        // $el while also detaching them from the DOM.
+        var $span = Backbone.$('<span>').append(this.$el.contents());
 
         var html = _.isFunction(this.template) ?
             this.template(this._serialize()) :
             this.template;
-        var $el = $('<div>').append(html);
+        var $el = Backbone.$('<div>').append(html);
 
         _.invoke(this._regions, '_setInContext', $el);
 
+        // Clean up any event handlers manually placed
+        // on the leftovers.
         $span.empty();
-        this.$el.html($el.contents());
 
+        this.$el.html($el.contents());
         this._addUIElements();
 
         this.trigger('rendered', this);
