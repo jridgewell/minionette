@@ -118,6 +118,8 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         this.view = newView;
         newView._parent = this;
 
+        attempt(this._parent, '_updateRegionView', this);
+
         // Let's not do any DOM manipulations if
         // the elements are the same.
         if (!$current.is(newView.$el)) {
