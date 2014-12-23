@@ -173,19 +173,38 @@ describe('Minionette.Region', function() {
         });
     });
 
+    describe("#placeholder", function() {
+        var placeholder;
+        beforeEach(function() {
+            region = new Minionette.Region({
+                el: $('<a href="test" target>text</a>')
+            });
+            placeholder = region.placeholder();
+        });
+
+        it("transforms elements into a base placeholder element html", function() {
+            expect($(placeholder)).to.match('a[href="test"][target]');
+        });
+
+        it("excludes children", function() {
+            expect(placeholder).not.to.have.string('text');
+        });
+
+        it("handles self closing tags", function() {
+            region.view.el = document.createElement('br');
+            expect($(region.placeholder())).to.match('br');
+        });
+
+        it("includes all attributes", function() {
+            expect(placeholder).to.have.string('href="test"');
+            expect(placeholder).to.have.string('target');
+        });
+    });
+
     describe("#attach()", function() {
         var newView;
         beforeEach(function() {
             newView = new Minionette.View();
-        });
-
-        it("removes old #_detachedView if it exists", function() {
-            var spy = sinon.spy(view, 'remove');
-            region.detach();
-
-            region.attach(newView);
-
-            expect(spy).to.have.been.called;
         });
 
         it("replaces current view#el with newView#el (the same index in parent)", function() {

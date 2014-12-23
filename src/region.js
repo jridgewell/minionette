@@ -25,6 +25,9 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         }
     }),
 
+    // The inverse of #placeholder, meant to identify it.
+    // This is overridden if the region is instantiated with
+    // a selector.
     selector: function() {
         var el = this.view.el;
         var selector = el.tagName;
@@ -40,6 +43,24 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
             return '[' + attr.name + value + ']';
         }).value();
         return selector;
+    },
+
+    // Transforms the current view's el into a placeholder element for
+    // use with the view template helper.
+    placeholder: function() {
+        var el = this.view.el;
+        if (!el) { return ''; }
+
+        // Special case childless nodes. This also handles
+        // self closing tags, like <br />
+        if (!el.childNodes) { return el.outerHTML; }
+
+        var tagName = el.tagName;
+        var attributes = _.reduce(el.attributes, function(attributes, attr) {
+            var value = attr.value ? '="' + attr.value + '"' : '';
+            return attributes + ' ' + attr.name + value;
+        }, '');
+        return '<' + tagName + attributes + '></' + tagName + '>';
     },
 
     // An override-able method to construct a new
