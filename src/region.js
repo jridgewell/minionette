@@ -21,6 +21,10 @@ function attributeReducer(attributes, left, right) {
     }).join('');
 }
 
+function throwPlaceholder() {
+    throw new Error('Cannot use view template helper with region declared using a selector');
+}
+
 _.extend(Minionette.Region.prototype, Backbone.Events, {
     PlaceholderView: Backbone.View.extend({
         // Use a span so it collapses on the DOM.
@@ -80,7 +84,10 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         // And set our views' _parent to this region.
         this.view._parent = this;
 
-        _.extend(this, _.pick(options, 'selector'));
+        if (options.selector) {
+            this.selector = options.selector;
+            this.placeholder = throwPlaceholder;
+        }
     },
 
     // Ensures that the view's el is contained inside the parent view's.

@@ -440,7 +440,13 @@ describe('Minionette.View', function() {
             });
 
             it("throws error if it cannot reattach region", function() {
-                var region = view.addRegion('subview', 'notexist');
+                view.addRegion('subview', 'notexist');
+                expect(function() { view.render(); }).to.throw(Error);
+            });
+
+            it("throws error if view template helper used with selector region", function() {
+                view.addRegion('subview', 'p');
+                view.template = _.template('<p></p><%= view("subview") %>');
 
                 expect(function() { view.render(); }).to.throw(Error);
             });

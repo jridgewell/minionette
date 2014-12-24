@@ -257,6 +257,7 @@ describe('Minionette.Region', function() {
             var selector = ':first-child';
             region = view.addRegion('subview', selector);
             region.attach(newView);
+            view.template = '<p></p><span></span>';
 
             view.render();
 
@@ -266,11 +267,11 @@ describe('Minionette.Region', function() {
         });
 
         it("will correctly render even when not rendered and initialized with jQuery object", function() {
-            var selector = ':first-child',
-                $selector = view.$(selector);
+            var selector = ':first-child';
+            var $selector = view.$(selector);
             region = view.addRegion('subview', $selector);
             region.attach(newView);
-
+            view.template = '<p></p><span></span>';
 
             view.render();
 
