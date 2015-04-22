@@ -2,9 +2,8 @@
 // When used in conjunction with Minionette.Model, any time a dependency
 // is updated, the computing function is called. The corresponding model
 // attribute will be updated with the returned value.
-Minionette.Computed = function() {
-    var dependencies = _.initial(arguments);
-    var fn = _.last(arguments);
+Minionette.Computed = rest(function(dependencies) {
+    var fn = dependencies.pop();
 
     if (!_.every(dependencies, _.isString)) {
         throw new TypeError('Minionette.Computed must be called with dependent keys.');
@@ -15,4 +14,4 @@ Minionette.Computed = function() {
 
     fn._dependentKeys = dependencies;
     return fn;
-};
+});

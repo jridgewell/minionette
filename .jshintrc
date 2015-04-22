@@ -6,12 +6,16 @@
     "eqeqeq": true,
     "eqnull": true,
     "esnext": true,
-    "exported": ["attempt"],
+    "exported": [
+      "attempt",
+      "rest"
+    ],
     "globals": {
         "Backbone": true,
         "Minionette": true,
         "_": true,
-        "attempt": true
+        "attempt": true,
+        "rest": true
     },
     "immed": true,
     "indent": 4,
