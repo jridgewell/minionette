@@ -1,11 +1,13 @@
+// Use getOwnPropertyNames in ES6 environments,
+// since it'll grab non-enumerable class methods.
+// In older environments, just use _.keys since
+// they don't have ES6 classes anyways.
+var getOwn = Object.getOwnPropertyNames || _.keys;
+
 Minionette.Model = Backbone.Model.extend({
     constructor: function() {
-        // Find any computed property functions,
-        // if they have not been cached already when instantiating
-        // a prior instance.
-        var proto = _.result(this.constructor, 'prototype') || this;
-        if (!_.has(proto, '_computedProperties')) {
-            this._findComputedProperties();
+        if (!this._computedProperties) {
+            this.constructor._findComputedProperties();
         }
 
         Backbone.Model.apply(this, arguments);
@@ -14,12 +16,11 @@ Minionette.Model = Backbone.Model.extend({
     // Model's constructor will call #set before calling #initialize.
     // Wrapping #set allows us to set the normal attributes, then the
     // computed attributes before #initialize is called.
-    set: function(key, val, options) {
+    set: function() {
         var ret = Backbone.Model.prototype.set.apply(this, arguments);
 
         if (!this._initializedComputedProperties) {
-            var computedProps = this._initComputedProperties();
-            this.set(computedProps, options || val);
+            this._initComputedProperties();
         }
         return ret;
     },
@@ -29,43 +30,48 @@ Minionette.Model = Backbone.Model.extend({
         return _.omit(this.attributes, this._computedProperties);
     },
 
-    // Finds all computed property functions. Attempts to cache
-    // the associated property names on the prototype, falling back
-    // to this instance.
-    _findComputedProperties: function() {
-        var proto = _.result(this.constructor, 'prototype') || this;
-        var computedProps = [];
-
-        for (var prop in this) {
-            var fn = this[prop];
-            if (_.isFunction(fn) && fn._dependentKeys) {
-                computedProps.push(prop);
-            }
-        }
-        proto._computedProperties = computedProps;
-    },
-
     // Sets up event listeners for each computed property,
     // and gets the property's original value.
     _initComputedProperties: function() {
         this._initializedComputedProperties = true;
-        return _.reduce(this._computedProperties, function(memo, prop) {
-            this._listenToComputedDependencies(prop);
-            memo[prop] = this[prop]();
-            return memo;
-        }, {}, this);
+        return _.each(this._computedProperties, this._listenToComputedDependencies, this);
     },
 
     // Sets up the event listeners for each computed property's
     // dependencies
     _listenToComputedDependencies: function(prop) {
-        var dependencies = this[prop]._dependentKeys;
-        var updater = function() {
-            this.set(prop, this[prop]());
-        };
+        var getter = this[prop];
+        var dependencies = getter._dependentKeys;
+        var depsToAttrs = _.partial(_.map, dependencies, this.get, this);
 
+        var setter = getter._setter;
+        if (setter) {
+            this.on('change:' + prop, function(model, value, options) {
+                if (options && options.computedSet) { return; }
+                setter.apply(model, [value].concat(depsToAttrs()));
+            });
+        }
+
+        var onDependencyChange = function(model) {
+            var value = getter.apply(model, depsToAttrs());
+            model.set(prop, value, { computedSet: true });
+        };
         _.each(dependencies, function(dependency) {
-            this.on('change:' + dependency, updater, this);
+            this.on('change:' + dependency, onDependencyChange);
         }, this);
+        onDependencyChange(this);
+    }
+
+}, {
+    // Finds all computed property functions. Caches
+    // the associated property names on the prototype.
+    _findComputedProperties: function() {
+        var proto = this.prototype;
+        var props = getOwn(proto);
+        var computedProps = _.filter(props, function(prop) {
+            var fn = proto[prop];
+            return _.isFunction(fn) && fn._dependentKeys;
+        });
+        proto._computedProperties = computedProps;
     }
 });

@@ -3,15 +3,22 @@
 // is updated, the computing function is called. The corresponding model
 // attribute will be updated with the returned value.
 Minionette.Computed = rest(function(dependencies) {
-    var fn = dependencies.pop();
+    var config = dependencies.pop();
 
     if (!_.every(dependencies, _.isString)) {
         throw new TypeError('Minionette.Computed must be called with dependent keys.');
     }
-    if (!_.isFunction(fn)) {
-        throw new TypeError('Minionette.Computed must be called with a computing function as last parameter.');
+    if (!_.isObject(config) || !_.isFunction(config.get)) {
+        throw new TypeError('Minionette.Computed must be called with config object `{ get: getter [, set: setter ] }`');
     }
 
-    fn._dependentKeys = dependencies;
-    return fn;
+    var getter = config.get;
+
+
+    getter._dependentKeys = dependencies;
+    if (_.isFunction(config.set)) {
+        getter._setter = config.set;
+    }
+
+    return getter;
 });
