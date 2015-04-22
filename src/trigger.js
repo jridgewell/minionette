@@ -15,9 +15,7 @@ Minionette.trigger = rest(function(event, args) {
             attempt(this, method, args);
         }, this);
     } else {
-        if (_.isFunction(this[method])) {
-            attempt(this, method, args, true);
-        }
+        attempt(this, method, args);
     }
 
     // Call the original trigger.
