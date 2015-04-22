@@ -50,9 +50,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         // Special case class, for faster lookups.
         if (el.className) {
             selector += '.' + el.className.replace(/ /g, '.');
-            attributes = _.reject(attributes, function(attr) {
-                return attr.name === 'class';
-            });
+            attributes = _.reject(attributes, { name: 'class' });
         }
 
         return selector + attributeReducer(attributes, '[', ']');
@@ -135,7 +133,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
         this.view = newView;
         newView._parent = this;
 
-        attempt(this._parent, '_updateRegionView', this);
+        this._parent._updateRegionView(this.name, newView);
 
         // Let's not do any DOM manipulations if
         // the elements are the same.
@@ -159,11 +157,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     remove: function() {
         this.trigger('remove', this);
 
-        // Prevent an extra reflow from resetting
-        var view = this.view;
-        delete this.view;
-        view.remove();
-
+        this.view.remove();
         this._removeFromParent();
         this.stopListening();
 
