@@ -51,7 +51,7 @@ Minionette.CollectionView = Minionette.View.extend({
         // Remove all our modelViews after the 'remove' event is
         // fired. This is set on #remove so that the removing
         // will happen after all other 'remove' listeners.
-        this.on('remove', this._removeModelViews);
+        this.once('remove', this._removeModelViews);
 
         return Minionette.View.prototype.remove.apply(this, arguments);
     },
@@ -181,7 +181,11 @@ Minionette.CollectionView = Minionette.View.extend({
     // a view#remove.
     _removeView: function(view) {
         delete this._modelViews[_.result(view.model, 'cid')];
-        this.stopListening(view);
+        this._removeReference(view);
+
+    // Removes event listeners from the view to this collectionView.
+    _removeReference: function(view) {
+        view.off('all', this._forwardEvents, this);
     },
 
     // A callback method bound to the 'remove:before'
@@ -222,7 +226,7 @@ Minionette.CollectionView = Minionette.View.extend({
     // you only need to listen to events that happen on
     // this collectionView, not on all the modelViews.
     _forwardEvents: function(view, prefixer) {
-        this.listenTo(view, 'all', rest(function(args) {
+        var forwardEvents = rest(function(args) {
             var prefix = _.result(this, prefixer);
             if (prefix) {
                 args[0] = prefix + ':' + args[0];
@@ -230,6 +234,8 @@ Minionette.CollectionView = Minionette.View.extend({
 
             args.push(view);
             this.trigger.apply(this, args);
-        }));
+        });
+        forwardEvents._callback = this._forwardEvents;
+        view.on('all', forwardEvents, this);
     }
 });
