@@ -194,8 +194,11 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // Removes the emptyView, if it exists.
     _removeEmptyView: function() {
-        _.result(this.emptyView, 'remove');
-        delete this.emptyView;
+        if (this.emptyView) {
+            this.emptyView.remove();
+            this.stopListening(this.emptyView);
+            this.emptyView = null;
+        }
     },
 
     // Sets this.ModelView. Prioritizes instantiated options.ModelView,
