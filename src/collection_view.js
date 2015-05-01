@@ -83,7 +83,9 @@ Minionette.CollectionView = Minionette.View.extend({
     // Add the empty view to this.$el, if the
     // EmptyView constructor is present.
     _renderEmptyView: function() {
-        if (!this.EmptyView) { return; }
+        if (!this.EmptyView || this.emptyView || !this.collection.isEmpty()) {
+            return;
+        }
 
         var view = this.emptyView = this.buildEmptyView();
         view._parent = this;
