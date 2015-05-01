@@ -1,5 +1,5 @@
 Minionette.CollectionView = Minionette.View.extend({
-    constructor: function(options) {
+    constructor: function() {
         // Initialize a storage object for our modelViews
         this._modelViews = {};
         this.modelViewsFrag = null;
@@ -8,7 +8,7 @@ Minionette.CollectionView = Minionette.View.extend({
 
         // Ensure this has a ModelView to initialize
         // new modelViews from.
-        this._ensureModelViews(options || {});
+        this._ensureModelViews();
 
         // Augment #render with our collection specific items.
         this.on('rendered', this._renderModelViews);
@@ -199,14 +199,14 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // Sets this.ModelView. Prioritizes instantiated options.ModelView,
     // then a subclass' prototype ModelView, and defaults to Minionette.ModelView
-    _ensureModelViews: function(options) {
-        var mv = options.ModelView || this.ModelView;
+    _ensureModelViews: function() {
+        var mv = this.ModelView;
         if (!_.isFunction(mv)) {
             mv = Minionette.ModelView.extend(mv);
         }
         this.ModelView = mv;
 
-        var ev = options.EmptyView || this.EmptyView;
+        var ev = this.EmptyView;
         if (ev && !_.isFunction(ev)) {
             ev = Minionette.View.extend(ev);
         }

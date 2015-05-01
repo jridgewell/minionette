@@ -1,7 +1,7 @@
 Minionette.View = Backbone.View.extend({
     constructor: function(options) {
         // Pick out a few initializing options
-        _.extend(this, _.pick(options || {}, 'regions', 'Region', 'template', 'ui'));
+        _.extend(this, _.pick(options || {}, 'regions', 'template', 'ui'));
 
         // Initialize our regions object
         this._regions = {};
