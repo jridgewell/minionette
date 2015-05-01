@@ -222,15 +222,14 @@ Minionette.CollectionView = Minionette.View.extend({
     // you only need to listen to events that happen on
     // this collectionView, not on all the modelViews.
     _forwardEvents: function(view, prefixer) {
-        this.listenTo(view, 'all', function() {
-            var args = _.toArray(arguments);
+        this.listenTo(view, 'all', rest(function(args) {
             var prefix = _.result(this, prefixer);
-            prefix = (prefix) ? prefix + ':' : '';
+            if (prefix) {
+                args[0] = prefix + ':' + args[0];
+            }
 
-            args[0] = prefix + args[0];
             args.push(view);
-
             this.trigger.apply(this, args);
-        });
+        }));
     }
 });
