@@ -175,18 +175,13 @@ Minionette.CollectionView = Minionette.View.extend({
     // A hook method that is called during
     // a view#remove.
     _removeView: function(view) {
-        this._removeReference(view);
+        view.off('all', this._forwardEvents, this);
+        view.off('removed', this._removeView, this);
 
         var cid = view.model && view.model.cid;
         if (cid in this._modelViews) {
             this._modelViews[cid] = null;
         }
-    },
-
-    // Removes event listeners from the view to this collectionView.
-    _removeReference: function(view) {
-        view.off('all', this._forwardEvents, this);
-        view.off('removed', this._removeView, this);
     },
 
     // A callback method bound to the 'remove:before'
@@ -201,7 +196,6 @@ Minionette.CollectionView = Minionette.View.extend({
     _removeEmptyView: function() {
         if (this.emptyView) {
             this.emptyView.remove();
-            this.stopListening(this.emptyView);
             this.emptyView = null;
         }
     },
