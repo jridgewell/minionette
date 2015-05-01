@@ -100,9 +100,10 @@ Minionette.View = Backbone.View.extend({
 
         var region = this.buildRegion(options);
 
-        region._parent = this;
         this[name] = region.view;
         this._regions[name] = region;
+        region.on('removed', this._removeRegion, this);
+        region.on('attach', this._updateRegionView, this);
 
         return region;
     },
@@ -135,14 +136,15 @@ Minionette.View = Backbone.View.extend({
 
     // A helper to replace an region's old view
     // with a new one.
-    _updateRegionView: function(region, view) {
+    _updateRegionView: function(view, region) {
         this[region.name] = view;
     },
 
     // A remove helper to remove a region
     _removeRegion: function(region) {
-        delete this[region.name];
-        delete this._regions[region.name];
+        region.off('removed', this._removeRegion, this);
+        region.off('attach', this._updateRegionView, this);
+        this[region.name] = this._regions[region.name] = null;
     },
 
     // Loop through the events given, and listen to

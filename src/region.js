@@ -134,8 +134,6 @@ _.extend(Region.prototype, Backbone.Events, {
         this.view = newView;
         newView._parent = this;
 
-        attempt(this._parent, '_updateRegionView', [this, newView]);
-
         // Let's not do any DOM manipulations if
         // the elements are the same.
         if (!$current.is(newView.$el)) {
@@ -159,18 +157,10 @@ _.extend(Region.prototype, Backbone.Events, {
         this.trigger('remove', this);
 
         this.view.remove();
-        this._removeFromParent();
         this.stopListening();
 
         this.trigger('removed', this);
         return this;
-    },
-
-    // A remove helper to remove this region from it's parent
-    // view.
-    _removeFromParent: function() {
-        // Remove this region from its parent, if it exists
-        attempt(this._parent, '_removeRegion', this);
     },
 
     // A hook method that is called during
