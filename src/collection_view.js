@@ -175,8 +175,13 @@ Minionette.CollectionView = Minionette.View.extend({
     // A hook method that is called during
     // a view#remove.
     _removeView: function(view) {
-        delete this._modelViews[_.result(view.model, 'cid')];
         this._removeReference(view);
+
+        var cid = view.model && view.model.cid;
+        if (cid in this._modelViews) {
+            this._modelViews[cid] = null;
+        }
+    },
 
     // Removes event listeners from the view to this collectionView.
     _removeReference: function(view) {
