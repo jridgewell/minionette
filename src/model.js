@@ -34,7 +34,7 @@ Minionette.Model = Backbone.Model.extend({
     // and gets the property's original value.
     _initComputedProperties: function() {
         this._initializedComputedProperties = true;
-        return _.each(this._computedProperties, this._listenToComputedDependencies, this);
+        _.each(this._computedProperties, this._listenToComputedDependencies, this);
     },
 
     // Sets up the event listeners for each computed property's
@@ -42,19 +42,10 @@ Minionette.Model = Backbone.Model.extend({
     _listenToComputedDependencies: function(prop) {
         var getter = this[prop];
         var dependencies = getter._dependentKeys;
-        var depsToAttrs = _.partial(_.map, dependencies, this.get, this);
-
-        var setter = getter._setter;
-        if (setter) {
-            this.on('change:' + prop, function(model, value, options) {
-                if (options && options.computedSet) { return; }
-                setter.apply(model, [value].concat(depsToAttrs()));
-            });
-        }
 
         var onDependencyChange = function(model) {
-            var value = getter.apply(model, depsToAttrs());
-            model.set(prop, value, { computedSet: true });
+            var value = getter.apply(model, _.map(dependencies, model.get, model));
+            model.set(prop, value);
         };
         _.each(dependencies, function(dependency) {
             this.on('change:' + dependency, onDependencyChange);
