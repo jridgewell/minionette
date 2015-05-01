@@ -139,7 +139,7 @@ Minionette.CollectionView = Minionette.View.extend({
     // An override-able method to construct a new
     // modelView.
     buildModelView: function(model) {
-        return new this.ModelView({model: model});
+        return new this.ModelView({ model: model });
     },
 
     // An override-able method to construct a new
