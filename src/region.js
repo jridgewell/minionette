@@ -1,4 +1,4 @@
-Minionette.Region = function(options) {
+var Region = Minionette.Region = function(options) {
     options = options || {};
 
     // Setup a unique id for this region.
@@ -12,7 +12,7 @@ Minionette.Region = function(options) {
 
 // Allow Regions to be extended.
 // Backbone's extend is generic, just copy it over.
-Minionette.Region.extend = Backbone.View.extend;
+Region.extend = Backbone.View.extend;
 
 function attributeReducer(attributes, left, right) {
     return _.map(attributes, function(attr) {
@@ -25,7 +25,7 @@ function throwPlaceholder() {
     throw new Error('Cannot use view template helper with region declared using a selector');
 }
 
-_.extend(Minionette.Region.prototype, Backbone.Events, {
+_.extend(Region.prototype, Backbone.Events, {
     PlaceholderView: Backbone.View.extend({
         // Use a span so it collapses on the DOM.
         tagName: 'span',
@@ -112,6 +112,7 @@ _.extend(Minionette.Region.prototype, Backbone.Events, {
     // oldView will just be detached.
     reset: function(detach) {
         this.attach(this.buildPlaceholderView(), detach);
+        _.extend(this, _.pick(Region.prototype, 'selector', 'placeholder'));
         return this;
     },
 
