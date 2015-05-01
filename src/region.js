@@ -78,9 +78,8 @@ _.extend(Region.prototype, Backbone.Events, {
 
     // Ensures the region has a view.
     _setView: function(options) {
-        this.view = options.view || this.buildPlaceholderView(options);
-        // And set our views' _parent to this region.
-        this.view._parent = this;
+        var view = options.view || this.buildPlaceholderView(options);
+        this.attach(view);
 
         if (options.selector) {
             this.selector = options.selector;
@@ -125,18 +124,22 @@ _.extend(Region.prototype, Backbone.Events, {
     // at the same index (inside the parent element)
     // as the old view, and removes the old view.
     attach: function(newView, detach) {
-        var oldView = this.view,
-            $current = oldView.$el;
+        var oldView = this.view;
+        var $current = oldView && oldView.$el;
 
-        this.trigger('detach', oldView, this);
+        if (oldView) {
+            this.trigger('detach', oldView, this);
+            oldView.off('remove:internal', this._removeView, this);
+        }
+
         this.trigger('attach', newView, this);
+        newView.on('remove:internal', this._removeView, this);
 
         this.view = newView;
-        newView._parent = this;
 
         // Let's not do any DOM manipulations if
         // the elements are the same.
-        if (!$current.is(newView.$el)) {
+        if (oldView && !newView.$el.is($current)) {
             // Places newView after the current view.
             newView.$el.insertAfter($current);
 
@@ -146,7 +149,7 @@ _.extend(Region.prototype, Backbone.Events, {
             else { oldView.remove(); }
         }
 
-        this.trigger('detached', oldView, this);
+        if (oldView) { this.trigger('detached', oldView, this); }
         this.trigger('attached', newView, this);
 
         return this;
@@ -162,6 +165,7 @@ _.extend(Region.prototype, Backbone.Events, {
         this.trigger('removed', this);
         return this;
     },
+
 
     // A hook method that is called during
     // a view#remove. Allows a view to be removed,
