@@ -86,6 +86,7 @@ Minionette.CollectionView = Minionette.View.extend({
         if (!this.EmptyView) { return; }
 
         var view = this.emptyView = this.buildEmptyView();
+        view._parent = this;
         this._forwardEvents(view, 'emptyViewEventPrefix');
         this.appendModelView(view.render());
     },
