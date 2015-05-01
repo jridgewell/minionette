@@ -132,12 +132,6 @@ Minionette.View = Backbone.View.extend({
         return this;
     },
 
-    // A remove helper to remove this view from it's parent
-    _removeFromParent: function() {
-        // Remove this view from _parent, if it exists
-        attempt(this._parent, '_removeView', this);
-    },
-
     // A helper to replace an region's old view
     // with a new one.
     _updateRegionView: function(view, region) {
