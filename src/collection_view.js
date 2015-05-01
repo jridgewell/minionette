@@ -88,7 +88,6 @@ Minionette.CollectionView = Minionette.View.extend({
         }
 
         var view = this.emptyView = this.buildEmptyView();
-        view._parent = this;
         this._forwardEvents(view, 'emptyViewEventPrefix');
         this.appendModelView(view.render());
     },
@@ -117,7 +116,6 @@ Minionette.CollectionView = Minionette.View.extend({
         this._removeEmptyView();
 
         var view = this.buildModelView(model);
-        view._parent = this;
 
         // Setup event forwarding
         this._forwardEvents(view, 'modelViewEventPrefix');
@@ -169,11 +167,6 @@ Minionette.CollectionView = Minionette.View.extend({
             view.remove();
 
             this.trigger('removedOne', view, this);
-            this._removeView(view);
-        }
-
-        if (!this.emptyView && this.collection.isEmpty()) {
-            this._renderEmptyView();
         }
 
         return view;
@@ -188,6 +181,7 @@ Minionette.CollectionView = Minionette.View.extend({
     // Removes event listeners from the view to this collectionView.
     _removeReference: function(view) {
         view.off('all', this._forwardEvents, this);
+        view.off('removed', this._removeView, this);
     },
 
     // A callback method bound to the 'remove:before'
@@ -239,5 +233,6 @@ Minionette.CollectionView = Minionette.View.extend({
         });
         forwardEvents._callback = this._forwardEvents;
         view.on('all', forwardEvents, this);
+        view.on('removed', this._removeView, this);
     }
 });
