@@ -134,7 +134,7 @@ _.extend(Region.prototype, Backbone.Events, {
         this.view = newView;
         newView._parent = this;
 
-        this._parent._updateRegionView(this.name, newView);
+        attempt(this._parent, '_updateRegionView', [this, newView]);
 
         // Let's not do any DOM manipulations if
         // the elements are the same.
