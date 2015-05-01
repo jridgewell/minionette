@@ -169,6 +169,8 @@ Minionette.CollectionView = Minionette.View.extend({
             this.trigger('removedOne', view, this);
         }
 
+        this._renderEmptyView();
+
         return view;
     },
 
