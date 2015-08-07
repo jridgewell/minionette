@@ -167,6 +167,11 @@ export default Backbone.View.extend({
         });
     },
 
+    setElement(element) {
+        Backbone.View.prototype.setElement.apply(this, arguments);
+        this._addUIElements();
+    },
+
     // A helper that is passed to #template that will
     // render regions inline.
     _viewHelper(name) {
