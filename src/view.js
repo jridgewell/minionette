@@ -3,9 +3,9 @@ import Backbone from 'backbone';
 import Region from './region';
 
 export default Backbone.View.extend({
-    constructor(options) {
+    constructor(options = {}) {
         // Pick out a few initializing options
-        _.extend(this, _.pick(options || {}, 'regions', 'template', 'ui'));
+        _.extend(this, _.pick(options, 'regions', 'template', 'ui'));
 
         // Initialize our regions object
         this._regions = {};
@@ -68,12 +68,12 @@ export default Backbone.View.extend({
 
         // Get a reference to everything currently in
         // $el while also detaching them from the DOM.
-        let $old = Backbone.$('<div>').append(this.$el.contents());
+        const $old = Backbone.$('<div>').append(this.$el.contents());
 
-        let html = _.isFunction(this.template) ?
+        const html = _.isFunction(this.template) ?
             this.template(this._serialize()) :
             this.template;
-        let $el = Backbone.$('<div>').append(html);
+        const $el = Backbone.$('<div>').append(html);
 
         _.invoke(this._regions, '_setInContext', $el);
 
@@ -94,7 +94,7 @@ export default Backbone.View.extend({
         // Remove the old region, if it exists already
         _.result(this._regions[name], 'remove');
 
-        let options = { name: name };
+        const options = { name: name };
         // If this is a Backbone.View, pass that as the
         // view to the region.
         if (!view || view.$el) {
@@ -106,7 +106,7 @@ export default Backbone.View.extend({
             options.el = this.$(view);
         }
 
-        let region = this.buildRegion(options);
+        const region = this.buildRegion(options);
 
         this[name] = region.view;
         this._regions[name] = region;
@@ -170,7 +170,7 @@ export default Backbone.View.extend({
     // A helper that is passed to #template that will
     // render regions inline.
     _viewHelper(name) {
-        let region = this.region(name);
+        const region = this.region(name);
         return region.placeholder();
     }
 });

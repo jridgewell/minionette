@@ -71,12 +71,12 @@ export default View.extend({
         this.modelViewsFrag = this.buildDocumentFragment();
 
         // Loop through all our models, and build their view.
-        let modelViews = this.collection.map(this.addOne, this);
+        const modelViews = this.collection.map(this.addOne, this);
 
         if (this.modelViewsFrag) {
             this.appendModelViewFrag(this.modelViewsFrag);
 
-            _.each(modelViews, view => {
+            _.each(modelViews, (view) => {
                 this.trigger('addedOne', view, this);
             });
 
@@ -91,7 +91,7 @@ export default View.extend({
             return;
         }
 
-        let view = this.emptyView = this.buildEmptyView();
+        const view = this.emptyView = this.buildEmptyView();
         this._forwardEvents(view, 'emptyViewEventPrefix');
         this.appendModelView(view.render());
     },
@@ -119,7 +119,7 @@ export default View.extend({
     addOne(model) {
         this._removeEmptyView();
 
-        let view = this.buildModelView(model);
+        const view = this.buildModelView(model);
 
         // Setup event forwarding
         this._forwardEvents(view, 'modelViewEventPrefix');
@@ -163,7 +163,7 @@ export default View.extend({
 
     // Remove an individual model's view from this.$el.
     removeOne(model) {
-        let view = this._modelViews[model.cid];
+        const view = this._modelViews[model.cid];
 
         if (view) {
             this.trigger('removeOne', view, this);
@@ -184,7 +184,7 @@ export default View.extend({
         view.off('all', this._forwardEvents, this);
         view.off('removed', this._removeView, this);
 
-        let cid = view.model && view.model.cid;
+        const cid = view.model && view.model.cid;
         if (cid in this._modelViews) {
             this._modelViews[cid] = null;
         }
@@ -227,10 +227,10 @@ export default View.extend({
     // you only need to listen to events that happen on
     // this collectionView, not on all the modelViews.
     _forwardEvents(view, prefixer) {
-        let forwardEvents = (...args) => {
-            let prefix = _.result(this, prefixer);
+        const forwardEvents = (...args) => {
+            const prefix = _.result(this, prefixer);
             if (prefix) {
-                args[0] = prefix + ':' + args[0];
+                args[0] = `${prefix}:${args[0]}`;
             }
 
             args.push(view);

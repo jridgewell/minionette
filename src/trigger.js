@@ -9,13 +9,13 @@ const trigger = Backbone.Events.trigger;
 export default function(event, ...args) {
     // Morph the event string into the "on" method.
     // Supports space separated events.
-    let method = 'on' + event.replace(eventReplacer, (_match, separator, letter) => {
+    const method = 'on' + event.replace(eventReplacer, (_match, separator, letter) => {
         return (separator === ' ' ? ' on' : '') + letter.toUpperCase();
     });
 
     // Optimize the normal case (just one event).
     if (eventSplitter.test(method)) {
-        _.each(method.split(eventSplitter), method => {
+        _.each(method.split(eventSplitter), (method) => {
             attempt(this, method, args);
         });
     } else {

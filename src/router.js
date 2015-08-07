@@ -1,7 +1,7 @@
 import Backbone from 'backbone';
 import attempt from './attempt';
 
-var routeMatcher = /^(\w+)\/(\w+)$/;
+const routeMatcher = /^(\w+)\/(\w+)$/;
 
 export default Backbone.Router.extend({
     constructor() {
