@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import View from './view';
+import ModelView from './model_view';
 
 export default View.extend({
     constructor: function() {
@@ -7,7 +8,7 @@ export default View.extend({
         this._modelViews = {};
         this.modelViewsFrag = null;
 
-        Minionette.View.apply(this, arguments);
+        View.apply(this, arguments);
 
         // Ensure this has a ModelView to initialize
         // new modelViews from.
@@ -37,7 +38,7 @@ export default View.extend({
     // for forwarding events from the emptyView.
     emptyViewEventPrefix: 'emptyView',
 
-    ModelView: Minionette.ModelView,
+    ModelView: ModelView,
 
     // Augment View#render so we can remove our old modelViews.
     render: function() {
@@ -46,7 +47,7 @@ export default View.extend({
         // will happen after all other 'render' listeners.
         this.once('render', this._removeModelViews);
 
-        return Minionette.View.prototype.render.apply(this, arguments);
+        return View.prototype.render.apply(this, arguments);
     },
 
     // Augment View#remove so we can remove our modelViews.
@@ -56,7 +57,7 @@ export default View.extend({
         // will happen after all other 'remove' listeners.
         this.once('remove', this._removeModelViews);
 
-        return Minionette.View.prototype.remove.apply(this, arguments);
+        return View.prototype.remove.apply(this, arguments);
     },
 
     // Render all the collection's models as modelViews,
@@ -210,13 +211,13 @@ export default View.extend({
     _ensureModelViews: function() {
         var mv = this.ModelView;
         if (!_.isFunction(mv)) {
-            mv = Minionette.ModelView.extend(mv);
+            mv = ModelView.extend(mv);
         }
         this.ModelView = mv;
 
         var ev = this.EmptyView;
         if (ev && !_.isFunction(ev)) {
-            ev = Minionette.View.extend(ev);
+            ev = View.extend(ev);
         }
         this.EmptyView = ev;
     },
