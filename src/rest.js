@@ -1,7 +1,7 @@
 // A helper function, similar to ES6 rest param
 // that will call the function with additional
 // arguments collected into an array.
-function rest(func) {
+export default function rest(func) {
     var start = func.length - 1;
     if (start > 1 || start < 0) {
         throw new Error('rest() does not support functions with length ' + func.length);

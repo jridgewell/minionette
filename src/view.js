@@ -1,4 +1,8 @@
-Minionette.View = Backbone.View.extend({
+import _ from 'underscore';
+import Backbone from 'backbone';
+import Region from './region';
+
+export default Backbone.View.extend({
     constructor: function(options) {
         // Pick out a few initializing options
         _.extend(this, _.pick(options || {}, 'regions', 'template', 'ui'));
@@ -24,7 +28,7 @@ Minionette.View = Backbone.View.extend({
         _.bindAll(this, '_viewHelper');
     },
 
-    Region: Minionette.Region,
+    Region: Region,
 
     // A default template that will clear this.$el.
     // Override this in a subclass to something useful.

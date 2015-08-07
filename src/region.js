@@ -1,4 +1,7 @@
-var Region = Minionette.Region = function(options) {
+import _ from 'underscore';
+import Backbone from 'backbone'
+
+export default function Region(options) {
     options = options || {};
 
     // Setup a unique id for this region.

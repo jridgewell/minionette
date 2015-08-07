@@ -1,8 +1,13 @@
+import _ from 'underscore';
+import Backbone from 'backbone';
+import rest from './rest';
+import attempt from './attempt';
+
 var eventSplitter = /\s+/;
 var eventReplacer = /(^|:| )(\w)/g;
 var trigger = Backbone.Events.trigger;
 
-Minionette.trigger = rest(function(event, args) {
+export default rest(function(event, args) {
     // Morph the event string into the "on" method.
     // Supports space separated events.
     var method = 'on' + event.replace(eventReplacer, function(_match, separator, letter) {

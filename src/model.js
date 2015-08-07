@@ -1,10 +1,13 @@
+import _ from 'underscore';
+import Backbone from 'backbone';
+
 // Use getOwnPropertyNames in ES6 environments,
 // since it'll grab non-enumerable class methods.
 // In older environments, just use _.keys since
 // they don't have ES6 classes anyways.
 var getOwn = Object.getOwnPropertyNames || _.keys;
 
-Minionette.Model = Backbone.Model.extend({
+export default Backbone.Model.extend({
     constructor: function() {
         if (!this._computedProperties) {
             this.constructor._findComputedProperties();

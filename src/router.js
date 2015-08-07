@@ -1,6 +1,9 @@
+import Backbone from 'backbone';
+import attempt from './attempt';
+
 var routeMatcher = /^(\w+)\/(\w+)$/;
 
-Minionette.Router = Backbone.Router.extend({
+export default Backbone.Router.extend({
     constructor: function() {
         Backbone.Router.apply(this, arguments);
         this.on('route', this._parseRouteEvent);

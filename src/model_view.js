@@ -1,4 +1,6 @@
-Minionette.ModelView = Minionette.View.extend({
+import View from './view';
+
+export default View.extend({
     // Listen to the default events
     modelEvents: {
         change: 'render',

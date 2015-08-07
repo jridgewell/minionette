@@ -1,4 +1,7 @@
-Minionette.CollectionView = Minionette.View.extend({
+import _ from 'underscore';
+import View from './view';
+
+export default View.extend({
     constructor: function() {
         // Initialize a storage object for our modelViews
         this._modelViews = {};
