@@ -2,9 +2,11 @@ import View from './view';
 
 export default View.extend({
     // Listen to the default events
-    modelEvents: {
-        change: 'render',
-        destroy: 'remove'
+    modelEvents() {
+        return {
+            change: 'render',
+            destroy: 'remove'
+        };
     },
 
     // The data that is sent into the template function.
