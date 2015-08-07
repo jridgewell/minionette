@@ -153,18 +153,18 @@ export default Backbone.View.extend({
     // entity's event.
     _listenToEvents(entity, events) {
         if (!entity) { return; }
-        _.each(events, function(method, event) {
+        _.each(events, (method, event) => {
             if (!_.isFunction(method)) { method = this[method]; }
             this.listenTo(entity, event, method);
-        }, this);
+        });
     },
 
     // Loops through all UI elements, attaching them
     // for easy access
     _addUIElements() {
-        _.each(_.result(this, 'ui'), function(selector, name) {
+        _.each(_.result(this, 'ui'), (selector, name) => {
             this['$' + name] = this.$(selector);
-        }, this);
+        });
     },
 
     // A helper that is passed to #template that will
