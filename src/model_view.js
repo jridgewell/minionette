@@ -9,7 +9,7 @@ export default View.extend({
 
     // The data that is sent into the template function.
     // Override this to provide custom data.
-    serialize: function() {
+    serialize() {
         return this.model.attributes;
     }
 });

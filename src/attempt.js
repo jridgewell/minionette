@@ -8,10 +8,10 @@ export default function attempt(obj, prop, args) {
     // Return undefined unless obj
     // is not null or undefined
     if (obj == null) { return; }
-    var fn = obj[prop];
+    let fn = obj[prop];
 
     if (_.isFunction(fn)) {
-        var apply = _.isArray(args);
+        let apply = _.isArray(args);
         return apply ? fn.apply(obj, args) : obj[prop](args);
     }
 }
