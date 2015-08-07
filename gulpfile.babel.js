@@ -1,29 +1,29 @@
-var gulp = require('gulp');
-var karma = require('karma').server;
-var jshint = require('gulp-jshint');
-var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
-var preprocess = require('gulp-preprocess');
-var esformatter = require('gulp-esformatter');
-var minimist = require('minimist');
+import gulp from 'gulp';
+import karma from 'karma';
+import jshint from 'gulp-jshint';
+import uglify from 'gulp-uglify';
+import rename from 'gulp-rename';
+import preprocess from 'gulp-preprocess';
+import esformatter from 'gulp-esformatter';
+import minimist from 'minimist';
 
-var opts = minimist(process.argv.slice(2));
+const opts = minimist(process.argv.slice(2));
 
-gulp.task('test', function (done) {
-    karma.start({
+gulp.task('test', done => {
+    karma.server.start({
         configFile: __dirname + '/karma.conf.js',
         singleRun: !opts.continuous
     }, done);
 });
 
-gulp.task('jshint', function() {
+gulp.task('jshint', () => {
     return gulp.src('src/*.js')
         .pipe(jshint())
         .pipe(jshint.reporter('default', {verbose: true}))
         .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('build', ['default'], function() {
+gulp.task('build', ['default'], () => {
     return gulp.src(['./src/build/*.js'])
         .pipe(preprocess())
         .pipe(esformatter({ indent: { value: '    ' } }))

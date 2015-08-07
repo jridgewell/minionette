@@ -25,6 +25,7 @@
     "underscore": "^1.4.4"
   },
   "devDependencies": {
+    "babel-core": "^5.8.21",
     "chai": "^1.10.0",
     "coveralls": "^2.11.3",
     "gulp": "^3.9.0",
