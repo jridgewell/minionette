@@ -227,7 +227,7 @@ export default View.extend({
     // you only need to listen to events that happen on
     // this collectionView, not on all the modelViews.
     _forwardEvents(view, prefixer) {
-        let forwardEvents = rest(args => {
+        let forwardEvents = (...args) => {
             let prefix = _.result(this, prefixer);
             if (prefix) {
                 args[0] = prefix + ':' + args[0];
@@ -235,7 +235,7 @@ export default View.extend({
 
             args.push(view);
             this.trigger.apply(this, args);
-        });
+        };
         forwardEvents._callback = this._forwardEvents;
         view.on('all', forwardEvents);
         view.on('removed', this._removeView, this);

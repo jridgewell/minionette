@@ -1,13 +1,12 @@
 import _ from 'underscore';
 import Backbone from 'backbone';
-import rest from './rest';
 import attempt from './attempt';
 
 const eventSplitter = /\s+/;
 const eventReplacer = /(^|:| )(\w)/g;
 const trigger = Backbone.Events.trigger;
 
-export default rest(function(event, args) {
+export default function(event, ...args) {
     // Morph the event string into the "on" method.
     // Supports space separated events.
     let method = 'on' + event.replace(eventReplacer, (_match, separator, letter) => {
@@ -25,4 +24,4 @@ export default rest(function(event, args) {
 
     // Call the original trigger.
     return trigger.apply(this, arguments);
-});
+};
