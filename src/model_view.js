@@ -1,4 +1,6 @@
-Minionette.ModelView = Minionette.View.extend({
+import View from './view';
+
+export default View.extend({
     // Listen to the default events
     modelEvents: {
         change: 'render',
@@ -7,7 +9,7 @@ Minionette.ModelView = Minionette.View.extend({
 
     // The data that is sent into the template function.
     // Override this to provide custom data.
-    serialize: function() {
+    serialize() {
         return this.model.attributes;
     }
 });

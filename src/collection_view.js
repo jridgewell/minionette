@@ -1,10 +1,14 @@
-Minionette.CollectionView = Minionette.View.extend({
-    constructor: function() {
+import _ from 'underscore';
+import View from './view';
+import ModelView from './model_view';
+
+export default View.extend({
+    constructor() {
         // Initialize a storage object for our modelViews
         this._modelViews = {};
         this.modelViewsFrag = null;
 
-        Minionette.View.apply(this, arguments);
+        View.apply(this, arguments);
 
         // Ensure this has a ModelView to initialize
         // new modelViews from.
@@ -34,32 +38,32 @@ Minionette.CollectionView = Minionette.View.extend({
     // for forwarding events from the emptyView.
     emptyViewEventPrefix: 'emptyView',
 
-    ModelView: Minionette.ModelView,
+    ModelView: ModelView,
 
     // Augment View#render so we can remove our old modelViews.
-    render: function() {
+    render() {
         // Remove all our modelViews after the 'render' event is
         // fired. This is set on #render so that the removing
         // will happen after all other 'render' listeners.
         this.once('render', this._removeModelViews);
 
-        return Minionette.View.prototype.render.apply(this, arguments);
+        return View.prototype.render.apply(this, arguments);
     },
 
     // Augment View#remove so we can remove our modelViews.
-    remove: function() {
+    remove() {
         // Remove all our modelViews after the 'remove' event is
         // fired. This is set on #remove so that the removing
         // will happen after all other 'remove' listeners.
         this.once('remove', this._removeModelViews);
 
-        return Minionette.View.prototype.remove.apply(this, arguments);
+        return View.prototype.remove.apply(this, arguments);
     },
 
     // Render all the collection's models as modelViews,
     // using a DocumentFragment to add all modelViews
     // efficiently.
-    _renderModelViews: function() {
+    _renderModelViews() {
         if (this.collection.isEmpty()) {
             return this._renderEmptyView();
         }
@@ -67,14 +71,14 @@ Minionette.CollectionView = Minionette.View.extend({
         this.modelViewsFrag = this.buildDocumentFragment();
 
         // Loop through all our models, and build their view.
-        var modelViews = this.collection.map(this.addOne, this);
+        let modelViews = this.collection.map(this.addOne, this);
 
         if (this.modelViewsFrag) {
             this.appendModelViewFrag(this.modelViewsFrag);
 
-            _.each(modelViews, function(view) {
+            _.each(modelViews, view => {
                 this.trigger('addedOne', view, this);
-            }, this);
+            });
 
             this.modelViewsFrag = null;
         }
@@ -82,40 +86,40 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // Add the empty view to this.$el, if the
     // EmptyView constructor is present.
-    _renderEmptyView: function() {
+    _renderEmptyView() {
         if (!this.EmptyView || this.emptyView || !this.collection.isEmpty()) {
             return;
         }
 
-        var view = this.emptyView = this.buildEmptyView();
+        let view = this.emptyView = this.buildEmptyView();
         this._forwardEvents(view, 'emptyViewEventPrefix');
         this.appendModelView(view.render());
     },
 
     // An override-able method to append a modelView to this
     // collectionView's element.
-    appendModelView: function(view) {
+    appendModelView(view) {
         this.$el.append(view.$el);
     },
 
     // An override-able method to append a collection of modelView
     // elements (inside a document fragment) to this collectionView's
     // elements at once.
-    appendModelViewToFrag: function(view) {
+    appendModelViewToFrag(view) {
         this.modelViewsFrag.appendChild(view.el);
     },
 
     // An override-able method to append a modelView to an efficient
     // DOM element store (a document fragment).
-    appendModelViewFrag: function(frag) {
+    appendModelViewFrag(frag) {
         this.$el.append(frag);
     },
 
     // Add an individual model's view to this.$el.
-    addOne: function(model) {
+    addOne(model) {
         this._removeEmptyView();
 
-        var view = this.buildModelView(model);
+        let view = this.buildModelView(model);
 
         // Setup event forwarding
         this._forwardEvents(view, 'modelViewEventPrefix');
@@ -138,7 +142,7 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // An override-able method to construct a new
     // modelView.
-    buildModelView: function(model) {
+    buildModelView(model) {
         return new this.ModelView({ model: model });
     },
 
@@ -146,20 +150,20 @@ Minionette.CollectionView = Minionette.View.extend({
     // documentFragment. Return false to prevent
     // its use, meaning a render will append all the
     // collection's modelViews individually.
-    buildDocumentFragment: function() {
+    buildDocumentFragment() {
         // Use a DocumentFragment to speed up #render
         return document.createDocumentFragment();
     },
 
     // An override-able method to construct a new
     // emptyView.
-    buildEmptyView: function() {
+    buildEmptyView() {
         return new this.EmptyView();
     },
 
     // Remove an individual model's view from this.$el.
-    removeOne: function(model) {
-        var view = this._modelViews[model.cid];
+    removeOne(model) {
+        let view = this._modelViews[model.cid];
 
         if (view) {
             this.trigger('removeOne', view, this);
@@ -176,11 +180,11 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // A hook method that is called during
     // a view#remove.
-    _removeView: function(view) {
+    _removeView(view) {
         view.off('all', this._forwardEvents, this);
         view.off('removed', this._removeView, this);
 
-        var cid = view.model && view.model.cid;
+        let cid = view.model && view.model.cid;
         if (cid in this._modelViews) {
             this._modelViews[cid] = null;
         }
@@ -188,14 +192,14 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // A callback method bound to the 'remove:before'
     // event. Removes all our modelViews.
-    _removeModelViews: function() {
+    _removeModelViews() {
         this._removeEmptyView();
         _.invoke(this._modelViews, 'remove');
         this._modelViews = {};
     },
 
     // Removes the emptyView, if it exists.
-    _removeEmptyView: function() {
+    _removeEmptyView() {
         if (this.emptyView) {
             this.emptyView.remove();
             this.emptyView = null;
@@ -204,16 +208,16 @@ Minionette.CollectionView = Minionette.View.extend({
 
     // Sets this.ModelView. Prioritizes instantiated options.ModelView,
     // then a subclass' prototype ModelView, and defaults to Minionette.ModelView
-    _ensureModelViews: function() {
-        var mv = this.ModelView;
+    _ensureModelViews() {
+        let mv = this.ModelView;
         if (!_.isFunction(mv)) {
-            mv = Minionette.ModelView.extend(mv);
+            mv = ModelView.extend(mv);
         }
         this.ModelView = mv;
 
-        var ev = this.EmptyView;
+        let ev = this.EmptyView;
         if (ev && !_.isFunction(ev)) {
-            ev = Minionette.View.extend(ev);
+            ev = View.extend(ev);
         }
         this.EmptyView = ev;
     },
@@ -222,9 +226,9 @@ Minionette.CollectionView = Minionette.View.extend({
     // setup event forwarding from modelViews. That way,
     // you only need to listen to events that happen on
     // this collectionView, not on all the modelViews.
-    _forwardEvents: function(view, prefixer) {
-        var forwardEvents = rest(function(args) {
-            var prefix = _.result(this, prefixer);
+    _forwardEvents(view, prefixer) {
+        let forwardEvents = rest(args => {
+            let prefix = _.result(this, prefixer);
             if (prefix) {
                 args[0] = prefix + ':' + args[0];
             }
@@ -233,7 +237,7 @@ Minionette.CollectionView = Minionette.View.extend({
             this.trigger.apply(this, args);
         });
         forwardEvents._callback = this._forwardEvents;
-        view.on('all', forwardEvents, this);
+        view.on('all', forwardEvents);
         view.on('removed', this._removeView, this);
     }
 });
