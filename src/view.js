@@ -81,6 +81,7 @@ export default Backbone.View.extend({
         // on the leftovers.
         $old.empty();
 
+        this._updateDOMAttributes();
         this.$el.html($el.contents());
         this._addUIElements();
 
@@ -177,5 +178,12 @@ export default Backbone.View.extend({
     _viewHelper(name) {
         const region = this.region(name);
         return region.placeholder();
+    },
+
+    _updateDOMAttributes() {
+        const attrs = _.extend({}, _.result(this, 'attributes'));
+        if (this.id) attrs.id = _.result(this, 'id');
+        if (this.className) attrs['class'] = _.result(this, 'className');
+        this._setAttributes(attrs);
     }
 });
