@@ -7,63 +7,22 @@ export default function Region(options = {}) {
     // Not really necessary, but it doesn't hurt.
     this.cid = _.uniqueId('r');
     this.name = options.name;
+    this.selector = options.selector;
 
     // Make sure we have a view.
-    this._setView(options);
+    this.attach(this.buildPlaceholderView(options));
+
+    this.initialize.apply(this, arguments);
 };
 
 // Allow Regions to be extended.
 // Backbone's extend is generic, just copy it over.
 Region.extend = Backbone.View.extend;
 
-function attributeReducer(attributes, left, right) {
-    return _.map(attributes, (attr) => {
-        const value = attr.value ? `="${attr.value}"` : '';
-        return `${left}${attr.name}${value}${right}`;
-    }).join('');
-}
-
-function throwPlaceholder() {
-    throw new Error('Cannot use view template helper with region declared using a selector');
-}
-
 _.extend(Region.prototype, Backbone.Events, {
     PlaceholderView: PlaceholderView,
 
-    // The inverse of #placeholder, meant to identify it.
-    // This is overridden if the region is instantiated with
-    // a selector.
-    selector() {
-        const el = this.view.el;
-
-        // Special case id, for faster lookups.
-        if (el.id) { return `#${el.id}`; }
-
-        const selector = el.tagName;
-        let attributes = el.attributes;
-        // Special case class, for faster lookups.
-        if (el.className) {
-            const className = el.className.replace(/ /g, '.');
-            selector = `${selector}.${className}`;
-            attributes = _.reject(attributes, { name: 'class' });
-        }
-
-        return selector + attributeReducer(attributes, '[', ']');
-    },
-
-    // Transforms the current view's el into a placeholder element for
-    // use with the view template helper.
-    placeholder() {
-        const el = this.view.el;
-
-        // Special case childless nodes. This also handles
-        // self closing tags, like <br />
-        if (!el.childNodes.length) { return el.outerHTML; }
-
-        const tagName = el.tagName;
-        const attributes = attributeReducer(el.attributes, ' ', '');
-        return `<${tagName}${attributes}></${tagName}>`;
-    },
+    initialize: function() {},
 
     // An override-able method to construct a new
     // placeholder view.
@@ -71,54 +30,12 @@ _.extend(Region.prototype, Backbone.Events, {
         return new this.PlaceholderView(options);
     },
 
-    // Ensures the region has a view.
-    _setView(options) {
-        const view = options.view || this.buildPlaceholderView(options);
-        this.attach(view);
-
-        if (options.selector) {
-            this.selector = options.selector;
-            this.placeholder = throwPlaceholder;
-        } else {
-            this._resetDOMMethods();
-        }
-    },
-
-    // Ensures that the view's el is contained inside the parent view's.
-    _setInContext($context) {
-        const $el = $context.find(_.result(this, 'selector'));
-        if (!$el.length) {
-            throw new Error("couldn't find region's selector in context");
-        }
-
-        // If we currently have a view element,
-        // just replace.
-        if (this.view.el) {
-            $el.replaceWith(this.view.el);
-        } else {
-            // If we don't have a view element,
-            // it means we instantiated the region
-            // when the parent view hadn't been rendered.
-            this.view.setElement($el);
-        }
-    },
-
     // Resets the region's view to placeholder view.
     // Optionally takes a boolean, in which case the
     // oldView will just be detached.
     reset(detach) {
         this.attach(this.buildPlaceholderView({}), detach);
-        this._resetDOMMethods();
         return this;
-    },
-
-    _resetDOMMethods() {
-        _.extend(this, _.pick(Region.prototype, 'selector', 'placeholder'));
-    },
-
-    // A proxy method to the view's render().
-    render() {
-        return this.view.render();
     },
 
     // Attaches newView. This sets newView#$el
@@ -140,7 +57,7 @@ _.extend(Region.prototype, Backbone.Events, {
 
         // Let's not do any DOM manipulations if
         // the elements are the same.
-        if (oldView && !newView.$el.is($current)) {
+        if ($current && !newView.$el.is($current)) {
             // Places newView after the current view.
             newView.$el.insertBefore($current);
 
@@ -156,17 +73,24 @@ _.extend(Region.prototype, Backbone.Events, {
         return this;
     },
 
-    // Removes this region, and it's view.
-    remove() {
-        this.trigger('remove', this);
+    // Ensures that the view's el is contained inside the parent view's.
+    _setInContext($context) {
+        const $el = $context.find(this.selector);
+        if (!$el.length) {
+            throw new Error("Couldn't find region's selector in context.");
+        }
 
-        this.view.remove();
-        this.stopListening();
-
-        this.trigger('removed', this);
-        return this;
+        // If we currently have a view element,
+        // just replace.
+        if (this.view.el) {
+            $el.replaceWith(this.view.el);
+        } else {
+            // If we don't have a view element,
+            // it means we instantiated the region
+            // when the parent view hadn't been rendered.
+            this.view.setElement($el);
+        }
     },
-
 
     // A hook method that is called during
     // a view#remove. Allows a view to be removed,

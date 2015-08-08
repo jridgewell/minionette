@@ -15,17 +15,11 @@ export default Backbone.View.extend({
         // Add the regions
         // This is done _after_ calling Backbone.View's constructor,
         // so that this.$el will be defined when we bind selectors.
-        this.addRegions(_.result(this, 'regions'));
+        this._addRegions(_.result(this, 'regions'));
 
         // Have the view listenTo the model and collection.
         this._listenToEvents(this.model, _.result(this, 'modelEvents'));
         this._listenToEvents(this.collection, _.result(this, 'collectionEvents'));
-
-        // Always bind this._viewHelper to this.
-        // This._viewHelper will be passed into
-        // the template as a helper method for
-        // rendering regions.
-        _.bindAll(this, '_viewHelper');
     },
 
     Region: Region,
@@ -38,13 +32,6 @@ export default Backbone.View.extend({
     // to this.template
     // Override this in a subclass to something useful.
     serialize() { return {}; },
-
-    // The actual "serialize" that is fed into the this.template.
-    // Used so a subclass can override this.serialize and still
-    // have the `view` helper.
-    _serialize() {
-        return _.extend({view: this._viewHelper}, this.serialize());
-    },
 
     // A useful remove method that triggers events.
     remove() {
@@ -66,7 +53,7 @@ export default Backbone.View.extend({
         const $old = Backbone.$('<div>').append(this.$el.contents());
 
         const html = _.isFunction(this.template) ?
-            this.template(this._serialize()) :
+            this.template(this.serialize()) :
             this.template;
         const $el = Backbone.$('<div>').append(html);
 
@@ -84,37 +71,34 @@ export default Backbone.View.extend({
         return this;
     },
 
+    setElement(element) {
+        Backbone.View.prototype.setElement.apply(this, arguments);
+        _.invoke(this._regions, '_setInContext', this.$el);
+        this._addUIElements();
+    },
+
     // Adds the region "name" to this as this[name].
     // Also attaches it to this._regions for internal management.
-    addRegion(name, view) {
-        // Remove the old region, if it exists already
-        _.result(this._regions[name], 'remove');
-
-        const options = { name: name };
-        // If this is a Backbone.View, pass that as the
-        // view to the region.
-        if (!view || view.$el) {
-            options.view = view;
-        } else {
-            // If view is a selector, find the DOM element
-            // that matches it.
-            options.selector = view.selector || view;
-            options.el = this.$(view);
+    addRegion(name, selector) {
+        if (selector instanceof Backbone.$) {
+            throw new Error('jQuery objects are not supported, please pass a selector string.');
         }
-
+        const options = {
+            name: name
+            selector: selector
+            el: this.$(selector);
+        };
         const region = this.buildRegion(options);
 
         this[name] = region.view;
         this._regions[name] = region;
-        region.on('removed', this._removeRegion, this);
         region.on('attach', this._updateRegionView, this);
 
         return region;
     },
 
-    //TODO
     region(name) {
-        return this._regions[name] || this.addRegion(name);
+        return this._regions[name];
     },
 
     // An override-able method to construct a new
@@ -125,9 +109,9 @@ export default Backbone.View.extend({
 
     // Adds multiple regions to the view. Takes
     // an object with {regioneName: view} syntax
-    addRegions(regions) {
-        _.each(regions, (view, name) => {
-            this.addRegion(name, view);
+    _addRegions(regions) {
+        _.each(regions, (selector, name) => {
+            this._addRegion(name, selector);
         });
         return this;
     },
@@ -136,13 +120,6 @@ export default Backbone.View.extend({
     // with a new one.
     _updateRegionView(view, region) {
         this[region.name] = view;
-    },
-
-    // A remove helper to remove a region
-    _removeRegion(region) {
-        region.off('removed', this._removeRegion, this);
-        region.off('attach', this._updateRegionView, this);
-        this[region.name] = this._regions[region.name] = null;
     },
 
     // Loop through the events given, and listen to
@@ -159,20 +136,8 @@ export default Backbone.View.extend({
     // for easy access
     _addUIElements() {
         _.each(_.result(this, 'ui'), (selector, name) => {
-            this['$' + name] = this.$(selector);
+            this[`$${name}`] = this.$(selector);
         });
-    },
-
-    setElement(element) {
-        Backbone.View.prototype.setElement.apply(this, arguments);
-        this._addUIElements();
-    },
-
-    // A helper that is passed to #template that will
-    // render regions inline.
-    _viewHelper(name) {
-        const region = this.region(name);
-        return region.placeholder();
     },
 
     _updateDOMAttributes() {
