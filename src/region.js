@@ -130,11 +130,11 @@ _.extend(Region.prototype, Backbone.Events, {
 
         if (oldView) {
             this.trigger('detach', oldView, this);
-            oldView.off('remove:internal', this._removeView, this);
+            oldView.off('remove', this._removeViewLast, this);
         }
 
         this.trigger('attach', newView, this);
-        newView.on('remove:internal', this._removeView, this);
+        newView.on('remove', this._removeViewLast, this);
 
         this.view = newView;
 
@@ -173,5 +173,9 @@ _.extend(Region.prototype, Backbone.Events, {
     // replacing it with the placeholder.
     _removeView(view) {
         if (this.view === view) { this.reset(true); }
+    },
+
+    _removeViewLast(view) {
+        view.once('remove', this._removeView, this);
     }
 });

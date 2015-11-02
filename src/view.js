@@ -50,11 +50,6 @@ export default Backbone.View.extend({
     remove() {
         this.trigger('remove', this);
 
-        // An internal event, **NOT TO BE USED BY DEVS**.
-        // Used to ensure removing this view does not cause
-        // the region this view is managed by to lose its place.
-        this.trigger('remove:internal', this);
-
         _.invoke(this._regions, 'remove');
         Backbone.View.prototype.remove.apply(this, arguments);
 
