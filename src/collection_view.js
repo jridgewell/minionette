@@ -6,7 +6,7 @@ export default View.extend({
     constructor() {
         // Initialize a storage object for our modelViews
         this._modelViews = {};
-        this.modelViewsFrag = null;
+        this.emptyView = null;
 
         View.apply(this, arguments);
 
@@ -62,28 +62,14 @@ export default View.extend({
         return View.prototype.remove.apply(this, arguments);
     },
 
-    // Render all the collection's models as modelViews,
-    // using a DocumentFragment to add all modelViews
-    // efficiently.
+    // Render all the collection's models as modelViews.
     _renderModelViews() {
         if (this.collection.isEmpty()) {
             return this._renderEmptyView();
         }
 
-        this.modelViewsFrag = this.buildDocumentFragment();
-
         // Loop through all our models, and build their view.
-        const modelViews = this.collection.map(this.addOne, this);
-
-        if (this.modelViewsFrag) {
-            this.appendModelViewFrag(this.modelViewsFrag);
-
-            _.each(modelViews, (view) => {
-                this.trigger('addedOne', view, this);
-            });
-
-            this.modelViewsFrag = null;
-        }
+        this.collection.each(this.addOne, this);
     },
 
     // Add the empty view to this.$el, if the
@@ -104,19 +90,6 @@ export default View.extend({
         this.$el.append(view.$el);
     },
 
-    // An override-able method to append a collection of modelView
-    // elements (inside a document fragment) to this collectionView's
-    // elements at once.
-    appendModelViewToFrag(view) {
-        this.modelViewsFrag.appendChild(view.el);
-    },
-
-    // An override-able method to append a modelView to an efficient
-    // DOM element store (a document fragment).
-    appendModelViewFrag(frag) {
-        this.$el.append(frag);
-    },
-
     // Add an individual model's view to this.$el.
     addOne(model) {
         this._removeEmptyView();
@@ -130,14 +103,11 @@ export default View.extend({
         this._modelViews[model.cid] = view;
 
         this.trigger('addOne', view, this);
-        view.render();
 
-        if (this.modelViewsFrag) {
-            this.appendModelViewToFrag(view);
-        } else {
-            this.appendModelView(view);
-            this.trigger('addedOne', view, this);
-        }
+        view.render();
+        this.appendModelView(view);
+
+        this.trigger('addedOne', view, this);
 
         return view;
     },
@@ -146,15 +116,6 @@ export default View.extend({
     // modelView.
     buildModelView(model) {
         return new this.ModelView({ model: model });
-    },
-
-    // An override-able method to construct a new
-    // documentFragment. Return false to prevent
-    // its use, meaning a render will append all the
-    // collection's modelViews individually.
-    buildDocumentFragment() {
-        // Use a DocumentFragment to speed up #render
-        return document.createDocumentFragment();
     },
 
     // An override-able method to construct a new
