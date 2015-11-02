@@ -31,7 +31,6 @@ module.exports = function(config) {
             'src/collection_view.js',
             'src/computed.js',
             'src/model.js',
-            'src/router.js',
             'src/trigger.js',
 
             'test/specs/*.js'
