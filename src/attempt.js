@@ -1,33 +1,17 @@
+import _ from 'underscore';
+
 // A helper function, similar to _.result
-// that will return the property on obj, unless obj
-// is undefined or null. Passes the 3rd params
-// as arguments to the property, if it is a method
-function attempt(obj, property, args) {
+// that will call the prop on obj, unless obj
+// is undefined or null. Passes the 3rd param
+// as arguments to the method.
+export default function attempt(obj, prop, args) {
     // Return undefined unless obj
     // is not null or undefined
-    if (obj == null) { return void 0; }
-    var prop = obj[property];
+    if (obj == null) { return; }
+    const fn = obj[prop];
 
-    if (_.isFunction(prop)) {
-        var length;
-        if (_.isArray(args)) {
-            length = args.length;
-        } else {
-            length = (args == null) ? 0 : -1;
-        }
-        switch (length) {
-            case -1:
-                return obj[property](args);
-            case 0:
-                return obj[property]();
-            case 1:
-                return obj[property](args[0]);
-            case 2:
-                return obj[property](args[0], args[1]);
-            case 3:
-                return obj[property](args[0], args[1], args[2]);
-        }
-        return prop.apply(obj, args);
+    if (_.isFunction(fn)) {
+        const apply = _.isArray(args);
+        return apply ? fn.apply(obj, args) : obj[prop](args);
     }
-    return prop;
 }

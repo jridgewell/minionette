@@ -8,7 +8,7 @@ in, `#modelEvents` and `#serialize()`.
 ## #modelEvents
 
 ```javascript
-modelEvents = {
+ModelView.prototype.modelEvents = {
     change: 'render',
     destroy: 'remove'
 };

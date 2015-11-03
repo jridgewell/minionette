@@ -38,7 +38,7 @@ var CV = Minionette.CollectionView.extend({
 ## #collectionEvents
 
 ```javascript
-collectionEvents = {
+CollectionView.prototype.collectionEvents = {
     add: 'addOne',
     remove: 'removeOne',
     reset: 'render',

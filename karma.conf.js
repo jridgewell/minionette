@@ -1,34 +1,25 @@
 // Karma configuration
 // http://karma-runner.github.io/0.10/config/configuration-file.html
+var minimist = require('minimist');
+
+var opts = minimist(process.argv.slice(2));
 
 module.exports = function(config) {
-    config.set({
+    var conf = {
         // base path, that will be used to resolve files and exclude
         basePath: '',
 
         // testing framework to use (jasmine/mocha/qunit/...)
-        frameworks: ['mocha'],
+        frameworks: ['mocha', 'sinon', 'chai'],
 
         reporters: ['dots'],
 
         // list of files / patterns to load in the browser
         files: [
+            'https://rawgit.com/chjj/marked/master/lib/marked.js',
             'test/support/jquery/dist/jquery.js',
             'test/support/underscore/underscore.js',
             'test/support/backbone/backbone.js',
-            'test/support/mocha/mocha.js',
-            'test/support/chai/chai.js',
-            'test/support/sinon/lib/sinon.js',
-            'test/support/sinon/lib/sinon/match.js',
-            'test/support/sinon/lib/sinon/spy.js',
-            'test/support/sinon/lib/sinon/call.js',
-            'test/support/sinon/lib/sinon/stub.js',
-            'test/support/sinon/lib/sinon/mock.js',
-            'test/support/sinon/lib/sinon/assert.js',
-            'test/support/sinon/lib/sinon/collection.js',
-            'test/support/sinon/lib/sinon/sandbox.js',
-            'test/support/sinon/lib/sinon/test.js',
-            'test/support/sinon/lib/sinon/test_case.js',
             'test/support/sinon-chai/lib/sinon-chai.js',
             'test/support/chai-jquery/chai-jquery.js',
             'test/*.js',
@@ -40,7 +31,7 @@ module.exports = function(config) {
             'src/collection_view.js',
             'src/computed.js',
             'src/model.js',
-            'src/router.js',
+            'src/trigger.js',
 
             'test/specs/*.js'
         ],
@@ -55,9 +46,6 @@ module.exports = function(config) {
         // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
         logLevel: config.LOG_INFO,
 
-        // enable / disable watching file and executing tests whenever any file changes
-        autoWatch: false,
-
         // Start these browsers, currently available:
         // - Chrome
         // - ChromeCanary
@@ -68,10 +56,6 @@ module.exports = function(config) {
         // - IE (only Windows)
         browsers: ['PhantomJS'],
 
-        // Continuous Integration mode
-        // if true, it capture browsers, run tests and exit
-        singleRun: true,
-
         client: {
             mocha: {
                 ui: 'bdd',
@@ -80,5 +64,22 @@ module.exports = function(config) {
         },
 
         reportSlowerThan: 10
-    });
+    };
+
+    if (opts.coverage) {
+        conf.reporters.push('coverage');
+
+        conf.preprocessors = conf.preprocessors || {};
+        var covPre = conf.preprocessors['src/*.js'] || [];
+        covPre.push('coverage');
+        conf.preprocessors['src/*.js'] = covPre;
+
+        conf.coverageReporter = {
+            dir: 'coverage',
+            subdir: '.',
+            type: 'lcov'
+        };
+    }
+
+    config.set(conf);
 };

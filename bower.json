@@ -14,15 +14,12 @@
       "name": "Justin Ridgewell"
   },
   "dependencies": {
+      "backbone": "^1.0",
       "jquery": ">=1.7.0",
-      "backbone": "~1.0",
-      "underscore": ">=1.4.4 <2.0"
+      "underscore": "^1.4.4"
   },
   "devDependencies": {
-      "mocha": "~1.12.0",
-      "chai": "~1.7.2",
-      "sinon": "~1.7.3",
-      "sinon-chai": "~2.4.0",
-      "chai-jquery": "~1.1.1"
+      "sinon-chai": "^2.4",
+      "chai-jquery": "^1.2"
   }
 }

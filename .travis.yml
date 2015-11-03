@@ -3,7 +3,12 @@ node_js:
   - "0.11"
   - "0.10"
 before_script:
-  - npm install -g grunt-cli bower
+  - npm install -g bower coveralls codeclimate-test-reporter
   - bower install --config.interactive=false
+script:
+  - gulp test --coverage
 after_success:
-  - grunt coverage
+  - coveralls < coverage/lcov.info
+  - codeclimate < coverage/lcov.info
+env:
+  - secure: "DJ5P4TnXa6GL7GIZoZP2FAsHy6ivL9IPFJ08F3Z2B0nJ3DwM7D+3PeKgZOo0BwuV/H3enVlcRrfwCBdL00cbfna75JxFh8T8HeKRzYuOk7lQZUphHgftgyWuGHkIz7R4sAAYK7sbw2KRIIAVAjkxXjBhq1vG95S48RWpxr9DJO0="
